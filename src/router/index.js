@@ -20,9 +20,9 @@ const routes = [
     component: () => import('../views/discover/DiscoverView.vue'),
   },
   {
-    path: '/message',
-    name: 'message',
-    component: () => import('../views/message/MessageView.vue'),
+    path: '/notice',
+    name: 'notice',
+    component: () => import('../views/notice/NoticeView.vue'),
   },
   {
     path: '/profile',
