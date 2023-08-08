@@ -20,10 +20,10 @@
         >发现</van-tabbar-item
       >
       <van-tabbar-item
-        replace to="/message"
-        :class="{ active: $route.path === '/message' }"
-        :icon="getIcon('chat-o', 'chat', '/message')"
-        >消息</van-tabbar-item
+        replace to="/notice"
+        :class="{ active: $route.path === '/notice' }"
+        :icon="getIcon('chat-o', 'chat', '/notice')"
+        >通知</van-tabbar-item
       >
       <van-tabbar-item
         replace to="/profile"
