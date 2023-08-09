@@ -1,9 +1,10 @@
 module.exports = {
   plugins: {
     'postcss-pxtorem': {
-      rootValue: 100, // 设计稿宽度 / 10，假设设计稿宽度为750px
+      rootValue: 75, // 设计稿宽度 / 10，假设设计稿宽度为750px
       propList: ['*'],
-      selectorBlackList: [],
+      selectorBlackList: ['.van'],// 把vant2排除，因为vant本来就是对移动端设计的，一般不需要postcss-pxtorem进行转换。
+      exclude: '/node_modules',
     },
   },
 };
