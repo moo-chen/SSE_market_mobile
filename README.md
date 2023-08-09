@@ -5,3 +5,5 @@
 > # debug
 > 1.遇到了CRLF的问题，晖哥的方法是在终端输入 "eslint --ext .js,.vue --fix"，
 > 我（龚敬）的方法是在.eslintrc.js中添加"linebreak-style": ["error", "windows"],"
+> 2.遇到了手机开热点但不能连接到的问题，我（龚敬）的方法是在vue.config.js中的host用
+> 无线局域网适配器的IPv4地址替换（在终端输入"ipconfig"可查到）
