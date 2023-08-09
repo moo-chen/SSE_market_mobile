@@ -20,7 +20,7 @@ export default {
 
 <style scoped>
 .banner{
-  width: 1000px;
+  width: 750px;
   height: 304px;
   background: pink;
 }
