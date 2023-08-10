@@ -1,20 +1,17 @@
 .van-tabbar {
-    height: 105px;
-    /* Adjust the height as needed */
+    height: 55px;
     background-color: #f0f0f0;
 }
 
 .van-tabbar-item {
-    font-size: 23px;
-    /* Adjust text size */
+    font-size: 10px;
 }
 
 .van-icon {
-    font-size: 53px;
-    /* Adjust icon size */
+    font-size: 27px;
 }
 
 .active {
     color: rgb(17, 167, 226);
-    /* Define active text color */
+
 }
