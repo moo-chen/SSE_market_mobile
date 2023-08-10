@@ -47,7 +47,12 @@ export default {
           this.$router.go(0);
         })
         .catch((err) => {
-          this.$toast.fail(err.response.data.msg);
+          console.error(err); // 打印完整的错误对象
+          if (err.response && err.response.data) {
+            this.$toast.fail(err.response.data.msg);
+          } else {
+            this.$toast.fail('登录失败'); // 或者其他通用错误消息
+          }
         });
     },
   },
