@@ -1,5 +1,12 @@
 <template>
   <div>
+  <div>
+    <van-notice-bar
+      left-icon="volume-o"
+      :scrollable="true"
+      text="欢迎大家来到软工集市，此版本为内测版本"
+      style="margin-bottom: 10px;"
+    />
     <div>
       <van-uploader
         :after-read="afterRead"
@@ -12,26 +19,34 @@
         </div>
       </van-uploader>
     </div>
-    <div class="mt-5">
-      <van-cell-group>
-        <van-field label="用户名" v-model="userInfo.name"  required/>
-        <van-field label="手机号" v-model="userInfo.phone" value="输入框已禁用" disabled />
-        <van-field label="邮箱" v-model="userInfo.email" value="输入框已禁用" disabled />
-      </van-cell-group>
-      <van-field
-        v-model="userInfo.intro"
-        rows="2"
-        autosize
-        label="个人简介"
-        type="textarea"
-        maxlength="100"
-        placeholder="请输入留言"
-        show-word-limit
-      />
-    </div>
+    <div>
+    <van-cell-group>
+      <van-field class="field-spacing"
+                 label="用户名" v-model="userInfo.name" required/>
+      <van-field class="field-spacing"
+                 label="手机号" v-model="userInfo.phone" value="输入框已禁用" disabled />
+      <van-field class="field-spacing"
+                 label="邮箱" v-model="userInfo.email" value="输入框已禁用" disabled />
+    </van-cell-group>
+    <van-field
+      class="field-spacing"
+      v-model="userInfo.intro"
+      rows="2"
+      autosize
+      label="简介"
+      type="textarea"
+      maxlength="100"
+      placeholder="请输入留言"
+      show-word-limit
+    />
+  </div>
     <van-button type="primary" native-type="submit" @click="updateUserInfo"
                 style="margin-right: 10px;">保存更改</van-button>
     <van-button type="info" @click="open">更多信息</van-button>
+  </div>
+  <div class="feedback-link">
+    <router-link to="/feedback">遇到问题了？点此反馈</router-link>
+  </div>
   </div>
 </template>
 <script>
@@ -85,7 +100,7 @@ export default {
       formData.append('file', file.file); // 'file' 必须与后端接收的字段名相匹配
       formData.append('phone', this.userInfo.phone);
       axios
-        .post('https://localhost:8080/api/auth/uploadavatar', formData, {
+        .post('https://localhost:8080/api/auth/updateavatar', formData, {
           headers: {
             'Content-Type': 'multipart/form-data',
           },
@@ -151,8 +166,8 @@ export default {
 
 <style>
 .avatar-container {
-  width: 100px;
-  height: 100px;
+  width: 200px;
+  height: 200px;
   border-radius: 10%;
   background-color: #eee;
   display: flex;
@@ -165,5 +180,21 @@ export default {
   height: 100%;
   object-fit: fill; /* 使图片填满容器 */
 }
+.field-spacing {
+  margin-left: 10px;
+  margin-right: 10px;
+}
+.feedback-link {
+  text-align: center;
+  margin: 300px 0;
+}
 
+.feedback-link a {
+  color: #409EFF; /* 你可以选择合适的颜色 */
+  text-decoration: none;
+}
+
+.feedback-link a:hover {
+  text-decoration: underline;
+}
 </style>
