@@ -51,9 +51,9 @@
 </template>
 <script>
 import { mapActions, mapState } from 'vuex';
-import request from '@/utils/request';
 import axios from 'axios';
 import { Dialog } from 'vant';
+import request from '@/utils/request';
 
 export default {
   computed: mapState({
