@@ -34,6 +34,14 @@ const routes = [
     name: 'logintest',
     component: () => import('../views/logintest/LoginTestView.vue'),
   },
+  {
+    path: '/postDetails',
+    name: 'postDetails',
+    meta: {
+      auth: true,
+    },
+    component: () => import('../views/postDetails/PostDetailsView.vue'),
+  },
 ];
 
 const router = new VueRouter({
