@@ -136,6 +136,14 @@ export default {
     },
     ...mapActions('userModule', { getInfo: 'getInfo' }),
     updateUserInfo() {
+      if (this.userInfo.name.trim() === '') {
+        Dialog.alert({
+          title: '保存失败',
+          message: '用户名不能为空！',
+          confirmButtonText: '确定',
+        });
+        return; // 如果用户名为空，则返回，不执行以下的保存逻辑
+      }
       const updatedUserInfo = {
         userID: this.userInfo.userID,
         name: this.userInfo.name,
@@ -143,7 +151,6 @@ export default {
         intro: this.userInfo.intro,
         avatarURL: this.userInfo.avatarURL,
       };
-
       request.post('https://localhost:8080/api/auth/updateUserInfo', updatedUserInfo)
         .then((response) => {
           // 处理更新成功的逻辑
