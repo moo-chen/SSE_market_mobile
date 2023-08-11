@@ -1,7 +1,7 @@
 <template>
   <div class="login-view">
     <div class="login" @keydown.enter="login">
-      <van-row class="mt-5">
+      <van-row>
         <van-col span="8" offset="8">
           <van-cell>
             <van-form>

@@ -1,5 +1,9 @@
 <template>
   <div>
+    <van-tabs v-model="noticesType" @click="changeType">
+      <van-tab title="未读通知" name="unread"></van-tab>
+      <van-tab title="已读通知" name="read"></van-tab>
+    </van-tabs>
     <!-- 通知列表 -->
     <van-list v-if="notices.length > 0" class="notification-list" ref="totalGroup">
       <!-- 标记未读 -->
@@ -22,12 +26,17 @@
           <van-row style="margin-top:5px">{{ formatNoticeTitle(notice) }}</van-row>
           <van-row style="margin-top: 5px">{{ formatNoticeContent(notice) }}</van-row>
         </van-col>
-        <van-badge :content="'New'"/>
+        <van-badge v-if="notice.read===false" :content="'New'"/>
       </van-cell>
-      <van-cell class="loading" v-if="loading">正在加载...</van-cell>
-      <van-button v-else block @click="loadMoreNotices">加载更多</van-button>
+      <div v-if="more">
+        <van-cell class="loading" v-if="loading">正在加载...</van-cell>
+        <van-button v-else block @click="loadMoreNotices">加载更多</van-button>
+      </div>
+      <div v-else>
+        <van-empty description="已无更多通知"/>
+      </div>
     </van-list>
-    <p v-else>没有通知</p>
+    <van-empty v-else description="暂无通知"></van-empty>
     <!-- 查看通知弹窗 -->
     <van-popup v-if="currentNotice"
                v-model="modalVisible" position="center"
@@ -71,6 +80,11 @@
         </div>
       </div>
     </van-popup>
+    <van-divider
+      :style="{ color: '#1989fa', borderColor: '#1989fa', padding: '0 16px',height: '50px'}"
+    >
+      ヽ(ﾟ∀ﾟ)ﾒ(ﾟ∀ﾟ)ﾉ 到底啦(￣▽￣)~*
+    </van-divider>
   </div>
 </template>
 
@@ -81,9 +95,16 @@ import request from '@/utils/request';
 export default {
   data() {
     return {
-      loading: true,
+      loading: false,
       page: 1,
       notices: [],
+      noticesType: 'unread',
+      more: true,
+      noticesNum: {
+        totalNum: 0,
+        unreadNum: 0,
+        readNum: 0,
+      }, // 通知的总数
       currentNotice: null,
       currentIndex: 0,
       modalVisible: false, // 弹出窗口是否可见
@@ -91,20 +112,14 @@ export default {
       getparams: {
         pageSize: 5, // 每页查询条数
         requireID: 0, // 查询ID，查询在此noticeID之前的通知，由于ID是越新越大的，也就是不管新来的通知
+        read: 0, // 获取未读的通知,read=0;获取已读的通知,read=1
       },
     };
-  },
-  mounted() {
-    this.getNotices();
-    window.addEventListener('scroll', this.handleScroll);
   },
   computed: {
     ...mapState({
       userInfo: (state) => state.userModule.userInfo,
     }),
-    nownotices() {
-      return this.notices;
-    },
     isNightStyle() {
       if (JSON.parse(localStorage.getItem('Style')) === 'night') {
         return true;
@@ -121,14 +136,32 @@ export default {
     if (this.$route.params.before) {
       this.before = this.$route.params.before;
     }
+    this.getNoticeNum();
+  },
+  mounted() {
+    this.getNotices();
   },
   methods: {
-    formatNoticeTitle(notice) {
-      let title = '';
-      if (notice.type === 'pcomment' || notice.type === 'ccomment') {
-        title += `${notice.senderName}：\n`;
+    changeType(name) {
+      this.notices = [];
+      this.noticesType = name;
+      this.getparams.requireID = 0;
+      this.more = true;
+      if (name === 'unread') {
+        this.getparams.read = 0;
+      } else {
+        this.getparams.read = 1;
       }
-      return title;
+      this.getNotices();
+    },
+    formatDate(date) {
+      // 格式化日期时间
+      const d = new Date(date);
+      return `${d.getFullYear()}年${
+        d.getMonth() + 1
+      }月${d.getDate()}日 ${String(d.getHours())
+        .padStart(2, '0')}:${String(d.getMinutes())
+        .padStart(2, '0')}`;
     },
     formatNoticeContent(notice, isTitle = false) {
       let content = '';
@@ -159,30 +192,36 @@ export default {
       }
       return content;
     },
-    // ...
-    handleScroll() {
-      this.$nextTick(() => {
-        const listGroup = this.$refs.totalGroup.$el;
-        if (listGroup.getBoundingClientRect().bottom <= window.innerHeight) {
-          this.loadMoreNotices();
-        }
-      });
+    formatNoticeTitle(notice) {
+      let title = '';
+      if (notice.type === 'pcomment' || notice.type === 'ccomment') {
+        title += `${notice.senderName}：\n`;
+      }
+      return title;
     },
-    async loadMoreNotices() {
-      window.removeEventListener('scroll', this.handleScroll);
-      this.loading = true;
-      setTimeout(() => {
-        this.getNotices();
-      }, 500);
-      this.loading = false;
-      window.addEventListener('scroll', this.handleScroll);
+    //
+    getNoticeNum() {
+      request.get('/auth/getNoticeNum')
+        .then((response) => {
+          this.noticesNum.totalNum = response.data.totalNum;
+          this.noticesNum.unreadNum = response.data.unreadTotalNum;
+          this.noticesNum.readNum = response.data.readTotalNum;
+        })
+        .catch((error) => {
+          this.$toast.fail('通知数量获取失败');
+          console.error(error);
+        });
     },
     // 获取通知列表
+    // 我在这里突然想到了一个在非常小概率情况下会出现的bug，
+    // 就是获取了通知数量后到获取通知这一极小的时间段内通知的数量又改变了，
+    // 可见用getNoticeNum()的数量来标志获取通知结束是不合适的，所以看后端返回来的结果其实是最好的
     getNotices() {
       request.get('/auth/getNotice', {
         params: {
           requireID: this.getparams.requireID,
           pageSize: this.getparams.pageSize,
+          read: this.getparams.read,
         },
       })
         .then((response) => {
@@ -199,7 +238,11 @@ export default {
           //   Target       int    `json:"target"`
           //   PcommentID   int    `json:"pcommentID"`
           // }
-          this.getparams.requireID = response.data.totalNum;
+          if (response.data.code === 201) {
+            this.more = false;
+            return;
+          }
+          this.getparams.requireID = response.data.lastID;
           const newNotices = response.data.noticeList.sort((a, b) => {
             // 先比较是否已读
             if (a.read && !b.read) {
@@ -220,19 +263,19 @@ export default {
             return 0;
           });
           this.notices.push(...newNotices);
-        })
-        .then(() => {
-          this.loadMoreNotices();
+          if (response.data.noticeList.length < 5) this.more = false;
         })
         .catch((error) => {
           console.error(error);
         });
     },
-    // 查看通知
-    viewNotice(notice, index) {
-      this.currentNotice = notice;
-      this.currentIndex = index;
-      this.modalVisible = true;
+    // ...
+    async loadMoreNotices() {
+      this.loading = true;
+      setTimeout(() => {
+        this.getNotices();
+      }, 500);
+      this.loading = false;
     },
     // 标记为已读
     markAsRead() {
@@ -286,14 +329,11 @@ export default {
         }
       }, 100);
     },
-    formatDate(date) {
-      // 格式化日期时间
-      const d = new Date(date);
-      return `${d.getFullYear()}年${
-        d.getMonth() + 1
-      }月${d.getDate()}日 ${String(d.getHours())
-        .padStart(2, '0')}:${String(d.getMinutes())
-        .padStart(2, '0')}`;
+    // 查看通知
+    viewNotice(notice, index) {
+      this.currentNotice = notice;
+      this.currentIndex = index;
+      this.modalVisible = true;
     },
   },
 };
