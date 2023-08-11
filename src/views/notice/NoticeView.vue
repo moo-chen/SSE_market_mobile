@@ -4,12 +4,12 @@
     <van-list v-if="notices.length > 0" class="notification-list" ref="totalGroup">
       <!-- 标记未读 -->
       <van-cell
-            v-for="(notice, index) in nownotices"
-            :key="index"
-            :class="{ 'notification-unread': !notice.read }"
-            @click="viewNotice(notice,index)"
-        >
-          <template #icon>
+        v-for="(notice, index) in notices"
+        :key="index"
+        :class="{ 'notification-unread': !notice.read }"
+        @click="viewNotice(notice,index)"
+      >
+        <template #icon>
           <van-image
             v-if="notice.type==='pcomment'|| notice.type==='ccomment'"
             :src="notice.senderAvatar"
@@ -17,10 +17,10 @@
             height="48"
             round
           />
-          </template>
+        </template>
         <van-col style="margin-outside: 5px">
-          <van-row style="margin-top:5px">{{formatNoticeTitle(notice)}}</van-row>
-          <van-row style="margin-top: 5px">{{formatNoticeContent(notice)}}</van-row>
+          <van-row style="margin-top:5px">{{ formatNoticeTitle(notice) }}</van-row>
+          <van-row style="margin-top: 5px">{{ formatNoticeContent(notice) }}</van-row>
         </van-col>
         <van-badge :content="'New'"/>
       </van-cell>
@@ -37,22 +37,24 @@
       <div class="d-flex align-items-center" style="margin: 10px">
         <!-- 头像 -->
         <img
-            v-if="currentNotice.type==='pcomment'|| currentNotice.type==='ccomment'"
-            :src="currentNotice.senderAvatar"
-            width="48"
-            height="48"
-            class="avatar mr-2"
-            alt=""
+          v-if="currentNotice.type==='pcomment'|| currentNotice.type==='ccomment'"
+          :src="currentNotice.senderAvatar"
+          width="48"
+          height="48"
+          class="avatar mr-2"
+          alt=""
         >
         <div style="display: flex;flex-direction: column;">
           <!-- 标题 -->
           <van-col>
             <van-row v-if="currentNotice.type==='pcomment'
             || currentNotice.type==='ccomment'"
-                  class="title" STYLE="color: #409EFF">{{ currentNotice.senderName }}</van-row>
+                     class="title" STYLE="color: #409EFF">{{ currentNotice.senderName }}
+            </van-row>
             <van-row v-else class="title" STYLE="color:saddlebrown">系统通知：</van-row>
             <van-row style="font-size:10px;color: #888888">
-              {{ formatDate(currentNotice.time) }}</van-row>
+              {{ formatDate(currentNotice.time) }}
+            </van-row>
           </van-col>
           <!-- 内容和类型 -->
           <div style="display: flex;flex-direction: column;">
@@ -60,7 +62,8 @@
                   @click="showDetails" @keydown.enter="showDetails">评论了你的帖子: </span>
             <span v-if="currentNotice.type === 'ccomment'" class="postjump"
                   @click="showDetails" @keydown.enter="showDetails">回复了你的评论: </span>
-            <span v-if="currentNotice.type === 'punishment'" style="color: red">警告，你的账号出现违规： </span>
+            <span v-if="currentNotice.type === 'punishment'"
+                  style="color: red">警告，你的账号出现违规： </span>
             <span v-if="currentNotice.type === 'sue'">你的举报已得到处理： </span>
             <span v-if="currentNotice.type === 'feedback'">你的反馈已得到处理回复： </span>
             <span class="preview mb-2" style="color:black">{{ currentNotice.content }}</span>
@@ -80,11 +83,15 @@ export default {
     return {
       loading: true,
       page: 1,
-      pagesize: 10,
       notices: [],
       currentNotice: null,
       currentIndex: 0,
       modalVisible: false, // 弹出窗口是否可见
+      // 用来存通知分页查询的相关参数
+      getparams: {
+        pageSize: 5, // 每页查询条数
+        requireID: 0, // 查询ID，查询在此noticeID之前的通知，由于ID是越新越大的，也就是不管新来的通知
+      },
     };
   },
   mounted() {
@@ -96,7 +103,7 @@ export default {
       userInfo: (state) => state.userModule.userInfo,
     }),
     nownotices() {
-      return this.notices.slice(0, this.page * this.pagesize);
+      return this.notices;
     },
     isNightStyle() {
       if (JSON.parse(localStorage.getItem('Style')) === 'night') {
@@ -165,49 +172,61 @@ export default {
       window.removeEventListener('scroll', this.handleScroll);
       this.loading = true;
       setTimeout(() => {
-        this.page += 1;
+        this.getNotices();
       }, 500);
       this.loading = false;
       window.addEventListener('scroll', this.handleScroll);
     },
     // 获取通知列表
     getNotices() {
-      request.get('/auth/getNotice').then((response) => {
-        // 注意这里接受的notice的字段是小写开头的驼峰,下面是对应的go结构体
-        // type NoticeResponse struct {
-        //   NoticeID     int    `json:"noticeID"`
-        //   ReceiverName string `json:"receiverName"`
-        //   SenderName   string `json:"senderName"`
-        //   SenderAvatar string `json:"senderAvatar"`
-        //   Type         string `json:"type"`
-        //   Content      string `json:"content"`
-        //   Read         bool   `json:"read"`
-        //   PostID       int    `json:"postID"`
-        //   Target       int    `json:"target"`
-        //   PcommentID   int    `json:"pcommentID"`
-        // }
-        this.notices = response.data.sort((a, b) => {
-          // 先比较是否已读
-          if (a.read && !b.read) {
-            return 1;
-          } if (!a.read && b.read) {
-            return -1;
-          }
-          // 如果两个通知都已读或都未读，则比较时间
-          const timeA = Date.parse(a.time);
-          const timeB = Date.parse(b.time);
-          if (timeA < timeB) {
-            return 1;
-          } if (timeA > timeB) {
-            return -1;
-          }
-          return 0;
+      request.get('/auth/getNotice', {
+        params: {
+          requireID: this.getparams.requireID,
+          pageSize: this.getparams.pageSize,
+        },
+      })
+        .then((response) => {
+          // 注意这里接受的notice的字段是小写开头的驼峰,下面是对应的go结构体
+          // type NoticeResponse struct {
+          //   NoticeID     int    `json:"noticeID"`
+          //   ReceiverName string `json:"receiverName"`
+          //   SenderName   string `json:"senderName"`
+          //   SenderAvatar string `json:"senderAvatar"`
+          //   Type         string `json:"type"`
+          //   Content      string `json:"content"`
+          //   Read         bool   `json:"read"`
+          //   PostID       int    `json:"postID"`
+          //   Target       int    `json:"target"`
+          //   PcommentID   int    `json:"pcommentID"`
+          // }
+          this.getparams.requireID = response.data.totalNum;
+          const newNotices = response.data.noticeList.sort((a, b) => {
+            // 先比较是否已读
+            if (a.read && !b.read) {
+              return 1;
+            }
+            if (!a.read && b.read) {
+              return -1;
+            }
+            // 如果两个通知都已读或都未读，则比较时间
+            const timeA = Date.parse(a.time);
+            const timeB = Date.parse(b.time);
+            if (timeA < timeB) {
+              return 1;
+            }
+            if (timeA > timeB) {
+              return -1;
+            }
+            return 0;
+          });
+          this.notices.push(...newNotices);
+        })
+        .then(() => {
+          this.loadMoreNotices();
+        })
+        .catch((error) => {
+          console.error(error);
         });
-      }).then(() => {
-        this.loadMoreNotices();
-      }).catch((error) => {
-        console.error(error);
-      });
     },
     // 查看通知
     viewNotice(notice, index) {
@@ -219,12 +238,14 @@ export default {
     markAsRead() {
       if (this.currentNotice.read === false) {
         const { noticeID } = this.currentNotice;
-        request.patch(`/auth/readNotice/${noticeID}`, { read: true }).then(() => {
-          this.notices[this.currentIndex].read = true;
-          this.currentIndex = 0;
-        }).catch((error) => {
-          console.error(error);
-        });
+        request.patch(`/auth/readNotice/${noticeID}`, { read: true })
+          .then(() => {
+            this.notices[this.currentIndex].read = true;
+            this.currentIndex = 0;
+          })
+          .catch((error) => {
+            console.error(error);
+          });
       }
       this.currentNotice = null;
     },
@@ -243,7 +264,10 @@ export default {
           const link = this.$router.resolve({
             name: 'postDetails',
             query: {
-              id: nowNotice.postID, partition: this.partition, before: 'notice', pcommentID: nowNotice.target,
+              id: nowNotice.postID,
+              partition: this.partition,
+              before: 'notice',
+              pcommentID: nowNotice.target,
             },
           });
           window.open(link.href, '_blank');
@@ -251,7 +275,11 @@ export default {
           const link = this.$router.resolve({
             name: 'postDetails',
             query: {
-              id: nowNotice.postID, partition: this.partition, before: 'notice', pcommentID: nowNotice.pcommentID, ccommentID: nowNotice.target,
+              id: nowNotice.postID,
+              partition: this.partition,
+              before: 'notice',
+              pcommentID: nowNotice.pcommentID,
+              ccommentID: nowNotice.target,
             },
           });
           window.open(link.href, '_blank');
@@ -263,7 +291,9 @@ export default {
       const d = new Date(date);
       return `${d.getFullYear()}年${
         d.getMonth() + 1
-      }月${d.getDate()}日 ${String(d.getHours()).padStart(2, '0')}:${String(d.getMinutes()).padStart(2, '0')}`;
+      }月${d.getDate()}日 ${String(d.getHours())
+        .padStart(2, '0')}:${String(d.getMinutes())
+        .padStart(2, '0')}`;
     },
   },
 };
@@ -303,7 +333,7 @@ p {
 }
 
 .preview {
-  font-size:14px;
+  font-size: 14px;
   display: inline-block;
   max-width: 700px;
   overflow: hidden;
