@@ -1,20 +1,21 @@
 <template>
   <div class="post-form">
     <van-cell-group>
-      <van-field v-model="posts.title" label="标题" placeholder="请输入标题"></van-field>
+      <van-field v-model="posts.title" label-width="50px"
+      label="标题" placeholder="请输入标题"></van-field>
     </van-cell-group>
 
     <van-cell-group>
-      <van-field v-model="posts.content" label="正文"
-      type="textarea" rows="10" placeholder="请输入正文" class="custom-textarea"></van-field>
+      <van-field v-model="posts.content" label="正文" label-width="50px" clearable
+      type="textarea" rows="10" placeholder="请输入正文"></van-field>
     </van-cell-group>
 
-    <van-cell-group>
+    <van-cell-group title="图片上传"><van-cell>
     <van-uploader v-model="fileList" action='https://localhost:8080/api/auth/uploadphotos'
       multiple :on-preview='handlePictureCardPreview' list-type='picture-card'
       :on-remove='handleRemove' :on-success='handleSuccess'
       accept=".jpg,.png">
-    </van-uploader>
+    </van-uploader></van-cell>
     </van-cell-group>
     <van-dialog v-model="dialogVisible">
       <img width='100%' :src='dialogImageUrl' alt='' />
@@ -23,6 +24,7 @@
     <van-cell-group>
       <van-field
         v-model="posts.partition"
+        label-width="50px"
         clickable
         readonly
         label="分区"
