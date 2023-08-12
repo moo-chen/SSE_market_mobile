@@ -11,150 +11,450 @@
       placeholder
       safe-area-inset-top
     />
-  <div class='postDetails' style="margin-left:10px">
-    <van-cell class='mx-auto my-5' style="max-width: 800px;"
-    :style="{ 'background-color': isNightStyle ? 'rgb(50,50,50)' : 'white',
+    <!--帖子详情-->
+    <div class='postDetails' style="margin-left:10px">
+      <van-cell class='mx-auto my-5' style="max-width: 750px;"
+                :style="{ 'background-color': isNightStyle ? 'rgb(50,50,50)' : 'white',
           'color': isNightStyle ? 'gray' : null}">
-      <van-popup v-model="post.showMenu" position="bottom" round
-                 :style="{ height: '40' }" @click.stop>
-          <van-row
-              :style="{ 'background-color': isNightStyle ? 'rgb(50,50,50)' : 'white',
+        <van-popup v-model="post.showMenu" position="bottom" round
+                   :style="{ height: '40' }" @click.stop>
+          <div
+            :style="{ 'background-color': isNightStyle ? 'rgb(50,50,50)' : 'white',
                     'color': isNightStyle ? 'gray' : null,
                     margin:'20px'}">
-            <van-icon class="mr-2" :name="post.isSaved ? 'star-o' : 'star'"
-            @click.stop="save()" :class="{ 'text-warning': post.isSaved }"></van-icon>收藏
-          </van-row>
-        <hr>
+            <van-icon size="27px" :name="post.isSaved ? 'star-o' : 'star'"
+                      @click.stop="save()" :class="{ 'text-warning': post.isSaved }"></van-icon>
+            收藏
+          </div>
+          <hr>
           <van-row
-                   v-if="this.post.authorTelephone !== userInfo.phone"
-          :style="{ 'background-color': isNightStyle ? 'rgb(50,50,50)' : 'white',
+            v-if="this.post.authorTelephone !== userInfo.phone"
+            :style="{ 'background-color': isNightStyle ? 'rgb(50,50,50)' : 'white',
                     'color': isNightStyle ? 'gray' : null,
                     margin:'20px'}"
             @click.stop="showReportModal = true">
-            <van-icon name="failure" class="mr-2"></van-icon>举报
+            <van-icon size="27px" name="failure" class="mr-2"></van-icon>
+            举报
           </van-row>
           <van-popup v-model="showReportModal" title="举报" @hidden="clearReportReason"
-            @ok="submitReport('post',post.postID)" ok-title="Submit">
+                     @ok="submitReport('post',post.postID)" ok-title="Submit">
             <van-field v-model="reportReason" placeholder="请输入举报原因" rows="8">
             </van-field>
           </van-popup>
           <van-cell v-if="this.post.authorTelephone === userInfo.phone"
-          :style="{ 'background-color': isNightStyle ? 'rgb(50,50,50)' : 'white',
+                    :style="{ 'background-color': isNightStyle ? 'rgb(50,50,50)' : 'white',
                     'color': isNightStyle ? 'gray' : null}"
-            @click.stop="showDeleteModal = true">
-            <van-icon name="delete-o" class="mr-2"></van-icon>删除
+                    @click.stop="showDeleteModal = true">
+            <van-icon size="27px" name="delete-o"></van-icon>
+            删除
           </van-cell>
           <van-popup v-model="showDeleteModal" title="确认删除" ok-title="Confirm"
-            @ok="postdelete(post)">
+                     @ok="postdelete(post)">
             <p>你确定要删除这个帖子吗？</p>
           </van-popup>
-      </van-popup>
-      <div class="van-row--flex mb-2">
-        <van-image :src="post.authorAvatar"
-                   width="48"
-                   height="48"
-                   round class="mr-3"></van-image>
-        <div class='author-box mb-2' :style="{ 'background-color': isNightStyle ?
-                  'rgb(246, 155, 10)' : 'rgb(17, 167, 226)'}">
-          {{ post.author }}</div>
-      </div>
-      <van-row  class="title-font-size" style="margin: 30px">{{ post.title }}</van-row>
-      <van-row class="content-font-size">{{ post.content }}</van-row>
-      <div v-if="fileListGet.length > 0" class="photo-viewer">
-        <div class="thumbnail-container">
-          <template v-if="fileListGet.length === 4">
-            <div>
-              <img :src="fileListGet[0]"
-                  width="100px"
-                  height="100px"
-                  @click="handlePictureCardPreview(0)"
-                  @keyup.enter="handlePictureCardPreview(0)"
-                   @loadeddata="handlePictureCardPreview(0)"
-                  alt="Post Photo" preview-text="Post Photo"
-                  preview="1"/>
-              <img :src="fileListGet[1]"
-                  width="100px"
-                  height="100px"
-                  style="margin-top:20px"
-                  @click="handlePictureCardPreview(1)"
-                  @keyup.enter="handlePictureCardPreview(1)"
-                  @loadeddata="handlePictureCardPreview(1)"
-                   alt="Post Photo"
-                  preview/>
-            </div>
-            <div>
-              <img :src="fileListGet[2]"
-                  width="100px"
-                  height="100px"
-                  @click="handlePictureCardPreview(2)"
-                  @keyup.enter="handlePictureCardPreview(2)"
-                   @loadeddata="handlePictureCardPreview(2)"
-                  alt="Post Photo"
-                  preview/>
-              <img :src="fileListGet[3]"
-                  width="100px"
-                  height="100px"
-                  style="margin-top:20px"
-                  @click="handlePictureCardPreview(3)"
-                  @keyup.enter="handlePictureCardPreview(3)"
-                   @loadeddata="handlePictureCardPreview(3)"
-                  alt="Post Photo" preview/>
-            </div>
-          </template>
-          <template v-else>
-            <div v-for="(file, index) in fileListGet" :key="index">
-              <img :src="file"
-                  width="100px"
-                  height="100px"
-                  @click="handlePictureCardPreview(index)"
-                  @keyup.enter="handlePictureCardPreview(index)"
-                   @loadeddata="handlePictureCardPreview(index)"
-                  alt="Post Photo" preview/>
-            </div>
-          </template>
+        </van-popup>
+        <div class="van-row--flex">
+          <van-image :src="post.authorAvatar"
+                     width="48"
+                     height="48"
+                     round class="mr-3"></van-image>
+          <van-col>
+            <van-tag
+              :color="isNightStyle ? 'rgb(246, 155, 10)' : 'rgb(17, 167, 226)'">
+              {{ post.author }}
+            </van-tag>
+            <van-row class="title-font-size"
+                     style="margin: 10px">{{ post.title }}
+            </van-row>
+          </van-col>
         </div>
-      </div>
-      <div class="d-flex justify-content-between">
-        <small class="text-muted">{{ formatDate(post.postTime) }}</small>
-      </div>
-      <div class='van-row--flex mt-3'>
-        <div class="text-muted">
-          <van-icon :name="post.isLiked ? 'like' : 'like-o'" :color="post.isLiked ? '#ee0a24' : ''"
-          @click.stop="like()" :class="{ 'text-danger': post.isLiked }"></van-icon>
-          {{ post.like }}
+        <van-row class="van-row--flex content-font-size"
+                 style="margin-bottom: 10px">
+          {{ post.content }}
+        </van-row>
+        <div v-if="fileListGet.length > 0" class="photo-viewer van-row">
+          <div class="thumbnail-container">
+            <template v-if="fileListGet.length === 4">
+              <div>
+                <img :src="fileListGet[0]"
+                     width="100px"
+                     height="100px"
+                     @click="handlePictureCardPreview(0)"
+                     @keyup.enter="handlePictureCardPreview(0)"
+                     @loadeddata="handlePictureCardPreview(0)"
+                     alt="Post Photo" preview-text="Post Photo"
+                     preview="1"/>
+                <img :src="fileListGet[1]"
+                     width="100px"
+                     height="100px"
+                     style="margin-top:20px"
+                     @click="handlePictureCardPreview(1)"
+                     @keyup.enter="handlePictureCardPreview(1)"
+                     @loadeddata="handlePictureCardPreview(1)"
+                     alt="Post Photo"
+                     preview/>
+              </div>
+              <div>
+                <img :src="fileListGet[2]"
+                     width="100px"
+                     height="100px"
+                     @click="handlePictureCardPreview(2)"
+                     @keyup.enter="handlePictureCardPreview(2)"
+                     @loadeddata="handlePictureCardPreview(2)"
+                     alt="Post Photo"
+                     preview/>
+                <img :src="fileListGet[3]"
+                     width="100px"
+                     height="100px"
+                     style="margin-top:20px"
+                     @click="handlePictureCardPreview(3)"
+                     @keyup.enter="handlePictureCardPreview(3)"
+                     @loadeddata="handlePictureCardPreview(3)"
+                     alt="Post Photo" preview/>
+              </div>
+            </template>
+            <template v-else>
+              <div v-for="(file, index) in fileListGet" :key="index">
+                <img :src="file"
+                     width="100px"
+                     height="100px"
+                     @click="handlePictureCardPreview(index)"
+                     @keyup.enter="handlePictureCardPreview(index)"
+                     @loadeddata="handlePictureCardPreview(index)"
+                     alt="Post Photo" preview/>
+              </div>
+            </template>
+          </div>
         </div>
-        <div class="text-muted">
-              <van-icon name="eye-o"></van-icon> {{ post.browse }}
+        <div class="d-flex justify-content-between">
+          <small class="text-muted">{{ formatDate(post.postTime) }}</small>
         </div>
-        <div class='text-muted'><van-icon name='comment-o'></van-icon> {{ commentsNum }}</div>
-      </div>
-    </van-cell>
-    <van-button @click="post.showCommentForm
-            = !post.showCommentForm" type="primary">
-      {{ post.showCommentForm ? '隐藏评论' : '评论' }}
-    </van-button>
-  <!--显示帖子评论窗口-->
-  <div v-if="post.showCommentForm" style="margin-top:10px">
+        <div class='van-row--flex' style="margin-bottom: 5px">
+          <div class="text-muted">
+            <van-icon size="27px" :name="post.isLiked ? 'like' : 'like-o'"
+                      :color="post.isLiked ? '#ee0a24' : ''"
+                      @click.stop="like()" :class="{ 'text-danger': post.isLiked }"></van-icon>
+            {{ post.like }}
+          </div>
+          <div class="text-muted">
+            <van-icon size="27px" name="eye-o"></van-icon>
+            {{ post.browse }}
+          </div>
+          <div class='text-muted'>
+            <van-icon size="27px" name='comment-o'></van-icon>
+            {{ commentsNum }}
+          </div>
+          <van-button class="div" @click="post.showCommentForm
+            = !post.showCommentForm" type="primary" plain>
+            {{ post.showCommentForm ? '隐藏评论' : '评论' }}
+          </van-button>
+        </div>
+      </van-cell>
+
+      <!--显示帖子评论窗口-->
+      <van-popup v-model="post.showCommentForm" position="bottom" :style="{ height: '30%' }">
         <div>
           <van-field v-model="pcomment.content"
-          placeholder="请写下你的精彩评论..." rows="3">
+                     placeholder="请写下你的精彩评论..." rows="3">
           </van-field>
         </div>
-        <div>
-          <van-button  type='primary' @click="showEmojiStatus()">😀</van-button>
-            <div v-if="showEmoji">
-              <picker
-                :include="['people']"
-                :showSearch="false"
-                :showPreview="false"
-                :showCategories="false"
-                @select="addEmojiToPcomment"
-              />
-            </div>
+        <div class="van-row">
+          <van-button style="margin-right: 2px"
+                      type='primary' size="small" plain
+                      @click="showEmojiStatus()">😀
+          </van-button>
+          <div v-if="showEmoji">
+            <picker
+              :include="['people']"
+              :showSearch="false"
+              :showPreview="false"
+              :showCategories="false"
+              @select="addEmojiToPcomment"
+            />
+          </div>
+          <van-button
+            @click="pcommentPost"
+            type="primary" plain>提交评论
+          </van-button>
         </div>
-        <b-button @click="pcommentPost" type="primary">提交评论</b-button>
+
+      </van-popup>
     </div>
-  </div>
+
+    <!--显示和发表帖子评论、评论的评论-->
+    <div class='comment'>
+      <!--帖子评论排序按钮-->
+      <div class="van-row--flex">
+        <van-button @click="sortkind='Date';comments=sortcomments(comments)"
+                    plain hairline
+                    type="primary" size="small" style="margin-left: 2px">按时间排序
+        </van-button>
+        <van-button @click="sortkind='heat';comments=sortcomments(comments)"
+                    plain hairline
+                    type="primary" size="small" style="margin-left: 2px">按热度排序
+        </van-button>
+      </div>
+      <!-- 帖子评论-->
+      <van-list name="comment-list" tag="div">
+        <div v-for="(comment, index) in visibleComments"
+             :key="index" ref="commentRef" :id="`comment-${comment.pcommentID}`">
+          <div class="van-hairline--top-bottom"
+               :style="{ 'background-color': isNightStyle ? 'rgb(50,50,50)' : 'white',
+          'color': isNightStyle ? 'gray' : null }">
+            <!-- 显示评论详情-->
+            <div style="margin-bottom: 0.5px">
+              <!--              评论头像-->
+              <div class="van-col">
+                <van-image :src="comment.authorAvatar"
+                           width="48"
+                           height="48"
+                           round style="margin-right: 20px"></van-image>
+              </div>
+              <!--        评论作者和评论内容-->
+              <div class="van-row" style="margin-top: 20px">
+                <div class="van-row--flex author-name">{{ comment.author }}</div>
+                <div class="comment-content">{{ comment.content }}</div>
+                <!--显示每个评论的点赞和回复数，点赞和回复图片对应点赞和回复功能-->
+                <div class='van-row--flex justify-content-between align-items-center'>
+                  <div class="text-muted">
+                    <van-icon size="27px" :name="comment.isLiked ? 'like' : 'like-o'"
+                              :color="comment.isLiked ? '#ee0a24' : ''"
+                              @click.stop="pclike(index)"
+                              :class="{ 'text-danger': comment.isLiked }">
+                    </van-icon>
+                    {{ comment.likeNum }}
+                  </div>
+                  <div class="text-muted">{{ formatDate(comment.commentTime) }}</div>
+                  <van-icon size="27px" name="comment-o" @click.stop="comment.showReplyForm
+            = !comment.showReplyForm">
+                  </van-icon>
+                  <div class='text-muted' @click.stop>
+                    <van-icon size="27px" name='ellipsis' @click.stop="comment.showMenu =
+              !comment.showMenu"></van-icon>
+                  </div>
+                </div>
+                <!--对帖子评论的更多功能选择菜单：举报和删除-->
+                <van-popup
+                  v-model='comment.showMenu'
+                  position="bottom"
+                  round
+                  :style="{height:'10%'}"
+                  @click.stop
+                >
+                  <!--                  举报评论按钮-->
+                  <div class="van-row--flex"
+                       v-if='comment.authorTelephone !== userInfo.phone'
+                       @click.stop='showReportModal = true'
+                       @keydown="handleKeyboardEvent"
+                  >
+                    <van-icon size="27px" name="failure" class='mr-2'></van-icon>
+                    举报
+                  </div>
+                  <!--                  提交举报弹窗-->
+                  <van-dialog v-model='showReportModal'
+                              title='举报'
+                              @confirm='submitReport("pcomment",comment.pcommentID)'
+                              @cancel='clearReportReason'
+                              @hidden='clearReportReason'
+                              confirm-button-text="提交"
+                              show-cancel-button>
+                    <van-field v-model='reportReason' placeholder='请输入举报原因' rows='8'>
+                    </van-field>
+                  </van-dialog>
+                  <!--                  删除评论按钮-->
+                  <div
+                    v-if='comment.authorTelephone === userInfo.phone'
+                    @click.stop='showDeleteModal = true'
+                    @keydown.stop="handleKeyboardEvent"
+                  >
+                    <van-icon size="27px" name="delete-o" class='mr-2'></van-icon>
+                    删除
+                  </div>
+                  <!--              确认删除弹窗    -->
+                  <van-dialog
+                    v-model='showDeleteModal'
+                    show-cancel-button
+                    @confirm='pcommentdelete(comment)'
+                  >
+                    <p>你确定要删除这条评论吗？</p>
+                  </van-dialog>
+                </van-popup>
+                <!--如果点击了评论，将显示评论窗口-->
+                <van-popup
+                  round
+                  position="bottom" :style="{ height: '30%' }"
+                  v-model="comment.showReplyForm">
+                  <van-form @submit="ccommentPost(index)">
+                    <van-field v-model="ccomment.content"
+                               placeholder="请写下你的精彩评论..." autosize>
+                    </van-field>
+                    <!--                    表情选择器和提交评论按钮-->
+                    <div>
+                      <van-button style="margin-right: 2px"
+                                  type="default"
+                                  plain size="small"
+                                  @click="showEmojiStatus()">😀
+                      </van-button>
+                      <div v-if="showEmoji">
+                        <picker
+                          :include="['people']"
+                          :showSearch="false"
+                          :showPreview="false"
+                          :showCategories="false"
+                          @select="addEmojiToCcomment"
+                        />
+                      </div>
+                      <van-button type="primary" plain native-type="submit">
+                        提交评论
+                      </van-button>
+                    </div>
+                  </van-form>
+                </van-popup>
+              </div>
+            </div>
+            <!-- 查看回复列表按钮-->
+            <van-button v-if="comment.subComments.length > 0"
+                        @click="showRepliesModal=true;showcommentsindex=index"
+                        size="small"
+                        type="default"
+                        plain>
+              查看回复共{{ len(comment.subComments) }}条
+            </van-button>
+          </div>
+        </div>
+      </van-list>
+      <!-- 评论的评论（下弹窗） -->
+      <van-popup
+        position="bottom"
+        round
+        :style="{ height: '80%' }"
+        v-model="showRepliesModal">
+        <!--显示评论的评论/回复列表-->
+        <van-list name="comment-list">
+          <div v-for="(subComment, subIndex) in visibleSubComments(showcommentsindex)"
+               :key="subIndex" :id="`ccomment-${subComment.ccommentID}`" tabindex="0">
+            <!--   用线来间隔-->
+            <hr>
+            <div class="van-row">
+              <!-- 头像-->
+              <div class="van-col" style="margin-right: 5px">
+                <van-image width="48"
+                           height="48" round class="mr-3"
+                           :src="subComment.authorAvatar"></van-image>
+              </div>
+              <!-- 作者名称和回复内容、时间&点赞、举报和回复图标-->
+              <div class="van-row">
+                <!--作者名称和回复内容-->
+                <div class="van-row">
+                  <div class="van-row--flex author-name">{{ subComment.author }}</div>
+                  <div
+                    class="van-row--flex"
+                    v-if="subComment.userTargetName !== ''">
+                            <span
+                              class="comment-content"
+                              style="color: cadetblue">
+                              回复@{{ subComment.userTargetName }}:</span>
+                  </div>
+                  <div
+                    class="comment-content">{{ subComment.content }}
+                  </div>
+                </div>
+                <!--回复时间&点赞、举报和回复图标-->
+                <div class="van-row--flex">
+                  <!--回复时间-->
+                  <div class="text-muted">{{ formatDate(subComment.commentTime) }}</div>
+                  <!--点赞图标-->
+                  <div class="text-muted">
+                    <van-icon size="27px" :name="subComment.isLiked ? 'like' : 'like-o'"
+                              :color="subComment.isLiked ? '#ee0a24' : ''"
+                              @click.stop="cclike(showcommentsindex,subIndex)"
+                              :class="{ 'text-danger': subComment.isLiked }">
+                    </van-icon>
+                    {{ subComment.likeNum }}
+                  </div>
+                  <!--举报/删除图标-->
+                  <div class='text-muted'>
+                    <!--举报图标-->
+                    <div v-if="subComment.authorTelephone !== userInfo.phone"
+                         style="position: absolute; top: 0; right: 0;">
+                      <van-icon size="27px" name='failure'
+                                @click.stop='showReportModal = true'></van-icon>
+                      <van-popup
+                        v-model='showReportModal'
+                        title='举报'
+                        @hidden='clearReportReason'
+                        @ok='submitReport("ccomment",subComment.ccommentID)'
+                        ok-title='Submit'
+                      >
+                        <van-field v-model='reportReason'
+                                   placeholder='请输入举报原因' rows='8'></van-field>
+                      </van-popup>
+                    </div>
+                    <!--删除图标-->
+                    <div v-else>
+                      <van-icon  size="27px" name='delete-o'
+                                @click.stop='showDeleteModal = true'></van-icon>
+                      <van-dialog
+                        v-model='showDeleteModal'
+                        confirm-button-text='确认'
+                        show-cancel-button
+                        @confirm='ccommentdelete(subComment)'
+                      >
+                        <p>你确定要删除这条评论吗？</p>
+                      </van-dialog>
+                    </div>
+                  </div>
+                  <!--回复按钮，点击后跳出评论的评论的回复窗口-->
+                  <div class="text-muted">
+                    <van-icon size="27px"
+                      name="comment-o"
+                      @click="replyshow = !replyshow; nowReplyComment=subComment">
+                      回复
+                    </van-icon>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </van-list>
+        <!-- 弹出评论回复窗口-->
+        <van-popup position="bottom" round
+                   :style="{height:'30%'}"
+                   v-model="replyshow">
+          <form @submit.prevent=
+                  "ccommentPost(showcommentsindex,
+                          nowReplyComment.author,
+                          nowReplyComment.ccommentID)">
+            <van-field v-model="ccomment.content"
+                       :placeholder="'回复@'+nowReplyComment.author" rows="3">
+            </van-field>
+            <!--表情选择器-->
+            <div>
+              <van-button style="margin-right: 2px"
+                          type='primary' size="small" plain
+                          @click="showEmojiStatus()">😀
+              </van-button>
+              <div v-if="showEmoji">
+                <picker
+                  :include="['people']"
+                  :showSearch="false"
+                  :showPreview="false"
+                  :showCategories="false"
+                  @select="addEmojiToCcomment"
+                />
+              </div>
+              <van-button type="primary" plain native-type="submit">
+                提交回复
+              </van-button>
+            </div>
+          </form>
+        </van-popup>
+      </van-popup>
+      <!--加载更多帖子评论-->
+      <van-button v-if="visibleComments.length < comments.length" @click="showAllComments()">
+        {{ allComments ? '折叠评论' : '展开全部评论' }}
+      </van-button>
+    </div>
   </div>
 
 </template>
@@ -168,42 +468,6 @@ import { Picker } from 'emoji-mart-vue';
 export default {
   components: {
     Picker,
-  },
-  computed: {
-    // 计算属性，根据当前展示的评论数和每次展示的评论数量，返回可见的评论
-    visibleComments() {
-      if (this.allComments === true) {
-        return this.comments;
-      }
-      return this.comments.slice(0, 10);
-    },
-    fileListGet() {
-      console.log(this.post.photos.split('|'));
-      if (this.post.photos === '') return [];
-      return this.post.photos.split('|');
-    },
-    ...mapState({
-      userInfo: (state) => state.userModule.userInfo,
-    }),
-    commentsNum() {
-      let num = len(this.comments);
-      for (let i = 0; i < this.comments.length; i += 1) {
-        const comment = this.comments[i];
-        num += len(comment.subComments);
-      }
-      return num;
-    },
-    isNightStyle() {
-      if (JSON.parse(localStorage.getItem('Style')) === 'night') {
-        return true;
-      }
-      return false;
-    },
-  },
-  mounted() {
-    // 获取当前评论ID
-    this.currentPcommentID = this.$route.query.pcommentID;
-    this.currentCcommentID = this.$route.query.ccommentID;
   },
   data() {
     return {
@@ -233,7 +497,7 @@ export default {
         isSaved: '',
         isLiked: '',
         showMenu: '',
-        showCommentForm: '',
+        showCommentForm: false,
         photos: '',
         browse: '',
       },
@@ -262,6 +526,37 @@ export default {
       showRepliesModal: false, // 显示窗口
       showEmoji: false,
     };
+  },
+  computed: {
+    ...mapState({
+      userInfo: (state) => state.userModule.userInfo,
+    }),
+    commentsNum() {
+      let num = len(this.comments);
+      for (let i = 0; i < this.comments.length; i += 1) {
+        const comment = this.comments[i];
+        num += len(comment.subComments);
+      }
+      return num;
+    },
+    fileListGet() {
+      console.log(this.post.photos.split('|'));
+      if (this.post.photos === '') return [];
+      return this.post.photos.split('|');
+    },
+    isNightStyle() {
+      if (JSON.parse(localStorage.getItem('Style')) === 'night') {
+        return true;
+      }
+      return false;
+    },
+    // 计算属性，根据当前展示的评论数和每次展示的评论数量，返回可见的评论
+    visibleComments() {
+      if (this.allComments === true) {
+        return this.comments;
+      }
+      return this.comments.slice(0, 10);
+    },
   },
 
   created() {
@@ -296,7 +591,10 @@ export default {
     }
     this.userTelephone = this.userInfo.phone;
     // 根据该id向后端发送请求，获取该帖子的详细信息，并展示在页面上
-    this.postShowDetails({ userTelephone: this.userTelephone, postID: this.post.postID })
+    this.postShowDetails({
+      userTelephone: this.userTelephone,
+      postID: this.post.postID,
+    })
       .then((post) => {
         this.post.postID = post.data.PostID;
         this.post.author = post.data.UserName;
@@ -320,16 +618,243 @@ export default {
     // 这里或许有比setTimeout更好的写法，但是暂时写不出来，
     // 所以先用setTimeout的方法来确保pcommentsShow执行完成之后再执行this.scrollToComment()
     setTimeout(() => {
-      this.scrollToComment();
+      // this.scrollToComment();
     }, 500);
   },
-  beforeRouteLeave(to, from, next) {
-    // 返回上一页面时清空本地缓存
-    localStorage.removeItem('PostID');
-    localStorage.removeItem('Before');
-    next();
+  mounted() {
+    // 获取当前评论ID
+    this.currentPcommentID = this.$route.query.pcommentID;
+    this.currentCcommentID = this.$route.query.ccommentID;
   },
   methods: {
+    addEmojiToCcomment(emoji) {
+      this.ccomment.content += emoji.native;
+    },
+    addEmojiToPcomment(emoji) {
+      this.pcomment.content += emoji.native;
+    },
+    cclike(index, subIndex) {
+      this.ccommentlike({
+        userTelephone: this.userTelephone,
+        ccommentID: this.comments[index].subComments[subIndex].ccommentID,
+        isLiked: this.comments[index].subComments[subIndex].isLiked,
+      })
+        .then(() => {
+        })
+        .catch((err) => {
+          console.error(err);
+        });
+      // 更新点赞状态及点赞数
+      // eslint-disable-next-line max-len
+      this.comments[index].subComments[subIndex].isLiked = !this.comments[index].subComments[subIndex].isLiked;
+      // eslint-disable-next-line max-len
+      if (this.comments[index].subComments[subIndex].isLiked) {
+        this.comments[index].subComments[subIndex].likeNum += 1;
+      } else {
+        this.comments[index].subComments[subIndex].likeNum -= 1;
+      }
+    },
+    // 发表评论的评论或者回复评论的评论
+    ccommentPost(index, author, ccommentID) {
+      const comment = this.comments[index];
+      this.ccomment.postID = this.post.postID;
+      this.ccomment.pcommentID = comment.pcommentID;
+      this.ccomment.userTelephone = this.userTelephone;
+      this.ccomment.userTargetName = author;
+      this.ccomment.ccommentID = ccommentID;
+      this.postCcomment(this.ccomment)
+        .then(() => {
+          // 弹窗提示
+          this.$toast.success('回复成功');
+          setTimeout(() => {
+            this.showcommentsindex = 0;
+            this.nowReplyComment = '';
+            this.replyshow = false;
+            this.pcommentsShow();
+            // 清空输入的内容
+            this.ccomment.content = '';
+            this.ccomment.ccommentID = 0;
+          }, 1000);
+        })
+        .catch((err) => {
+          this.$toast.fail(`回复失败${err.response.data.msg}`);
+        });
+    },
+    ccommentdelete(SubComment) {
+      this.deleteCcomment({
+        ccommentID: SubComment.ccommentID,
+      })
+        .then(() => {
+          this.$toast.success('删除成功');
+          this.$router.go(0);
+        })
+        .catch((err) => {
+          console.error(err);
+        });
+    },
+    clearReportReason() {
+      this.reportReason = '';
+    },
+    formatDate(date) {
+      // 格式化日期时间
+      const d = new Date(date);
+      return `${d.getFullYear()}年${
+        d.getMonth() + 1
+      }月${d.getDate()}日 ${String(d.getHours())
+        .padStart(2, '0')}:${String(d.getMinutes())
+        .padStart(2, '0')}:${String(d.getSeconds())
+        .padStart(2, '0')}`;
+    },
+    goback() {
+      console.log(this.before);
+      if (this.before === 'home') {
+        this.$router.replace({
+          name: 'home',
+          query: { partitions: this.partition },
+        });
+      } else if (this.before === 'save') {
+        this.$router.replace({ name: 'save' });
+      } else if (this.before === 'history') {
+        this.$router.replace({ name: 'history' });
+      } else if (this.before === 'notice') {
+        this.$router.replace({ name: 'notice' });
+      }
+    },
+    handleKeyboardEvent() {
+      // 处理键盘事件，即使是一个空的处理程序
+    },
+    handlePictureCardPreview(index) {
+      console.log(index);
+      this.$previewRefresh();
+    },
+    len,
+    like() {
+      const userTelephone = this.userInfo.phone;
+      // 请求
+      this.postLike({
+        userTelephone,
+        postID: this.post.postID,
+        isLiked: this.post.isLiked,
+      })
+        .then(() => {
+        })
+        .catch((err) => {
+          console.error(err);
+        });
+      // 更新点赞状态及点赞数
+      this.post.isLiked = !this.post.isLiked;
+      if (this.post.isLiked) {
+        this.post.like += 1;
+      } else {
+        this.post.like -= 1;
+      }
+    },
+    pclike(index) {
+      this.pcommentlike({
+        userTelephone: this.userTelephone,
+        pcommentID: this.comments[index].pcommentID,
+        isLiked: this.comments[index].isLiked,
+      })
+        .then(() => {
+        })
+        .catch((err) => {
+          console.error(err);
+        });
+      // 更新点赞状态及点赞数
+      this.comments[index].isLiked = !this.comments[index].isLiked;
+      if (this.comments[index].isLiked) {
+        this.comments[index].likeNum += 1;
+      } else {
+        this.comments[index].likeNum -= 1;
+      }
+    },
+    // 发表帖子评论
+    pcommentPost() {
+      this.pcomment.postID = this.post.postID;
+      this.pcomment.userTelephone = this.userTelephone;
+      this.postPcomment(this.pcomment)
+        .then(() => {
+          this.$toast.success('评论成功');
+          setTimeout(() => {
+            this.pcommentsShow();
+            this.pcomment.content = '';
+          }, 1000);
+        })
+        .catch((err) => {
+          this.$toast.fail(`评论失败${err.response.data.msg}`);
+        });
+    },
+    pcommentdelete(comment) {
+      this.deletePcomment({
+        pcommentID: comment.pcommentID,
+      })
+        .then(() => {
+          this.$toast.success('删除成功');
+          this.$router.go(0);
+        })
+        .catch((err) => {
+          console.error(err);
+        });
+    },
+    async pcommentsShow() {
+      const postid = this.post.postID;
+      // 请求
+      try {
+        const { data } = await this.showPcomments({
+          userTelephone: this.userTelephone,
+          postID: postid,
+        });
+        const comments = data.map((pcomment) => ({
+          pcommentID: pcomment.PcommentID,
+          author: pcomment.Author,
+          authorAvatar: pcomment.AuthorAvatar,
+          authorTelephone: pcomment.AuthorTelephone,
+          commentTime: pcomment.CommentTime,
+          content: pcomment.Content,
+          likeNum: pcomment.LikeNum,
+          subComments: pcomment.SubComments,
+          isLiked: pcomment.IsLiked,
+          showMenu: false,
+          showReplyForm: false,
+          showAllReplies: false,
+          heat: pcomment.LikeNum + len(pcomment.SubComments),
+        }));
+        this.comments = this.sortcomments(comments);
+        // .sort((a, b) => new Date(b.commentTime) - new Date(a.commentTime))
+        // this.comments = data;
+      } catch (err) {
+        console.error(err);
+      }
+    },
+    postdelete() {
+      this.deletepost({
+        postID: this.post.postID,
+      })
+        .then(() => {
+          this.$toast.success('删除成功');
+          this.$router.go(-1);
+        })
+        .catch((err) => {
+          this.$toast.fail(`删除失败${err.response.date.msg}`);
+          console.error(err);
+        });
+    },
+    save() {
+      const userTelephone = this.userInfo.phone;
+      // 请求
+      this.postSave({
+        userTelephone,
+        postID: this.post.postID,
+        isSaved: this.post.isSaved,
+      })
+        .then(() => {
+        })
+        .catch((err) => {
+          console.error(err);
+        });
+      // 更新点赞状态及点赞数
+      this.post.isSaved = !this.post.isSaved;
+    },
     scrollToComment() {
       console.log('scrollToComment');
       // 获取当前评论所在的元素
@@ -345,8 +870,11 @@ export default {
         const get = new Promise((resolve, reject) => {
           setTimeout(() => {
             commentEl = document.getElementById(`comment-${this.currentPcommentID}`);
-            if (commentEl) resolve(commentEl);
-            else reject(commentEl);
+            if (commentEl) {
+              resolve(commentEl);
+            } else {
+              reject(commentEl);
+            }
           });
         });
         get.then(() => {
@@ -382,9 +910,10 @@ export default {
               }
             }, 500);
           }
-        }).catch((err) => {
-          console.log(err);
-        });
+        })
+          .catch((err) => {
+            console.log(err);
+          });
       } else {
         // 使用vue-scrollto插件平滑滚动到元素所在位置
         this.$scrollTo(commentEl, {
@@ -407,8 +936,11 @@ export default {
               const get = new Promise((resolve, reject) => {
                 setTimeout(() => {
                   childEl = document.getElementById(`ccomment-${this.currentCcommentID}`);
-                  if (childEl) resolve();
-                  else reject();
+                  if (childEl) {
+                    resolve();
+                  } else {
+                    reject();
+                  }
                 });
               });
               get.then(() => {
@@ -417,19 +949,18 @@ export default {
                 setTimeout(() => {
                   childEl.classList.remove('blink');
                 }, 10000);
-              }).catch((error) => {
-                console.log(error);
-              });
+              })
+                .catch((error) => {
+                  console.log(error);
+                });
             }
           });
         }
       }
     },
-    handlePictureCardPreview(index) {
-      console.log(index);
-      this.$previewRefresh();
+    showAllComments() {
+      this.allComments = !this.allComments;// 将帖子所有评论都展示出来
     },
-    len,
     ...mapActions('postModule', { postShowDetails: 'showDetails' }),
     ...mapActions('postModule', { postLike: 'like' }),
     ...mapActions('userModule', { postSave: 'save' }),
@@ -446,180 +977,8 @@ export default {
       // 将评论的所有子评论都显示出来
       this.comments[index].showAllReplies = !this.comments[index].showAllReplies;
     },
-    showAllComments() {
-      this.allComments = !this.allComments;// 将帖子所有评论都展示出来
-    },
-    goback() {
-      console.log(this.before);
-      if (this.before === 'home') {
-        this.$router.replace({ name: 'home', query: { partitions: this.partition } });
-      } else if (this.before === 'save') {
-        this.$router.replace({ name: 'save' });
-      } else if (this.before === 'history') {
-        this.$router.replace({ name: 'history' });
-      } else if (this.before === 'notice') {
-        this.$router.replace({ name: 'notice' });
-      }
-    },
-    toggleMenu() {
-      this.post.showMenu = !this.post.showMenu;
-    },
-    formatDate(date) {
-      // 格式化日期时间
-      const d = new Date(date);
-      return `${d.getFullYear()}年${
-        d.getMonth() + 1
-      }月${d.getDate()}日 ${String(d.getHours()).padStart(2, '0')}:${String(d.getMinutes()).padStart(2, '0')}:${String(d.getSeconds()).padStart(2, '0')}`;
-    },
-    save() {
-      const userTelephone = this.userInfo.phone;
-      // 请求
-      this.postSave({
-        userTelephone, postID: this.post.postID, isSaved: this.post.isSaved,
-      }).then(() => {
-      }).catch((err) => {
-        console.error(err);
-      });
-      // 更新点赞状态及点赞数
-      this.post.isSaved = !this.post.isSaved;
-    },
-    like() {
-      const userTelephone = this.userInfo.phone;
-      // 请求
-      this.postLike({
-        userTelephone, postID: this.post.postID, isLiked: this.post.isLiked,
-      }).then(() => {
-      }).catch((err) => {
-        console.error(err);
-      });
-      // 更新点赞状态及点赞数
-      this.post.isLiked = !this.post.isLiked;
-      if (this.post.isLiked) this.post.like += 1;
-      else this.post.like -= 1;
-    },
-    pclike(index) {
-      this.pcommentlike({
-        userTelephone: this.userTelephone,
-        pcommentID: this.comments[index].pcommentID,
-        isLiked: this.comments[index].isLiked,
-      }).then(() => {
-      }).catch((err) => {
-        console.error(err);
-      });
-      // 更新点赞状态及点赞数
-      this.comments[index].isLiked = !this.comments[index].isLiked;
-      if (this.comments[index].isLiked) this.comments[index].likeNum += 1;
-      else this.comments[index].likeNum -= 1;
-    },
-    cclike(index, subIndex) {
-      this.ccommentlike({
-        userTelephone: this.userTelephone,
-        ccommentID: this.comments[index].subComments[subIndex].ccommentID,
-        isLiked: this.comments[index].subComments[subIndex].isLiked,
-      }).then(() => {
-      }).catch((err) => {
-        console.error(err);
-      });
-      // 更新点赞状态及点赞数
-      // eslint-disable-next-line max-len
-      this.comments[index].subComments[subIndex].isLiked = !this.comments[index].subComments[subIndex].isLiked;
-      // eslint-disable-next-line max-len
-      if (this.comments[index].subComments[subIndex].isLiked) this.comments[index].subComments[subIndex].likeNum += 1;
-      else this.comments[index].subComments[subIndex].likeNum -= 1;
-    },
-    postdelete() {
-      this.deletepost({
-        postID: this.post.postID,
-      }).then(() => {
-        this.$bvToast.toast('删除成功', {
-          title: '系统提醒',
-          variant: 'primary',
-          solid: true,
-        });
-        this.$router.go(-1);
-      }).catch((err) => {
-        console.error(err);
-      });
-    },
-    pcommentdelete(comment) {
-      this.deletePcomment({
-        pcommentID: comment.pcommentID,
-      }).then(() => {
-        this.$bvToast.toast('删除成功', {
-          title: '系统提醒',
-          variant: 'primary',
-          solid: true,
-        });
-        this.$router.go(0);
-      }).catch((err) => {
-        console.error(err);
-      });
-    },
-    ccommentdelete(SubComment) {
-      this.deleteCcomment({
-        ccommentID: SubComment.ccommentID,
-      }).then(() => {
-        this.$bvToast.toast('删除成功', {
-          title: '系统提醒',
-          variant: 'primary',
-          solid: true,
-        });
-        this.$router.go(0);
-      }).catch((err) => {
-        console.error(err);
-      });
-    },
-    submitReport(type, idnum) {
-      this.submitreport({
-        TargetID: idnum,
-        Targettype: type,
-        userTelephone: this.userInfo.phone,
-        Reason: this.reportReason,
-      }).then(() => {
-        this.$bvToast.toast('举报发送成功', {
-          title: '系统提醒',
-          variant: 'primary',
-          solid: true,
-        });
-      }).catch((err) => {
-        this.$bvToast.toast(err.response.data.msg, {
-          title: '数据验证错误',
-          variant: 'danger',
-          solid: true,
-        });
-      });
-    },
-    clearReportReason() {
-      this.reportReason = '';
-    },
-    async pcommentsShow() {
-      const postid = this.post.postID;
-      // 请求
-      try {
-        const { data } = await this.showPcomments({
-          userTelephone: this.userTelephone, postID: postid,
-        });
-        const comments = data.map((pcomment) => ({
-          pcommentID: pcomment.PcommentID,
-          author: pcomment.Author,
-          authorAvatar: pcomment.AuthorAvatar,
-          authorTelephone: pcomment.AuthorTelephone,
-          commentTime: pcomment.CommentTime,
-          content: pcomment.Content,
-          likeNum: pcomment.LikeNum,
-          subComments: pcomment.SubComments,
-          isLiked: pcomment.IsLiked,
-          showMenu: false,
-          showReplyForm: false,
-          showAllReplies: false,
-          heat: pcomment.LikeNum + len(pcomment.SubComments),
-        }));
-        this.comments = this.sortcomments(comments);
-        // .sort((a, b) => new Date(b.commentTime) - new Date(a.commentTime))
-        // this.comments = data;
-      } catch (err) {
-        console.error(err);
-      }
+    showEmojiStatus() {
+      this.showEmoji = !this.showEmoji;
     },
     sortcomments(comments) {
       if (this.sortkind === 'Date') {
@@ -627,95 +986,59 @@ export default {
       }
       return comments.sort((a, b) => b.heat - a.heat);
     },
-    // 发表帖子评论
-    pcommentPost() {
-      this.pcomment.postID = this.post.postID;
-      this.pcomment.userTelephone = this.userTelephone;
-      this.postPcomment(this.pcomment).then(() => {
-        this.$bvToast.toast('评论成功', {
-          title: '系统提醒',
-          variant: 'primary',
-          solid: true,
-        });
-        setTimeout(() => {
-          this.pcommentsShow();
-          this.pcomment.content = '';
-        }, 1000);
+    submitReport(type, idnum) {
+      this.submitreport({
+        TargetID: idnum,
+        Targettype: type,
+        userTelephone: this.userInfo.phone,
+        Reason: this.reportReason,
       })
+        .then(() => {
+          this.$toast.success('举报发送成功');
+        })
         .catch((err) => {
-          this.$bvToast.toast(err.response.data.msg, {
-            title: '评论失败',
-            variant: 'danger',
-            solid: true,
-          });
+          this.$toast.fail(`举报发送失败${err.response.data.msg}`);
         });
     },
-    // 发表评论的评论或者回复评论的评论
-    ccommentPost(index, author, ccommentID) {
-      const comment = this.comments[index];
-      this.ccomment.postID = this.post.postID;
-      this.ccomment.pcommentID = comment.pcommentID;
-      this.ccomment.userTelephone = this.userTelephone;
-      this.ccomment.userTargetName = author;
-      this.ccomment.ccommentID = ccommentID;
-      this.postCcomment(this.ccomment).then(() => {
-        this.$bvToast.toast('回复成功', {
-          title: '系统提醒',
-          variant: 'primary',
-          solid: true,
-        });
-        setTimeout(() => {
-          this.showcommentsindex = 0;
-          this.nowReplyComment = '';
-          this.replyshow = false;
-          this.pcommentsShow();
-          // 清空输入的内容
-          this.ccomment.content = '';
-          this.ccomment.ccommentID = 0;
-        }, 1000);
-      })
-        .catch((err) => {
-          this.$bvToast.toast(err.response.data.msg, {
-            title: '回复失败',
-            variant: 'danger',
-            solid: true,
-          });
-        });
+    toggleMenu() {
+      this.post.showMenu = !this.post.showMenu;
     },
     visibleSubComments(index) {
+      if (this.comments[index] === undefined) return [];
       if (this.comments[index].showAllReplies === true) {
         return this.comments[index].subComments;
       }
       return this.comments[index].subComments.slice(0, 5);
     },
-    addEmojiToPcomment(emoji) {
-      this.pcomment.content += emoji.native;
-    },
-    addEmojiToCcomment(emoji) {
-      this.ccomment.content += emoji.native;
-    },
-    showEmojiStatus() {
-      this.showEmoji = !this.showEmoji;
-    },
+  },
+  beforeRouteLeave(to, from, next) {
+    // 返回上一页面时清空本地缓存
+    localStorage.removeItem('PostID');
+    localStorage.removeItem('Before');
+    next();
   },
 };
 </script>
 
 <style lass="scss" scoped>
 @import '@/style/css/PostDetailsView.css';
+
 #div_boxs_lnteado /deep/ .van-nav-bar__title {
   color: white;
   font-size: 0.45rem;
 }
+
 .thumbnail-container {
   display: flex;
   flex-wrap: wrap;
 }
+
 .thumbnail-container div {
   width: calc(100% / 3);
   padding: 10px;
   box-sizing: border-box;
 }
+
 @keyframes blink {
   0% {
     opacity: 1;
@@ -730,6 +1053,7 @@ export default {
     background-color: transparent;
   }
 }
+
 /* 使用更具体的选择器 */
 .blink {
   animation-name: blink;
@@ -737,6 +1061,7 @@ export default {
   animation-iteration-count: 3;
   background-color: transparent !important; /* 覆盖框架中的样式 */
 }
+
 .emoji-mart[data-v-7bc71df8] {
   font-family: -apple-system, BlinkMacSystemFont, "Helvetica Neue", sans-serif;
   display: -ms-flexbox;
