@@ -1,25 +1,318 @@
-// 此页面都是测试时乱写的
+<!-- eslint-disable max-len -->
+<!-- eslint-disable vue/no-use-v-if-with-v-for -->
+<!-- eslint-disable vuejs-accessibility/click-events-have-key-events -->
+<!-- eslint-disable vuejs-accessibility/alt-text -->
 <template>
-  <div>
+  <div margin="0">
     <h2>SSE_market</h2>
     <div class="icon-container">
       <van-icon name="add" @click="goToPost" />
     </div>
-    <div class="banner"></div>
     <div class="list">
-      <div class="item"></div>
-      <div class="item"></div>
-      <div class="item"></div>
-      <div class="item"></div>
+      <div
+        class="item"
+        v-for="(card, index) in cards"
+        :key="index"
+        @click="partitionBrowse(card.title)"
+      >
+        <van-icon
+          :name="card.icon"
+          color="white"
+        />
+        <!-- <p v-html="line"></p> -->
+        <div class="title">
+          {{ card.title }}
+        </div>
+      </div>
+    </div>
+
+    <div>
+      <van-list
+        v-for="post in posts"
+        :key="post.postID"
+        :border="true"
+        fit="cover"
+        position="left"
+        inset
+        ref="totalGroup"
+      >
+        <p v-html="line"></p>
+        <van-row justify="center">
+          <van-col offset="1" span="1" margin="0">
+            <van-image
+              round
+              width="30px"
+              height="30px"
+              fit="cover"
+              position="left"
+              :src="post.authorAvatar"
+            >
+            </van-image>
+          </van-col>
+          <van-col offset="2" span="4">
+            <div class="author_box">
+              {{ post.author }}
+            </div>
+          </van-col>
+        </van-row>
+
+        <van-row>
+          <van-col offset="1" span="24">
+            <van-cell
+              :border="false"
+              class="post_title"
+            >
+              <p v-html="line"></p>
+              {{ post.title }}
+            </van-cell>
+          </van-col>
+
+          <van-col offset="1" span="24">
+            <van-cell
+              :border="false"
+              class="post_content"
+            >
+              <p v-html="line"></p>
+              {{ post.content }}
+              <p v-html="line"></p>
+            </van-cell>
+          </van-col>
+        </van-row>
+
+        <van-col
+          offset="1"
+          span="24"
+        >
+          <van-cell
+            :border="false"
+          >
+            <p v-html="line"></p>
+            {{ formatDate(post.postTime) }}
+          </van-cell>
+        </van-col>
+
+        <van-row>
+          <van-col span="8">
+            <van-icon
+              name="good-job-o"
+              size="10"
+              @click="like(post)"
+              v-if="!post.isLiked"
+            />
+            <van-icon
+              v-else
+              color="red"
+              name="good-job"
+              size="10"
+              @click="like(post)"
+            />
+            <font size="1">
+              {{ post.like }}
+            </font>
+          </van-col>
+
+          <van-col span="8">
+            <van-icon name="eye-o" size="10"/>
+            <font size="1">
+              {{ post.browse }}
+            </font>
+          </van-col>
+
+          <van-col span="8">
+            <van-icon name="chat-o" size="10"/>
+            <font size="1">
+              {{ post.comment }}
+            </font>
+          </van-col>
+        </van-row>
+      </van-list>
+      <van-row>
+        <van-col
+          offset="9"
+          span="6"
+          class="tips"
+        >
+          <van-cell
+            :center="true"
+            class="notice"
+            v-if="this.currentPage*this.pageSize>=this.totalItems"
+          >
+            <p v-html="line"></p>
+            已划到底部
+            <p v-html="line"></p>
+          </van-cell>
+          <van-cell class="loading" v-else-if="loading">
+            <p v-html="line"></p>
+            正在加载...
+            <p v-html="line"></p>
+          </van-cell>
+          <van-button v-else block @click="loadMorePosts">
+            <p v-html="line"></p>
+            加载更多
+            <p v-html="line"></p>
+          </van-button>
+        </van-col>
+      </van-row>
     </div>
   </div>
 </template>
 
 <script>
+
+import { mapActions } from 'vuex';
+
 export default {
+  data() {
+    return {
+      partition: '',
+      totalItems: 0,
+      pageSize: 5,
+      currentPage: 1,
+      posts: [],
+      fileList: [],
+      dialogImageUrl: '',
+      dialogVisible: false,
+      userTelephone: '',
+      postID: '',
+      isSaved: '',
+      isLiked: '',
+      title: '',
+      heat: '',
+      browse: '',
+      searchinfo: '',
+      showDeleteModal: false,
+      showReportModal: false,
+      reportReason: '',
+      toLogin: false,
+      loading: false,
+      line: '<br/>',
+      cards: [
+        {
+          title: '日常吐槽',
+          icon: 'smile',
+        },
+        {
+          title: '打听求助',
+          icon: 'question',
+        },
+        {
+          title: '二手闲置',
+          icon: 'gift',
+        },
+        {
+          title: '恋爱交友',
+          icon: 'like',
+        },
+        {
+          title: '学习交流',
+          icon: 'todo-list',
+        },
+        {
+          title: '其他',
+          icon: 'more',
+        },
+      ],
+    };
+  },
+  created() {
+    this.partitionBrowse('');
+  },
   methods: {
+    ...mapActions('postModule', { postBrowse: 'browse' }),
+
     goToPost() {
       this.$router.push({ path: '/post' });
+    },
+
+    partitionBrowse(chosenPartition) {
+      this.partition = chosenPartition;
+      this.postBrowse({
+        userTelephone: '',
+        searchinfo: '',
+        partition: chosenPartition,
+      }).then((data) => {
+        if (data.data == null) {
+          this.totalItems = 0;
+          this.posts = [];
+        } else {
+          this.totalItems = data.data.length;
+          this.posts = data.data
+            .map((post) => ({
+              id: post.PostID,
+              author: post.UserName,
+              authorTelephone: post.UserTelephone,
+              authorAvatar: post.UserAvatar,
+              title: post.Title,
+              content: post.Content,
+              like: post.Like,
+              comment: post.Comment,
+              postTime: post.PostTime,
+              isSaved: post.IsSaved,
+              browse: post.Browse,
+              isLiked: post.IsLiked,
+              heat: post.Heat,
+              photos: post.Photos,
+              showMenu: false,
+            })).sort((a, b) => new Date(b.postTime) - new Date(a.postTime)); // 按时间倒序排序展示
+          this.posts = this.posts.slice(0, this.currentPage * this.pageSize);
+          console.error(this.posts);
+        }
+        console.error(this.totalItems);
+      }).catch((err) => {
+        this.totalItems = 0;
+        console.error(err);
+      });
+    },
+
+    handleScroll() {
+      this.$nextTick(() => {
+        const listGroup = this.$refs.totalGroup.$el;
+        if (listGroup.getBoundingClientRect().bottom <= window.innerHeight) {
+          this.loadMorePosts();
+        }
+      });
+    },
+
+    async loadMorePosts() {
+      window.removeEventListener('scroll', this.handleScroll);
+      this.loading = true;
+      // setTimeout(() => {
+      this.currentPage += 1;
+      // }, 500);
+      this.loading = false;
+      console.error(this.currentPage);
+      window.addEventListener('scroll', this.handleScroll);
+      this.partitionBrowse(this.partition);
+    },
+
+    formatDate(date) {
+      // 格式化日期时间
+      const d = new Date(date);
+      return `${d.getFullYear()}年${d.getMonth() + 1}月${d.getDate()}日 ${String(
+        d.getHours(),
+      ).padStart(2, '0')}:${String(d.getMinutes()).padStart(2, '0')}:${String(
+        d.getSeconds(),
+      ).padStart(2, '0')}`;
+    },
+
+    like(post) {
+      const updatedPost = { ...post, isLiked: !post.isLiked };
+      updatedPost.like += post.isLiked ? -1 : 1;
+      // 用更新后的 post 对象替换原先的 post 对象
+      this.posts.splice(this.posts.indexOf(post), 1, updatedPost);
+      this.userTelephone = this.userInfo.phone;
+      this.postID = post.id;
+      this.isLiked = post.isLiked;
+      // 请求
+      this.postLike({
+        userTelephone: this.userTelephone,
+        postID: this.postID,
+        isLiked: this.isLiked,
+      })
+        .then(() => {})
+        .catch((err) => {
+          console.error(err);
+        });
     },
   },
 };
@@ -33,18 +326,63 @@ export default {
   z-index: 999; /* Ensure the icon is above other elements */
 }
 .banner{
-  width: 750px;
+  width: 1000px;
   height: 304px;
   background: pink;
 }
 .list {
   padding: 20px;
-  display: flex;
-  justify-content: space-around;
+  justify-items: center;
+  display: grid;
+  grid-gap: 40px;
+  grid-template-columns: 1fr 1fr 1fr;
 }
 .list .item {
-  width: 136px;
-  height: 138px;
+  justify-items: center;
+  width: 200px;
+  height: 200px;
   background: skyblue;
 }
+
+.list .item .title {
+  font-size: 1px;
+}
+
+.avatar {
+  width: 30px;
+  height: 30px;
+}
+
+.author {
+  height: 100px;
+  font-size: medium;
+}
+
+.post {
+  display: flex;
+}
+
+.author_box {
+  height: 1rem;
+  width: 2rem;
+  font-size: xx-small;
+  background-color: darkseagreen;
+}
+
+.post_title {
+  height: 1rem;
+  vertical-align: middle;
+  font-size: large;
+  font-weight: bold;
+}
+
+.post_content {
+  vertical-align: middle;
+}
+
+.tips {
+  vertical-align: middle;
+  text-align: center;
+}
+
 </style>
