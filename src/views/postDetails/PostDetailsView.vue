@@ -565,6 +565,7 @@ export default {
         localStorage.setItem('Style', JSON.stringify('day'));
       }
     }
+    console.error(this.$route.query);
     if (this.$route.query.before) {
       this.before = this.$route.query.before;
       // 将postID保存在本地缓存中

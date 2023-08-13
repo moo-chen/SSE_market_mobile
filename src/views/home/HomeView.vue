@@ -220,10 +220,11 @@ export default {
     },
 
     showDetail(post) {
+      console.error(post);
       this.$router.push({
         name: 'postDetails',
-        params: { id: post.id, partition: this.partition, phone: '13899999999' },
-        query: { title: post.title },
+        params: { id: post.id, partition: this.partition, before: 'home' },
+        query: { id: post.id, before: 'home' },
       });
     },
 
