@@ -6,7 +6,7 @@
   <div margin="0">
     <h2>SSE_market</h2>
     <div class="icon-container">
-      <van-icon name="add" @click="goToPost" />
+      <van-icon size="27" name="add" @click="goToPost" />
     </div>
     <div class="list">
       <div
@@ -57,39 +57,37 @@
         </van-row>
 
         <van-row>
-          <van-col offset="1" span="24">
+          <van-col span="24">
             <van-cell
               :border="false"
               class="post_title"
             >
-              <p v-html="line"></p>
               {{ post.title }}
             </van-cell>
           </van-col>
 
-          <van-col offset="1" span="24">
+          <van-col span="24">
             <van-cell
               :border="false"
               class="post_content"
             >
-              <p v-html="line"></p>
               {{ post.content }}
-              <p v-html="line"></p>
+            </van-cell>
+          </van-col>
+
+          <van-col
+            span="24"
+          >
+            <van-cell
+              :border="false"
+              class="date"
+            >
+              <font size="2">
+                {{ formatDate(post.postTime) }}
+              </font>
             </van-cell>
           </van-col>
         </van-row>
-
-        <van-col
-          offset="1"
-          span="24"
-        >
-          <van-cell
-            :border="false"
-          >
-            <p v-html="line"></p>
-            {{ formatDate(post.postTime) }}
-          </van-cell>
-        </van-col>
 
         <van-row>
           <van-col span="8">
@@ -128,8 +126,8 @@
       </van-list>
       <van-row>
         <van-col
-          offset="9"
-          span="6"
+          offset="8"
+          span="8"
           class="tips"
         >
           <van-cell
@@ -137,21 +135,18 @@
             class="notice"
             v-if="this.currentPage*this.pageSize>=this.totalItems"
           >
-            <p v-html="line"></p>
             已划到底部
-            <p v-html="line"></p>
           </van-cell>
           <van-cell class="loading" v-else-if="loading">
-            <p v-html="line"></p>
             正在加载...
-            <p v-html="line"></p>
           </van-cell>
-          <van-button v-else block @click="loadMorePosts">
-            <p v-html="line"></p>
+          <van-button v-else :border="false" block @click="loadMorePosts">
             加载更多
-            <p v-html="line"></p>
           </van-button>
         </van-col>
+        <p v-html="line"></p>
+        <p v-html="line"></p>
+        <p v-html="line"></p>
       </van-row>
     </div>
   </div>
@@ -321,8 +316,8 @@ export default {
 <style scoped>
 .icon-container {
   position: fixed;
-  top: 20px;
-  right: 20px;
+  top: 0.2rem;
+  right: 0.2rem;
   z-index: 999; /* Ensure the icon is above other elements */
 }
 .banner{
@@ -339,8 +334,8 @@ export default {
 }
 .list .item {
   justify-items: center;
-  width: 200px;
-  height: 200px;
+  width: 150px;
+  height: 150px;
   background: skyblue;
 }
 
@@ -370,7 +365,7 @@ export default {
 }
 
 .post_title {
-  height: 1rem;
+  height: 1.25rem;
   vertical-align: middle;
   font-size: large;
   font-weight: bold;
@@ -383,6 +378,10 @@ export default {
 .tips {
   vertical-align: middle;
   text-align: center;
+}
+
+.date {
+  height: 5%;
 }
 
 </style>
