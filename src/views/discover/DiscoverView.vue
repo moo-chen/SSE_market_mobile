@@ -1,9 +1,10 @@
 <template>
     <div>
-    <van-search v-model="searchinfo" show-action
-    placeholder="请输入搜索关键词" @search="onSearch">
+    <van-search v-model="searchinfo" show-action background="#a9ddff"
+    placeholder="请输入搜索关键词" @search="onSearch" shape="round">
     <template #action>
-    <div @click="onSearch" @keydown.enter="onSearch" tabindex="0">搜索</div>
+    <div class="custom-search-button"
+    @click="onSearch" @keydown.enter="onSearch" tabindex="0">搜索</div>
     </template>
     </van-search>
     </div>
@@ -25,3 +26,11 @@ export default {
   },
 };
 </script>
+
+<style scoped>
+.custom-search-button {
+  background-color: #a9ddff;
+  color: #ffffff;
+}
+
+</style>
