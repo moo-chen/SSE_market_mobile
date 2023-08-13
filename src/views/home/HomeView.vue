@@ -36,8 +36,8 @@
         inset
         ref="totalGroup"
       >
-        <p v-html="line"></p>
-        <van-row justify="center">
+        <p v-html="line" @click="showDetail(post)"></p>
+        <van-row justify="center" @click="showDetail(post)">
           <van-col offset="1" span="1" margin="0">
             <van-image
               round
@@ -56,7 +56,7 @@
           </van-col>
         </van-row>
 
-        <van-row>
+        <van-row @click="showDetail(post)">
           <van-col span="24">
             <van-cell
               :border="false"
@@ -109,14 +109,14 @@
             </font>
           </van-col>
 
-          <van-col span="8">
+          <van-col span="8" @click="showDetail(post)">
             <van-icon name="eye-o" size="10"/>
             <font size="1">
               {{ post.browse }}
             </font>
           </van-col>
 
-          <van-col span="8">
+          <van-col span="8" @click="showDetail(post)">
             <van-icon name="chat-o" size="10"/>
             <font size="1">
               {{ post.comment }}
@@ -217,6 +217,14 @@ export default {
 
     goToPost() {
       this.$router.push({ path: '/post' });
+    },
+
+    showDetail(post) {
+      this.$router.push({
+        name: 'postDetails',
+        params: { id: post.id, partition: this.partition, phone: '13899999999' },
+        query: { title: post.title },
+      });
     },
 
     partitionBrowse(chosenPartition) {
