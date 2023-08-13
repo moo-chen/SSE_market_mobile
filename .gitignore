@@ -25,4 +25,8 @@ pnpm-debug.log*
 .yarn/
 .eslintrc.js
 yarn.lock
+.pnp.loader.mjs
+.pnp.cjs
+package.json
 yarn.lock
+vue.config.js
