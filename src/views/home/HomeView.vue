@@ -90,7 +90,7 @@
         </van-row>
 
         <van-row>
-          <van-col span="8">
+          <van-col span="6">
             <van-icon
               name="good-job-o"
               size="10"
@@ -109,18 +109,34 @@
             </font>
           </van-col>
 
-          <van-col span="8" @click="showDetail(post)">
+          <van-col span="6" @click="showDetail(post)">
             <van-icon name="eye-o" size="10"/>
             <font size="1">
               {{ post.browse }}
             </font>
           </van-col>
 
-          <van-col span="8" @click="showDetail(post)">
+          <van-col span="6" @click="showDetail(post)">
             <van-icon name="chat-o" size="10"/>
             <font size="1">
               {{ post.comment }}
             </font>
+          </van-col>
+
+          <van-col span="6">
+            <van-icon
+              name="star-o"
+              size="20"
+              @click="save(post)"
+              v-if="!post.isSaved"
+            />
+            <van-icon
+              v-else
+              color="yellow"
+              name="star"
+              size="20"
+              @click="save(post)"
+            />
           </van-col>
         </van-row>
       </van-list>
@@ -221,6 +237,7 @@ export default {
     ...mapActions('postModule', { postBrowse: 'browse' }),
     ...mapActions('postModule', { postLike: 'like' }),
     ...mapActions('postModule', { updateLook: 'updatebrowse' }),
+    ...mapActions('userModule', { postSave: 'save' }),
 
     goToPost() {
       this.$router.push({ path: '/post' });
@@ -329,6 +346,26 @@ export default {
         userTelephone: this.userTelephone,
         postID: this.postID,
         isLiked: this.isLiked,
+      })
+        .then(() => {})
+        .catch((err) => {
+          console.error(err);
+        });
+    },
+
+    save(post) {
+      // 切换收藏状态
+      const updatedPost = { ...post, isSaved: !post.isSaved };
+      // 用更新后的 post 对象替换原先的 post 对象
+      this.posts.splice(this.posts.indexOf(post), 1, updatedPost);
+      this.userTelephone = this.userInfo.phone;
+      this.postID = post.id;
+      this.isSaved = post.isSaved;
+      // 请求
+      this.postSave({
+        userTelephone: this.userTelephone,
+        postID: this.postID,
+        isSaved: this.isSaved,
       })
         .then(() => {})
         .catch((err) => {

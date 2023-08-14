@@ -44,6 +44,12 @@
                 style="margin-right: 10px;">保存更改</van-button>
     <van-button type="info" @click="open">更多信息</van-button>
   </div>
+  <div>
+    <van-button class="custom-yellow-button" @click="gotoSave"
+                style="margin-right: 10px;">我的收藏</van-button>
+    <van-button class="custom-light-blue-button" @click="gotoHistory">
+                历史记录</van-button>
+  </div>
   <div class="feedback-link">
     <router-link to="/feedback">遇到问题了？点此反馈</router-link>
   </div>
@@ -167,6 +173,12 @@ export default {
           console.error('用户信息更新失败', error);
         });
     },
+    gotoSave() {
+      this.$router.push({ path: '/save' });
+    },
+    gotoHistory() {
+      this.$router.push({ path: '/history' });
+    },
   },
 };
 </script>
@@ -203,5 +215,17 @@ export default {
 
 .feedback-link a:hover {
   text-decoration: underline;
+}
+
+.custom-yellow-button {
+  background-color: rgba(197, 170, 17, 0.701);
+  border-color: rgba(197, 170, 17, 0.701);
+  color: white;
+}
+
+.custom-light-blue-button {
+  background-color: #87CEEB;
+  border-color: #87CEEB;
+  color: white;
 }
 </style>
