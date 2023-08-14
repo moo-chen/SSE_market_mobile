@@ -8,6 +8,15 @@
     <div class="icon-container">
       <van-icon size="27" name="add" @click="goToPost" />
     </div>
+    <div>
+      <van-search v-model="searchinfo" show-action background="#a9ddff"
+      placeholder="请输入搜索关键词" @search="onSearch" shape="round">
+      <template #action>
+      <div class="custom-search-button"
+      @click="onSearch" @keydown.enter="onSearch" tabindex="0">搜索</div>
+      </template>
+      </van-search>
+    </div>
     <div class="list">
       <div
         class="item"
@@ -242,6 +251,10 @@ export default {
     goToPost() {
       this.$router.push({ path: '/post' });
     },
+    onSearch() {
+      this.partitionBrowse('');
+      this.searchinfo = '';
+    },
 
     showDetail(post) {
       console.error(post);
@@ -265,8 +278,8 @@ export default {
       console.error(this.userInfo);
       this.postBrowse({
         userTelephone: this.userInfo.phone,
-        searchinfo: '',
-        partition: chosenPartition,
+        partition: this.partition,
+        searchinfo: this.searchinfo,
       }).then((data) => {
         if (data.data == null) {
           this.totalItems = 0;
@@ -382,6 +395,10 @@ export default {
   top: 0.2rem;
   right: 0.2rem;
   z-index: 999; /* Ensure the icon is above other elements */
+}
+.custom-search-button {
+  background-color: #a9ddff;
+  color: #ffffff;
 }
 .banner{
   width: 1000px;
