@@ -154,7 +154,7 @@
 
 <script>
 
-import { mapActions } from 'vuex';
+import { mapState, mapActions } from 'vuex';
 
 export default {
   data() {
@@ -212,8 +212,15 @@ export default {
   created() {
     this.partitionBrowse('');
   },
+  computed: {
+    ...mapState({
+      userInfo: (state) => state.userModule.userInfo,
+    }),
+  },
   methods: {
     ...mapActions('postModule', { postBrowse: 'browse' }),
+    ...mapActions('postModule', { postLike: 'like' }),
+    ...mapActions('postModule', { updateLook: 'updatebrowse' }),
 
     goToPost() {
       this.$router.push({ path: '/post' });
@@ -221,6 +228,14 @@ export default {
 
     showDetail(post) {
       console.error(post);
+      this.updateLook({
+        userTelephone: this.userInfo.phone,
+        postID: post.id,
+      }).then(() => {
+        this.browse += 1;
+      }).catch((err) => {
+        console.error(err);
+      });
       this.$router.push({
         name: 'postDetails',
         params: { id: post.id, partition: this.partition, before: 'home' },
@@ -230,8 +245,9 @@ export default {
 
     partitionBrowse(chosenPartition) {
       this.partition = chosenPartition;
+      console.error(this.userInfo);
       this.postBrowse({
-        userTelephone: '',
+        userTelephone: this.userInfo.phone,
         searchinfo: '',
         partition: chosenPartition,
       }).then((data) => {
@@ -300,6 +316,7 @@ export default {
     },
 
     like(post) {
+      console.error(this.userInfo);
       const updatedPost = { ...post, isLiked: !post.isLiked };
       updatedPost.like += post.isLiked ? -1 : 1;
       // 用更新后的 post 对象替换原先的 post 对象

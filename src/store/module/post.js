@@ -19,6 +19,7 @@ const postModule = {
     },
 
     browse(context, { userTelephone, partition, searchinfo }) {
+      console.error(userTelephone, partition, searchinfo);
       return new Promise((resolve, reject) => {
         postService.browse({ userTelephone, partition, searchinfo }).then((res) => {
           resolve(res);
@@ -30,6 +31,7 @@ const postModule = {
 
     like(context, { userTelephone, postID, isLiked }) {
       return new Promise((resolve, reject) => {
+        console.error(userTelephone, postID, isLiked);
         postService.like({ userTelephone, postID, isLiked }).then((res) => {
           resolve(res);
         }).catch((err) => {
