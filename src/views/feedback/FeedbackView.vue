@@ -4,7 +4,7 @@
       <van-field
         v-model="feedback.ftext"
         label="反馈"
-        placeholder="请输入你的反馈"
+        placeholder="请输入您的反馈"
         type="textarea"
         rows="10"
         style="margin-top: 50px;"

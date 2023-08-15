@@ -63,6 +63,14 @@ const routes = [
     },
     component: () => import('@/views/history/HistoryView.vue'),
   },
+  {
+    path: '/feedback',
+    name: 'feedback',
+    meta: {
+      auth: true,
+    },
+    component: () => import('@/views/feedback/FeedbackView.vue'),
+  },
 ];
 
 const router = new VueRouter({
