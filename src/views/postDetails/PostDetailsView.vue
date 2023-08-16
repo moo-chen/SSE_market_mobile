@@ -719,6 +719,8 @@ export default {
         this.$router.replace({ name: 'history' });
       } else if (this.before === 'notice') {
         this.$router.replace({ name: 'notice' });
+      } else if (this.before === 'discover') {
+        this.$router.replace({ name: 'discover' });
       }
     },
     handleKeyboardEvent() {
