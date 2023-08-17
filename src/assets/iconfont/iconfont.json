@@ -1,0 +1,51 @@
+{
+  "id": "4213441",
+  "name": "my_icon_sets",
+  "font_family": "iconfont",
+  "css_prefix_text": "icon-",
+  "description": "",
+  "glyphs": [
+    {
+      "icon_id": "2696595",
+      "name": "其他",
+      "font_class": "qita",
+      "unicode": "e625",
+      "unicode_decimal": 58917
+    },
+    {
+      "icon_id": "4294147",
+      "name": "我的学习",
+      "font_class": "wodexuexi",
+      "unicode": "e65c",
+      "unicode_decimal": 58972
+    },
+    {
+      "icon_id": "9526792",
+      "name": "评论区",
+      "font_class": "pinglunqu",
+      "unicode": "e611",
+      "unicode_decimal": 58897
+    },
+    {
+      "icon_id": "15416292",
+      "name": "心-情侣",
+      "font_class": "xin-qinglv",
+      "unicode": "e68a",
+      "unicode_decimal": 59018
+    },
+    {
+      "icon_id": "27195684",
+      "name": "问号",
+      "font_class": "wenhao",
+      "unicode": "e60d",
+      "unicode_decimal": 58893
+    },
+    {
+      "icon_id": "34279441",
+      "name": "购物，购物袋",
+      "font_class": "a-gouwugouwudai",
+      "unicode": "e619",
+      "unicode_decimal": 58905
+    }
+  ]
+}
