@@ -84,17 +84,18 @@
             </van-cell>
           </van-col>
 
-          <van-col
-            span="24"
-          >
-            <van-cell
-              :border="false"
-              class="date"
-            >
-              <font size="2">
-                {{ formatDate(post.postTime) }}
-              </font>
-            </van-cell>
+          <van-col span="24">
+            <div class="horizontal-container">
+              <van-cell :border="false" class="date">
+                <font size="2">{{ formatDate(post.postTime) }}</font>
+              </van-cell>
+            <div class="tag-group">
+              <span class="tag-group__title"></span>
+              <van-tag v-for="tag in post.tag" :key="tag.label" :type="tag.type" effect="plain" size="mini">
+              {{ tag.label }}
+              </van-tag>
+            </div>
+            </div>
           </van-col>
         </van-row>
 
@@ -241,6 +242,13 @@ export default {
     ...mapState({
       userInfo: (state) => state.userModule.userInfo,
     }),
+    tagTypeMap() {
+      return {
+        大厂: 'primary',
+        高工资: 'success',
+        实习: 'danger',
+      };
+    },
   },
   methods: {
     ...mapActions('postModule', { postBrowse: 'browse' }),
@@ -302,6 +310,10 @@ export default {
               isLiked: post.IsLiked,
               heat: post.Heat,
               photos: post.Photos,
+              tag: post.Tag ? post.Tag.split(',').map((tagText) => ({
+                type: this.tagTypeMap[tagText.trim()], // 使用 this.tagTypeMap
+                label: tagText.trim(),
+              })) : [],
               showMenu: false,
             })).sort((a, b) => new Date(b.postTime) - new Date(a.postTime)); // 按时间倒序排序展示
           this.posts = this.posts.slice(0, this.currentPage * this.pageSize);
@@ -459,9 +471,14 @@ export default {
   vertical-align: middle;
   text-align: center;
 }
-
+.horizontal-container {
+  display: flex;
+  justify-content: space-between; /* 将子元素水平分隔放置 */
+  align-items: center; /* 垂直居中对齐子元素 */
+}
 .date {
   height: 5%;
+  flex: 1;
 }
 
 </style>

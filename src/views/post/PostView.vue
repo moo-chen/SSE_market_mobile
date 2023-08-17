@@ -44,6 +44,32 @@
       </van-popup>
     </van-cell-group>
 
+    <van-cell-group>
+    <van-checkbox-group v-model="tagitems">
+      <template #default>
+        <van-field
+          label-width="50px"
+          readonly
+          label="标签"
+        >
+        <template #right-icon>
+        <span class="tag-list">
+          <van-checkbox
+            v-for="(item, index) in tags"
+            :key="index"
+            :name="item.label"
+            :value="item.label"
+            class="tag-checkbox"
+          >
+          {{ item.label }}
+          </van-checkbox>
+        </span>
+        </template>
+        </van-field>
+      </template>
+    </van-checkbox-group>
+    </van-cell-group>
+
     <div class="form-buttons">
       <van-button type="primary" size="large"
       @click='post()' class="custom-send-button">发送</van-button>
@@ -77,10 +103,19 @@ export default {
         content: '',
         partition: '',
         photos: '',
+        tagList: '',
       },
       showEmoji: false,
+      showTagPicker: false,
+      rounded: true,
       showPicker: false,
       partitions: ['日常吐槽', '学习交流', '恋爱交友', '二手闲置', '打听求助', '其他'],
+      tags: [
+        { label: '大厂', value: '大厂' },
+        { label: '高工资', value: '高工资' },
+        { label: '实习', value: '实习' },
+      ],
+      tagitems: [],
     };
   },
   methods: {
@@ -99,6 +134,10 @@ export default {
     onClickLeft() {
       this.$router.push({ path: '/' });
     },
+    onTagConfirm() {
+      this.showTagPicker = false;
+      // 在这里处理选中的标签
+    },
     send() {
       if (this.mode === 'post') {
         this.post();
@@ -110,6 +149,7 @@ export default {
       this.posts.userTelephone = this.userInfo.phone;
       // 提取 fileList 中的所有 url，并连接成一个字符串
       this.posts.photos = this.fileList.map((file) => file.url).join('|');
+      this.posts.tagList = this.tagitems.join('|');
       // 请求
       this.Post(this.posts)
         .then(() => {
@@ -153,6 +193,15 @@ export default {
   justify-content: space-between;
   align-items: center;
   margin-top: 20px;
+}
+
+.tag-list {
+  display: flex;
+  align-items: center;
+}
+
+.tag-checkbox {
+  margin-right: 8px;
 }
 
 .custom-send-button {
