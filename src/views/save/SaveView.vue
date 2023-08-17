@@ -4,36 +4,7 @@
 <!-- eslint-disable vuejs-accessibility/alt-text -->
 <template>
   <div margin="0">
-    <h2>SSE_market</h2>
-    <div class="icon-container">
-      <van-icon size="27" name="add" @click="goToPost" />
-    </div>
-    <div>
-      <van-search v-model="searchinfo" show-action background="#a9ddff"
-      placeholder="请输入搜索关键词" @search="onSearch" shape="round">
-      <template #action>
-      <div class="custom-search-button"
-      @click="onSearch" @keydown.enter="onSearch" tabindex="0">搜索</div>
-      </template>
-      </van-search>
-    </div>
-    <div class="list">
-      <div
-        class="item"
-        v-for="(card, index) in cards"
-        :key="index"
-        @click="partitionBrowse(card.title)"
-      >
-        <van-icon
-          :name="card.icon"
-          color="white"
-        />
-        <!-- <p v-html="line"></p> -->
-        <div class="title">
-          {{ card.title }}
-        </div>
-      </div>
-    </div>
+    <h3>我的收藏</h3>
 
     <div>
       <van-list
@@ -251,10 +222,6 @@ export default {
     goToPost() {
       this.$router.push({ path: '/post' });
     },
-    onSearch() {
-      this.partitionBrowse('');
-      this.searchinfo = '';
-    },
 
     showDetail(post) {
       console.error(post);
@@ -273,20 +240,18 @@ export default {
       });
     },
 
-    partitionBrowse(chosenPartition) {
-      this.partition = chosenPartition;
+    partitionBrowse() {
       console.error(this.userInfo);
       this.postBrowse({
         userTelephone: this.userInfo.phone,
-        partition: this.partition,
-        searchinfo: this.searchinfo,
+        searchinfo: '',
       }).then((data) => {
         if (data.data == null) {
           this.totalItems = 0;
           this.posts = [];
         } else {
-          this.totalItems = data.data.length;
-          this.posts = data.data
+          const filteredPosts = data.data
+            .filter((post) => post.IsSaved === true) // 筛选用户收藏过的帖子
             .map((post) => ({
               id: post.PostID,
               author: post.UserName,
@@ -304,7 +269,8 @@ export default {
               photos: post.Photos,
               showMenu: false,
             })).sort((a, b) => new Date(b.postTime) - new Date(a.postTime)); // 按时间倒序排序展示
-          this.posts = this.posts.slice(0, this.currentPage * this.pageSize);
+          this.totalItems = filteredPosts.length;
+          this.posts = filteredPosts.slice(0, this.currentPage * this.pageSize);
           console.error(this.posts);
         }
         console.error(this.totalItems);
@@ -332,7 +298,7 @@ export default {
       this.loading = false;
       console.error(this.currentPage);
       window.addEventListener('scroll', this.handleScroll);
-      this.partitionBrowse(this.partition);
+      this.partitionBrowse();
     },
 
     formatDate(date) {
@@ -395,10 +361,6 @@ export default {
   top: 0.2rem;
   right: 0.2rem;
   z-index: 999; /* Ensure the icon is above other elements */
-}
-.custom-search-button {
-  background-color: #a9ddff;
-  color: #ffffff;
 }
 .banner{
   width: 1000px;

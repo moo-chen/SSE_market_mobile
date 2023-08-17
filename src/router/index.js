@@ -47,6 +47,30 @@ const routes = [
     name: 'post',
     component: () => import('../views/post/PostView.vue'),
   },
+  {
+    path: '/save',
+    name: 'save',
+    meta: {
+      auth: true,
+    },
+    component: () => import('@/views/save/SaveView.vue'),
+  },
+  {
+    path: '/history',
+    name: 'history',
+    meta: {
+      auth: true,
+    },
+    component: () => import('@/views/history/HistoryView.vue'),
+  },
+  {
+    path: '/feedback',
+    name: 'feedback',
+    meta: {
+      auth: true,
+    },
+    component: () => import('@/views/feedback/FeedbackView.vue'),
+  },
 ];
 
 const router = new VueRouter({
