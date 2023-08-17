@@ -1,5 +1,14 @@
 <template>
   <div>
+    <div>
+      <van-swipe :autoplay="3000">
+        <van-swipe-item v-for="item in imagebox" :key="item.id">
+          <a :href="getWebsiteURL(item.id)" aria-label="链接到图片">
+            <img :src="item.idView" alt="" class="full-width-image"/>
+          </a>
+        </van-swipe-item>
+      </van-swipe>
+    </div>
     <div class="hotpost-topic">
       <van-icon name="fire-o" color="#fc0000" />
       24小时火文
@@ -23,15 +32,6 @@
           </van-cell>
         </van-list>
       </van-pull-refresh>
-    </div>
-    <div>
-      <van-swipe :autoplay="3000">
-        <van-swipe-item v-for="item in imagebox" :key="item.id">
-          <a :href="getWebsiteURL(item.id)" aria-label="链接到图片">
-            <img :src="item.idView" alt="" class="full-width-image"/>
-          </a>
-        </van-swipe-item>
-      </van-swipe>
     </div>
   </div>
 </template>
@@ -117,7 +117,7 @@ export default {
         this.hotposts.slice(0, 10);
         this.loading = false;
 
-        if (this.hotposts.length === 10) {
+        if (this.hotposts.length <= 10) {
           this.finished = true;
         }
       }, 1000);

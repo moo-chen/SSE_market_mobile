@@ -126,8 +126,16 @@
             </template>
           </div>
         </div>
-        <div class="d-flex justify-content-between">
-          <small class="text-muted">{{ formatDate(post.postTime) }}</small>
+        <div>
+        <div class='d-flex justify-content-between'>
+          <small class='text-muted'>{{ formatDate(post.postTime) }}</small>
+        </div>
+        <div class="tag-group">
+          <span class="tag-group__title"></span>
+          <van-tag v-for="tag in post.tag" :key="tag.label" :type="tag.type"
+          effect="plain" size="mini">{{ tag.label }}
+          </van-tag>
+        </div>
         </div>
         <div class='van-row--flex' style="margin-bottom: 5px">
           <div class="text-muted">
@@ -541,6 +549,13 @@ export default {
   computed: {
     ...mapState({
       userInfo: (state) => state.userModule.userInfo,
+      tagTypeMap() {
+        return {
+          大厂: 'primary',
+          高工资: 'success',
+          实习: 'danger',
+        };
+      },
     }),
     commentsNum() {
       let num = len(this.comments);
@@ -617,6 +632,10 @@ export default {
         this.post.like = post.data.Like;
         this.post.comment = post.data.Comment;
         this.post.postTime = post.data.PostTime;
+        this.post.tag = post.data.Tag ? post.data.Tag.split(',').map((tagText) => ({
+          type: this.tagTypeMap[tagText.trim()],
+          label: tagText.trim(),
+        })) : [];
         this.post.isSaved = post.data.IsSaved;
         this.post.isLiked = post.data.IsLiked;
         this.post.showMenu = false;
@@ -730,6 +749,8 @@ export default {
         this.$router.replace({ name: 'history' });
       } else if (this.before === 'notice') {
         this.$router.replace({ name: 'notice' });
+      } else if (this.before === 'discover') {
+        this.$router.replace({ name: 'discover' });
       }
     },
     handleKeyboardEvent() {
