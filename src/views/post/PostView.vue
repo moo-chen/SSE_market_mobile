@@ -1,5 +1,7 @@
 <template>
   <div class="post-form">
+    <van-nav-bar title="发帖"
+    left-arrow @click-left="onClickLeft"/>
     <van-cell-group>
       <van-field v-model="posts.title" label-width="50px"
       label="标题" placeholder="请输入标题"></van-field>
@@ -93,6 +95,9 @@ export default {
     handlePictureCardPreview(file) {
       this.dialogImageUrl = file.url;
       this.dialogVisible = true;
+    },
+    onClickLeft() {
+      this.$router.push({ path: '/' });
     },
     send() {
       if (this.mode === 'post') {

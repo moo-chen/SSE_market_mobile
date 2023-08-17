@@ -1,14 +1,5 @@
 <template>
   <div>
-    <div>
-      <van-search v-model="searchinfo" show-action background="#a9ddff"
-      placeholder="请输入搜索关键词" @search="onSearch" shape="round">
-      <template #action>
-      <div class="custom-search-button"
-      @click="onSearch" @keydown.enter="onSearch" tabindex="0">搜索</div>
-      </template>
-      </van-search>
-    </div>
     <div class="hotpost-topic">
       <van-icon name="fire-o" color="#fc0000" />
       24小时火文
@@ -54,8 +45,6 @@ export default {
   }),
   data() {
     return {
-      searchinfo: '',
-
       posts: [],
       hotposts: [],
       userTelephone: '',
@@ -81,10 +70,6 @@ export default {
   methods: {
     ...mapActions('postModule', { postHots: 'calculateheat' }),
     ...mapActions('postModule', { postUpdateBrowse: 'updatebrowse' }),
-    onSearch() {
-      this.$router.push({ name: 'home', query: { searchinfo: this.searchinfo } });
-    //   this.$router.go(0);
-    },
     updatebrowse(post) {
       // 切换浏览状态
       const updatedPost = { ...post, browse: post.browse };
@@ -171,11 +156,6 @@ export default {
 </script>
 
 <style scoped>
-
-.custom-search-button {
-  background-color: #a9ddff;
-  color: #ffffff;
-}
 .hotpost-topic {
   text-align: center;
   font-size: 40px;
