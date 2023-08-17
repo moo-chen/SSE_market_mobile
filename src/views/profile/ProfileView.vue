@@ -106,7 +106,7 @@ export default {
       formData.append('file', file.file); // 'file' 必须与后端接收的字段名相匹配
       formData.append('phone', this.userInfo.phone);
       axios
-        .post('https://localhost:8080/api/auth/updateavatar', formData, {
+        .post(`${process.env.VUE_APP_BASE_URL}auth/updateAvatar`, formData, {
           headers: {
             'Content-Type': 'multipart/form-data',
           },
@@ -157,7 +157,7 @@ export default {
         intro: this.userInfo.intro,
         avatarURL: this.userInfo.avatarURL,
       };
-      request.post('https://localhost:8080/api/auth/updateUserInfo', updatedUserInfo)
+      request.post(`${process.env.VUE_APP_BASE_URL}auth/updateUserInfo`, updatedUserInfo)
         .then((response) => {
           // 处理更新成功的逻辑
           console.log(response);

@@ -10,6 +10,8 @@ import './assets/css/index.css';
 import router from './router';
 import store from './store';
 import 'vue-photo-preview/dist/skin.css';
+// eslint-disable-next-line import/extensions
+import './assets/iconfont/iconfont.js';
 
 const options = {
   fullscreenEl: false, // 控制是否显示右上角全屏按钮

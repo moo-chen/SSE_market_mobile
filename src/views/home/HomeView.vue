@@ -2,6 +2,10 @@
 <!-- eslint-disable vue/no-use-v-if-with-v-for -->
 <!-- eslint-disable vuejs-accessibility/click-events-have-key-events -->
 <!-- eslint-disable vuejs-accessibility/alt-text -->
+<!-- eslint-disable max-len -->
+<!-- eslint-disable vue/no-use-v-if-with-v-for -->
+<!-- eslint-disable vuejs-accessibility/click-events-have-key-events -->
+<!-- eslint-disable vuejs-accessibility/alt-text -->
 <template>
   <div margin="0">
     <h2>SSE_market</h2>
@@ -15,10 +19,15 @@
         :key="index"
         @click="partitionBrowse(card.title)"
       >
-        <van-icon
-          :name="card.icon"
-          color="white"
-        />
+<!--        <van-icon-->
+<!--          :name="card.icon"-->
+<!--          color="white"-->
+<!--        />-->
+        <div>
+          <svg class="icon" aria-hidden="true">
+            <use v-bind:xlink:href="getGoodsHref(card.icon)"></use>
+          </svg>
+        </div>
         <!-- <p v-html="line"></p> -->
         <div class="title">
           {{ card.title }}
@@ -200,27 +209,27 @@ export default {
       cards: [
         {
           title: '日常吐槽',
-          icon: 'smile',
+          icon: 'pinglunqu',
         },
         {
           title: '打听求助',
-          icon: 'question',
+          icon: 'wenhao',
         },
         {
           title: '二手闲置',
-          icon: 'gift',
+          icon: 'a-gouwugouwudai',
         },
         {
           title: '恋爱交友',
-          icon: 'like',
+          icon: 'xin-qinglv',
         },
         {
           title: '学习交流',
-          icon: 'todo-list',
+          icon: 'wodexuexi',
         },
         {
           title: '其他',
-          icon: 'more',
+          icon: 'qita',
         },
       ],
     };
@@ -238,7 +247,9 @@ export default {
     ...mapActions('postModule', { postLike: 'like' }),
     ...mapActions('postModule', { updateLook: 'updatebrowse' }),
     ...mapActions('userModule', { postSave: 'save' }),
-
+    getGoodsHref(iconName) {
+      return `#icon-${iconName}`;
+    },
     goToPost() {
       this.$router.push({ path: '/post' });
     },
@@ -399,7 +410,6 @@ export default {
   justify-items: center;
   width: 150px;
   height: 150px;
-  background: skyblue;
 }
 
 .list .item .title {
@@ -424,7 +434,6 @@ export default {
   height: 1rem;
   width: 2rem;
   font-size: xx-small;
-  background-color: darkseagreen;
 }
 
 .post_title {
@@ -446,5 +455,19 @@ export default {
 .date {
   height: 5%;
 }
-
+h2 {
+  font-size: 60px; /* 增大字体大小 */
+  background: linear-gradient(to right, #2196F3, #FF4081); /* 使用蓝色和粉色的渐变背景 */
+  -webkit-background-clip: text; /* 将背景应用到文本 */
+  -webkit-text-fill-color: transparent; /* 使文本透明 */
+  text-shadow: 2px 2px 4px rgba(62, 218, 255, 0.8),
+  2px 2px 6px rgba(255, 64, 129, 0.8); /* 添加非黑色的阴影效果 */
+}
+.icon {
+  width: 1.5em;
+  height: 1.5em;
+  vertical-align: -0.15em;
+  fill: currentColor;
+  overflow: hidden;
+}
 </style>

@@ -1,19 +1,28 @@
 <template>
   <div>
+    <van-nav-bar
+      :title="this.title"
+      left-text="返回"
+      left-arrow
+      @click-left="goBack"
+      fixed
+    />
+    <div>
     <van-form @submit="submitFeedback">
       <van-field
         v-model="feedback.ftext"
         label="反馈"
         placeholder="请输入您的反馈"
         type="textarea"
-        rows="10"
-        style="margin-top: 50px;"
+        rows="3"
+        style="margin-top: 60px;"
         required
       />
       <van-uploader
         :after-read="afterReadFile"
         :max-count="1"
         accept="image/gif, image/jpeg, image/png"
+        style="margin-top: 20px;"
       >
         <div class="avatar-container">
           <img v-if="feedback.attachment"
@@ -26,14 +35,17 @@
       </div>
     </van-form>
   </div>
+  </div>
 </template>
 
 <script>
 import axios from 'axios';
+import { mapActions } from 'vuex';
 
 export default {
   data() {
     return {
+      title: '反馈',
       feedback: {
         ftext: '',
         attachment: '',
@@ -41,12 +53,16 @@ export default {
     };
   },
   methods: {
+    ...mapActions('postModule', { SubmitFeedback: 'submitFeedback' }),
+    goBack() {
+      this.$router.push({ path: '/profile' });
+    },
     afterReadFile(file) {
       // 这里你可以处理文件上传，然后将链接或其他信息存储到 feedback.attachment
       const formData = new FormData();
       formData.append('file', file.file); // 'file' 必须与后端接收的字段名相匹配
       axios
-        .post('https://localhost:8080/api/auth/uploadavatar', formData, {
+        .post(`${process.env.VUE_APP_BASE_URL}auth/uploadAvatar`, formData, {
           headers: {
             'Content-Type': 'multipart/form-data',
           },
@@ -69,12 +85,10 @@ export default {
         this.$toast('反馈内容不能为空');
         return;
       }
-      this.$axios
-        .post('https://localhost:8080/api/auth/submitFeedback', this.feedback)
+      this.SubmitFeedback(this.feedback)
         .then((response) => {
           if (response.data.code === 200) {
             this.$toast('反馈提交成功');
-            // 你可以在这里做一些跳转或其他操作
             this.$router.push('/profile');
           } else {
             this.$toast(`反馈提交失败: ${response.data.message}`);
@@ -91,5 +105,8 @@ export default {
 <style>
 .submit-button {
   margin: 20px;
+}
+body {
+  background-color: #f0f0f0; /* 灰色背景 */
 }
 </style>
