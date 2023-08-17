@@ -153,7 +153,7 @@
             {{ commentsNum }}
           </div>
           <van-button class="div" @click="post.showCommentForm
-            = !post.showCommentForm" type="primary" plain>
+            = !post.showCommentForm" type="default" plain>
             {{ post.showCommentForm ? '隐藏评论' : '评论' }}
           </van-button>
         </div>
@@ -168,7 +168,8 @@
         </div>
         <div class="van-row">
           <van-button style="margin-right: 2px"
-                      type='primary' size="small" plain
+                      type='default' size="mini" plain
+                      round
                       @click="showEmojiStatus()">😀
           </van-button>
           <div v-if="showEmoji">
@@ -182,7 +183,7 @@
           </div>
           <van-button
             @click="pcommentPost"
-            type="primary" plain>提交评论
+            round type="primary">提交评论
           </van-button>
         </div>
 
@@ -194,11 +195,11 @@
       <!--帖子评论排序按钮-->
       <div class="van-row--flex">
         <van-button @click="sortkind='Date';comments=sortcomments(comments)"
-                    plain hairline  icon="descending"
+                    plain hairline icon="descending"
                     type="primary" size="small" style="margin-left: 2px">时间
         </van-button>
         <van-button @click="sortkind='heat';comments=sortcomments(comments)"
-                    plain hairline  icon="descending"
+                    plain hairline icon="descending"
                     type="primary" size="small" style="margin-left: 2px">热度
         </van-button>
       </div>
@@ -224,32 +225,24 @@
                 <div class="comment-content">{{ comment.content }}</div>
                 <!--显示每个评论的点赞和回复数，点赞和回复图片对应点赞和回复功能-->
                 <div class='van-row--flex justify-content-between align-items-center'>
-                  <div class="van-col">
-                    <div class="text-muted">
-                      <van-icon size="27px" :name="comment.isLiked ? 'like' : 'like-o'"
-                                :color="comment.isLiked ? '#ee0a24' : ''"
-                                @click.stop="pclike(index)"
-                                :class="{ 'text-danger': comment.isLiked }">
-                      </van-icon>
-                      {{ comment.likeNum }}
-                    </div>
+                  <div class="text-muted">
+                    <van-icon size="27px" :name="comment.isLiked ? 'like' : 'like-o'"
+                              :color="comment.isLiked ? '#ee0a24' : ''"
+                              @click.stop="pclike(index)"
+                              :class="{ 'text-danger': comment.isLiked }">
+                    </van-icon>
+                    {{ comment.likeNum }}
                   </div>
-                  <div class="van-col" style="line-height: 1;">
-                    <div class="text-muted" style="vertical-align: middle;margin-top: 15px;">
-                      {{ formatDate(comment.commentTime) }}</div>
-                  </div>
-                  <div class="van-col" style="line-height: 1;">
-                    <van-icon size="27px" name="comment-o" style="vertical-align: middle;
-                    margin-top: 7px;"
-                    @click.stop="comment.showReplyForm= !comment.showReplyForm">
+                  <div class="text-muted">{{ formatDate(comment.commentTime) }}</div>
+                  <van-icon size="27px" name="comment-o"
+                  style="vertical-align: middle; margin-top: 8px;"
+                  @click.stop="comment.showReplyForm
+            = !comment.showReplyForm">
                   </van-icon>
-                  </div>
-                  <div class="van-col" style="line-height: 1;">
-                   <div class='text-muted' style="vertical-align: middle;" @click.stop>
-                    <van-icon size="27px" name='ellipsis' style="
-                    margin-bottom: 20px;" @click.stop="comment.showMenu =
+                  <div class='text-muted' @click.stop>
+                    <van-icon size="27px" name='ellipsis'
+                    @click.stop="comment.showMenu =
               !comment.showMenu"></van-icon>
-                    </div>
                   </div>
                 </div>
                 <!--对帖子评论的更多功能选择菜单：举报和删除-->
@@ -428,7 +421,7 @@
                     <van-icon size="27px"
                       name="comment-o"
                       @click="replyshow = !replyshow; nowReplyComment=subComment">
-                      <span style="font-size: 12px">回复</span>
+                      <span style="font-size: 12px;">回复</span>
                     </van-icon>
                   </div>
                 </div>
@@ -749,8 +742,6 @@ export default {
         this.$router.replace({ name: 'history' });
       } else if (this.before === 'notice') {
         this.$router.replace({ name: 'notice' });
-      } else if (this.before === 'discover') {
-        this.$router.replace({ name: 'discover' });
       }
     },
     handleKeyboardEvent() {
