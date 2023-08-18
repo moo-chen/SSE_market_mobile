@@ -7,7 +7,18 @@ module.exports = defineConfig({
 
 module.exports = {
   devServer: {
-    host: '192.168.202.129',
-    port: 8082,
+    host: '',
+    port: 8081,
+  },
+  configureWebpack: {
+    module: {
+      rules: [
+        // ...其他加载器配置
+        {
+          test: /\.txt$/,
+          use: 'raw-loader',
+        },
+      ],
+    },
   },
 };

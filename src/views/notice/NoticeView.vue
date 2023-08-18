@@ -313,7 +313,9 @@ export default {
               pcommentID: nowNotice.target,
             },
           });
-          window.open(link.href, '_blank');
+          // 在新页面加载后，可以通过监听 popstate 事件来处理返回操作
+          // window.open(link.href, '_blank');
+          window.location.href = link.href;
         } else if (nowNotice.type === 'ccomment') {
           const link = this.$router.resolve({
             name: 'postDetails',
@@ -325,7 +327,8 @@ export default {
               ccommentID: nowNotice.target,
             },
           });
-          window.open(link.href, '_blank');
+          // window.open(link.href, '_blank');
+          window.location.href = link.href;
         }
       }, 100);
     },

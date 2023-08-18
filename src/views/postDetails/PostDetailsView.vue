@@ -48,10 +48,10 @@
             <van-icon size="27px" name="delete-o"></van-icon>
             删除
           </van-cell>
-          <van-popup v-model="showDeleteModal" title="确认删除" ok-title="Confirm"
-                     @ok="postdelete(post)">
-            <p>你确定要删除这个帖子吗？</p>
-          </van-popup>
+          <van-dialog v-model="showDeleteModal" message="你确定要删除这个帖子吗？"
+                      showCancelButton
+                     @confirm="postdelete(post)">
+          </van-dialog>
         </van-popup>
         <div class="van-row--flex">
           <van-image :src="post.authorAvatar"
@@ -584,7 +584,7 @@ export default {
         localStorage.setItem('Style', JSON.stringify('day'));
       }
     }
-    console.error(this.$route.query);
+    console.log(this.$route.query);
     if (this.$route.query.before) {
       this.before = this.$route.query.before;
       // 将postID保存在本地缓存中
@@ -636,7 +636,8 @@ export default {
         this.post.browse = post.data.Browse;
       })
       .catch((err) => {
-        console.error(err);
+        this.$toast.fail(`加载失败\n${err.response.data.msg}`);
+        console.error(err.msg);
       });
     this.pcommentsShow();
     // 这里或许有比setTimeout更好的写法，但是暂时写不出来，
@@ -649,6 +650,9 @@ export default {
     // 获取当前评论ID
     this.currentPcommentID = this.$route.query.pcommentID;
     this.currentCcommentID = this.$route.query.ccommentID;
+    setTimeout(() => {
+      this.scrollToComment();
+    }, 1000);
   },
   methods: {
     addEmojiToCcomment(emoji) {
@@ -731,18 +735,18 @@ export default {
     },
     goback() {
       console.log(this.before);
-      if (this.before === 'home') {
-        this.$router.replace({
-          name: 'home',
-          query: { partitions: this.partition },
-        });
-      } else if (this.before === 'save') {
-        this.$router.replace({ name: 'save' });
-      } else if (this.before === 'history') {
-        this.$router.replace({ name: 'history' });
-      } else if (this.before === 'notice') {
-        this.$router.replace({ name: 'notice' });
-      }
+      this.$router.go(-1);
+      // if (this.before === 'home') {
+      //   this.$router.replace({
+      //     name: 'home',
+      //     query: { partitions: this.partition },
+      //   });
+      // } else if (this.before === 'save') {
+      //   this.$router.replace({ name: 'save' });
+      // } else if (this.before === 'history') {
+      //   this.$router.replace({ name: 'history' });
+      // } else if (this.before === 'notice') {
+      //   this.$router.replace({ name: 'notice' });
     },
     handleKeyboardEvent() {
       // 处理键盘事件，即使是一个空的处理程序
@@ -883,8 +887,9 @@ export default {
       console.log('scrollToComment');
       // 获取当前评论所在的元素
       let commentEl = document.getElementById(`comment-${this.currentPcommentID}`);
+      console.log(this.currentPcommentID);
       console.log(commentEl);
-      // const commentRef = this.$refs.commentRef[3];
+      // const commentRef = this.$refs.commentRef[2];
       // if (commentRef) {
       //   commentRef.setAttribute('tabindex', '-1');
       //   commentRef.scrollIntoView({ behavior: 'smooth', duration: 500 });
