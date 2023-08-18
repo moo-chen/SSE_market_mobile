@@ -8,6 +8,7 @@ const post = ({
   content,
   partition,
   photos,
+  tagList,
 }) => {
   return request.post('auth/post', {
     userTelephone,
@@ -15,12 +16,26 @@ const post = ({
     content,
     partition,
     photos,
+    tagList,
   });
 };
 
 // 看帖
-const browse = ({ userTelephone, partition, searchinfo }) => {
-  return request.post('auth/browse', { userTelephone, partition, searchinfo });
+const browse = ({
+  userTelephone, partition, searchinfo, limit, offset, searchsort,
+}) => {
+  return request.post('auth/browse', {
+    userTelephone, partition, searchinfo, limit, offset, searchsort,
+  });
+};
+
+// 查询帖子数量(用于分表查询)
+const getPostNum = ({
+  userTelephone, partition, searchinfo, searchsort,
+}) => {
+  return request.post('auth/getPostNum', {
+    userTelephone, partition, searchinfo, searchsort,
+  });
 };
 
 // 帖子点赞
@@ -70,6 +85,7 @@ const calculateheat = ({
 export default {
   post,
   browse,
+  getPostNum,
   like,
   deletepost,
   submitreport,

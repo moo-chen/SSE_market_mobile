@@ -126,8 +126,16 @@
             </template>
           </div>
         </div>
-        <div class="d-flex justify-content-between">
-          <small class="text-muted">{{ formatDate(post.postTime) }}</small>
+        <div>
+        <div class='d-flex justify-content-between'>
+          <small class='text-muted'>{{ formatDate(post.postTime) }}</small>
+        </div>
+        <div class="tag-group">
+          <span class="tag-group__title"></span>
+          <van-tag v-for="tag in post.tag" :key="tag.label" :type="tag.type"
+          effect="plain" size="mini">{{ tag.label }}
+          </van-tag>
+        </div>
         </div>
         <div class='van-row--flex' style="margin-bottom: 5px">
           <div class="text-muted">
@@ -145,7 +153,7 @@
             {{ commentsNum }}
           </div>
           <van-button class="div" @click="post.showCommentForm
-            = !post.showCommentForm" type="primary" plain>
+            = !post.showCommentForm" type="default" plain>
             {{ post.showCommentForm ? '隐藏评论' : '评论' }}
           </van-button>
         </div>
@@ -160,7 +168,8 @@
         </div>
         <div class="van-row">
           <van-button style="margin-right: 2px"
-                      type='primary' size="small" plain
+                      type='default' size="mini" plain
+                      round
                       @click="showEmojiStatus()">😀
           </van-button>
           <div v-if="showEmoji">
@@ -174,7 +183,7 @@
           </div>
           <van-button
             @click="pcommentPost"
-            type="primary" plain>提交评论
+            round type="primary">提交评论
           </van-button>
         </div>
 
@@ -186,12 +195,12 @@
       <!--帖子评论排序按钮-->
       <div class="van-row--flex">
         <van-button @click="sortkind='Date';comments=sortcomments(comments)"
-                    plain hairline
-                    type="primary" size="small" style="margin-left: 2px">按时间排序
+                    plain hairline icon="descending"
+                    type="primary" size="small" style="margin-left: 2px">时间
         </van-button>
         <van-button @click="sortkind='heat';comments=sortcomments(comments)"
-                    plain hairline
-                    type="primary" size="small" style="margin-left: 2px">按热度排序
+                    plain hairline icon="descending"
+                    type="primary" size="small" style="margin-left: 2px">热度
         </van-button>
       </div>
       <!-- 帖子评论-->
@@ -225,11 +234,14 @@
                     {{ comment.likeNum }}
                   </div>
                   <div class="text-muted">{{ formatDate(comment.commentTime) }}</div>
-                  <van-icon size="27px" name="comment-o" @click.stop="comment.showReplyForm
+                  <van-icon size="27px" name="comment-o"
+                  style="vertical-align: middle; margin-top: 8px;"
+                  @click.stop="comment.showReplyForm
             = !comment.showReplyForm">
                   </van-icon>
                   <div class='text-muted' @click.stop>
-                    <van-icon size="27px" name='ellipsis' @click.stop="comment.showMenu =
+                    <van-icon size="27px" name='ellipsis'
+                    @click.stop="comment.showMenu =
               !comment.showMenu"></van-icon>
                   </div>
                 </div>
@@ -409,7 +421,7 @@
                     <van-icon size="27px"
                       name="comment-o"
                       @click="replyshow = !replyshow; nowReplyComment=subComment">
-                      回复
+                      <span style="font-size: 12px;">回复</span>
                     </van-icon>
                   </div>
                 </div>
@@ -530,6 +542,13 @@ export default {
   computed: {
     ...mapState({
       userInfo: (state) => state.userModule.userInfo,
+      tagTypeMap() {
+        return {
+          大厂: 'primary',
+          高工资: 'success',
+          实习: 'danger',
+        };
+      },
     }),
     commentsNum() {
       let num = len(this.comments);
@@ -606,6 +625,10 @@ export default {
         this.post.like = post.data.Like;
         this.post.comment = post.data.Comment;
         this.post.postTime = post.data.PostTime;
+        this.post.tag = post.data.Tag ? post.data.Tag.split(',').map((tagText) => ({
+          type: this.tagTypeMap[tagText.trim()],
+          label: tagText.trim(),
+        })) : [];
         this.post.isSaved = post.data.IsSaved;
         this.post.isLiked = post.data.IsLiked;
         this.post.showMenu = false;

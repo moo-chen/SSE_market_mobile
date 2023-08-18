@@ -3,33 +3,53 @@
 <!-- eslint-disable vuejs-accessibility/click-events-have-key-events -->
 <!-- eslint-disable vuejs-accessibility/alt-text -->
 <template>
-  <div margin="0">
-    <h2>SSE_market</h2>
-    <div class="icon-container">
-      <van-icon size="27" name="add" @click="goToPost" />
+  <div margin='0'>
+    <div class='container'>
+      <h2>SSE_market</h2>
+      <div class='icon-container'>
+        <van-icon size='27' name='add' @click='goToPost' />
+      </div>
+      <div class='search-container'>
+        <van-search
+          v-model='searchinfo'
+          show-action
+          show-action-slot
+          placeholder='请输入搜索关键词'
+          @search='onSearch'
+          shape='round'
+        >
+          <template #action>
+            <div
+              class='custom-search-button'
+              @click='onSearch'
+              @keydown.enter='onSearch'
+              tabindex='0'
+            >
+              搜索
+            </div>
+          </template>
+        </van-search>
+      </div>
     </div>
-    <div>
-      <van-search v-model="searchinfo" show-action background="#a9ddff"
-      placeholder="请输入搜索关键词" @search="onSearch" shape="round">
-      <template #action>
-      <div class="custom-search-button"
-      @click="onSearch" @keydown.enter="onSearch" tabindex="0">搜索</div>
-      </template>
-      </van-search>
-    </div>
-    <div class="list">
+    <div class='list'>
       <div
-        class="item"
-        v-for="(card, index) in cards"
-        :key="index"
-        @click="partitionBrowse(card.title)"
+        class='item'
+        v-for='(card, index) in cards'
+        :key='index'
+        @click='partitionBrowse(card.title)'
       >
-        <van-icon
-          :name="card.icon"
-          color="white"
-        />
-        <!-- <p v-html="line"></p> -->
-        <div class="title">
+        <!-- <van-icon
+          :name='card.icon'
+          color='white'
+        /> -->
+        <div>
+          <svg class='icon' aria-hidden='true'>
+            <use v-bind:xlink:href='getGoodsHref(card.icon)'></use>
+          </svg>
+        </div>
+
+        <!-- <p v-html='line'></p> -->
+        <div class='title'>
           {{ card.title }}
         </div>
       </div>
@@ -37,148 +57,121 @@
 
     <div>
       <van-list
-        v-for="post in posts"
-        :key="post.postID"
-        :border="true"
-        fit="cover"
-        position="left"
+        v-for='post in posts'
+        :key='post.postID'
+        :border='true'
+        fit='cover'
+        position='left'
         inset
-        ref="totalGroup"
+        ref='totalGroup'
       >
-        <p v-html="line" @click="showDetail(post)"></p>
-        <van-row justify="center" @click="showDetail(post)">
-          <van-col offset="1" span="1" margin="0">
+        <p v-html='line' @click='showDetail(post)'></p>
+        <van-row justify='center' @click='showDetail(post)'>
+          <van-col offset='1' span='1' margin='0'>
             <van-image
               round
-              width="30px"
-              height="30px"
-              fit="cover"
-              position="left"
-              :src="post.authorAvatar"
+              width='30px'
+              height='30px'
+              fit='cover'
+              position='left'
+              :src='post.authorAvatar'
             >
             </van-image>
           </van-col>
-          <van-col offset="2" span="4">
-            <div class="author_box">
+          <van-col>
+            <div
+              class='author_box'
+              style='margin-left: 5px; vertical-align: middle; margin-top: 10px'
+            >
               {{ post.author }}
             </div>
           </van-col>
         </van-row>
 
-        <van-row @click="showDetail(post)">
-          <van-col span="24">
-            <van-cell
-              :border="false"
-              class="post_title"
-            >
+        <van-row @click='showDetail(post)'>
+          <van-col span='24'>
+            <van-cell :border='false' class='post_title'>
               {{ post.title }}
             </van-cell>
           </van-col>
 
-          <van-col span="24">
-            <van-cell
-              :border="false"
-              class="post_content"
-            >
+          <van-col span='24'>
+            <van-cell :border='false' class='post_content'>
               {{ post.content }}
             </van-cell>
           </van-col>
 
-          <van-col
-            span="24"
-          >
-            <van-cell
-              :border="false"
-              class="date"
-            >
-              <font size="2">
-                {{ formatDate(post.postTime) }}
-              </font>
-            </van-cell>
+          <van-col span='24'>
+            <div class='horizontal-container'>
+              <van-cell :border='false' class='date'>
+                <font size='2'>{{ formatDate(post.postTime) }}</font>
+              </van-cell>
+              <div class='tag-group'>
+                <span class='tag-group__title'></span>
+                <van-tag
+                  v-for='tag in post.tag'
+                  :key='tag.label'
+                  :type='tag.type'
+                  effect='plain'
+                  size='mini'
+                >
+                  {{ tag.label }}
+                </van-tag>
+              </div>
+            </div>
           </van-col>
         </van-row>
 
         <van-row>
-          <van-col span="6">
-            <van-icon
-              name="good-job-o"
-              size="10"
-              @click="like(post)"
-              v-if="!post.isLiked"
-            />
-            <van-icon
-              v-else
-              color="red"
-              name="good-job"
-              size="10"
-              @click="like(post)"
-            />
-            <font size="1">
+          <van-col span='6'>
+            <van-icon name='good-job-o' size='10' @click='like(post)' v-if='!post.isLiked' />
+            <van-icon v-else color='red' name='good-job' size='10' @click='like(post)' />
+            <font size='1'>
               {{ post.like }}
             </font>
           </van-col>
 
-          <van-col span="6" @click="showDetail(post)">
-            <van-icon name="eye-o" size="10"/>
-            <font size="1">
+          <van-col span='6' @click='showDetail(post)'>
+            <van-icon name='eye-o' size='10' />
+            <font size='1'>
               {{ post.browse }}
             </font>
           </van-col>
 
-          <van-col span="6" @click="showDetail(post)">
-            <van-icon name="chat-o" size="10"/>
-            <font size="1">
+          <van-col span='6' @click='showDetail(post)'>
+            <van-icon name='chat-o' size='10' />
+            <font size='1'>
               {{ post.comment }}
             </font>
           </van-col>
 
-          <van-col span="6">
-            <van-icon
-              name="star-o"
-              size="20"
-              @click="save(post)"
-              v-if="!post.isSaved"
-            />
-            <van-icon
-              v-else
-              color="yellow"
-              name="star"
-              size="20"
-              @click="save(post)"
-            />
+          <van-col span='6'>
+            <van-icon name='star-o' size='20' @click='save(post)' v-if='!post.isSaved' />
+            <van-icon v-else color='yellow' name='star' size='20' @click='save(post)' />
           </van-col>
         </van-row>
       </van-list>
       <van-row>
-        <van-col
-          offset="8"
-          span="8"
-          class="tips"
-        >
+        <van-col offset='8' span='8' class='tips'>
           <van-cell
-            :center="true"
-            class="notice"
-            v-if="this.currentPage*this.pageSize>=this.totalItems"
+            :center='true'
+            class='notice'
+            v-if='this.currentPage * this.pageSize >= this.totalItems'
           >
             已划到底部
           </van-cell>
-          <van-cell class="loading" v-else-if="loading">
-            正在加载...
-          </van-cell>
-          <van-button v-else :border="false" block @click="loadMorePosts">
-            加载更多
-          </van-button>
+          <van-cell class='loading' v-else-if='loading'> 正在加载... </van-cell>
+          <van-button v-else :border='false' block @click='loadMorePosts'> 加载更多 </van-button>
         </van-col>
-        <p v-html="line"></p>
-        <p v-html="line"></p>
-        <p v-html="line"></p>
+        <p v-html='line'></p>
+        <p v-html='line'></p>
+        <p v-html='line'></p>
       </van-row>
     </div>
   </div>
 </template>
 
 <script>
-
 import { mapState, mapActions } from 'vuex';
 
 export default {
@@ -209,45 +202,57 @@ export default {
       cards: [
         {
           title: '日常吐槽',
-          icon: 'smile',
+          icon: 'pinglunqu',
         },
         {
           title: '打听求助',
-          icon: 'question',
+          icon: 'wenhao',
         },
         {
           title: '二手闲置',
-          icon: 'gift',
+          icon: 'a-gouwugouwudai',
         },
         {
           title: '恋爱交友',
-          icon: 'like',
+          icon: 'xin-qinglv',
         },
         {
           title: '学习交流',
-          icon: 'todo-list',
+          icon: 'wodexuexi',
         },
         {
           title: '其他',
-          icon: 'more',
+          icon: 'qita',
         },
       ],
     };
   },
   created() {
+    this.PostNum();
     this.partitionBrowse('');
   },
   computed: {
     ...mapState({
       userInfo: (state) => state.userModule.userInfo,
     }),
+    tagTypeMap() {
+      return {
+        大厂: 'primary',
+        高工资: 'success',
+        实习: 'danger',
+      };
+    },
   },
   methods: {
     ...mapActions('postModule', { postBrowse: 'browse' }),
+    ...mapActions('postModule', { getPostNum: 'getPostNum' }),
     ...mapActions('postModule', { postLike: 'like' }),
     ...mapActions('postModule', { updateLook: 'updatebrowse' }),
     ...mapActions('userModule', { postSave: 'save' }),
 
+    getGoodsHref(iconName) {
+      return `#icon-${iconName}`;
+    },
     goToPost() {
       this.$router.push({ path: '/post' });
     },
@@ -261,57 +266,80 @@ export default {
       this.updateLook({
         userTelephone: this.userInfo.phone,
         postID: post.id,
-      }).then(() => {
-        this.browse += 1;
-      }).catch((err) => {
-        console.error(err);
-      });
+      })
+        .then(() => {
+          this.browse += 1;
+        })
+        .catch((err) => {
+          console.error(err);
+        });
       this.$router.push({
         name: 'postDetails',
         params: { id: post.id, partition: this.partition, before: 'home' },
         query: { id: post.id, before: 'home' },
       });
     },
-
-    partitionBrowse(chosenPartition) {
-      this.partition = chosenPartition;
-      console.error(this.userInfo);
-      this.postBrowse({
-        userTelephone: this.userInfo.phone,
-        partition: this.partition,
-        searchinfo: this.searchinfo,
-      }).then((data) => {
-        if (data.data == null) {
-          this.totalItems = 0;
-          this.posts = [];
+    // 查询满足要求的帖子数量
+    async PostNum() {
+      try {
+        if (this.userInfo) {
+          this.userTelephone = this.userInfo.phone;
         } else {
-          this.totalItems = data.data.length;
-          this.posts = data.data
-            .map((post) => ({
-              id: post.PostID,
-              author: post.UserName,
-              authorTelephone: post.UserTelephone,
-              authorAvatar: post.UserAvatar,
-              title: post.Title,
-              content: post.Content,
-              like: post.Like,
-              comment: post.Comment,
-              postTime: post.PostTime,
-              isSaved: post.IsSaved,
-              browse: post.Browse,
-              isLiked: post.IsLiked,
-              heat: post.Heat,
-              photos: post.Photos,
-              showMenu: false,
-            })).sort((a, b) => new Date(b.postTime) - new Date(a.postTime)); // 按时间倒序排序展示
-          this.posts = this.posts.slice(0, this.currentPage * this.pageSize);
-          console.error(this.posts);
+          // 游客访问
+          this.userTelephone = '00000000000';
         }
-        console.error(this.totalItems);
-      }).catch((err) => {
-        this.totalItems = 0;
-        console.error(err);
-      });
+        const { data } = await this.getPostNum({
+          userTelephone: this.userTelephone,
+          partition: this.partition,
+          searchinfo: this.searchinfo,
+          searchsort: 'home',
+        });
+        this.totalItems = data.Postcount;
+      } catch (error) {
+        console.error(error);
+      }
+    },
+    async partitionBrowse(chosenPartition) {
+      this.partition = chosenPartition;
+      try {
+        // 向后端发送请求并获取帖子列表
+        const { data } = await this.postBrowse({
+          userTelephone: this.userTelephone,
+          partition: this.partition,
+          searchinfo: this.searchinfo,
+          searchsort: 'home',
+          limit: this.pageSize,
+          offset: (this.currentPage - 1) * this.pageSize,
+        });
+        // 将获取到的帖子列表数据赋值给 posts 变量
+        this.posts = data
+          .map((post) => ({
+            id: post.PostID,
+            author: post.UserName,
+            authorTelephone: post.UserTelephone,
+            authorAvatar: post.UserAvatar,
+            title: post.Title,
+            content: post.Content,
+            like: post.Like,
+            comment: post.Comment,
+            postTime: post.PostTime,
+            isSaved: post.IsSaved,
+            isLiked: post.IsLiked,
+            browse: post.Browse,
+            heat: post.Heat,
+            photos: post.Photos,
+            tag: post.Tag
+              ? post.Tag.split(',').map((tagText) => ({
+                type: this.tagTypeMap[tagText.trim()], // 使用 this.tagTypeMap
+                label: tagText.trim(),
+              }))
+              : [],
+            showMenu: false,
+          }))
+          .sort((a, b) => new Date(b.postTime) - new Date(a.postTime));
+      } catch (error) {
+        console.error(error);
+      }
     },
 
     handleScroll() {
@@ -332,59 +360,97 @@ export default {
       this.loading = false;
       console.error(this.currentPage);
       window.addEventListener('scroll', this.handleScroll);
-      this.partitionBrowse(this.partition);
-    },
-
-    formatDate(date) {
-      // 格式化日期时间
-      const d = new Date(date);
-      return `${d.getFullYear()}年${d.getMonth() + 1}月${d.getDate()}日 ${String(
-        d.getHours(),
-      ).padStart(2, '0')}:${String(d.getMinutes()).padStart(2, '0')}:${String(
-        d.getSeconds(),
-      ).padStart(2, '0')}`;
-    },
-
-    like(post) {
-      console.error(this.userInfo);
-      const updatedPost = { ...post, isLiked: !post.isLiked };
-      updatedPost.like += post.isLiked ? -1 : 1;
-      // 用更新后的 post 对象替换原先的 post 对象
-      this.posts.splice(this.posts.indexOf(post), 1, updatedPost);
-      this.userTelephone = this.userInfo.phone;
-      this.postID = post.id;
-      this.isLiked = post.isLiked;
-      // 请求
-      this.postLike({
-        userTelephone: this.userTelephone,
-        postID: this.postID,
-        isLiked: this.isLiked,
-      })
-        .then(() => {})
-        .catch((err) => {
-          console.error(err);
+      // 下面再请求一次数据,加到原来的posts上
+      try {
+        const { data } = await this.postBrowse({
+          userTelephone: this.userTelephone,
+          partition: this.partition,
+          searchinfo: this.searchinfo,
+          searchsort: 'home',
+          limit: this.pageSize,
+          offset: (this.currentPage - 1) * this.pageSize,
         });
+        const newPosts = data
+          .map((post) => ({
+            id: post.PostID,
+            author: post.UserName,
+            authorTelephone: post.UserTelephone,
+            authorAvatar: post.UserAvatar,
+            title: post.Title,
+            content: post.Content,
+            like: post.Like,
+            comment: post.Comment,
+            postTime: post.PostTime,
+            isSaved: post.IsSaved,
+            isLiked: post.IsLiked,
+            browse: post.Browse,
+            heat: post.Heat,
+            photos: post.Photos,
+            tag: post.Tag
+              ? post.Tag.split(',').map((tagText) => ({
+                type: this.tagTypeMap[tagText.trim()], // 使用 this.tagTypeMap
+                label: tagText.trim(),
+              }))
+              : [],
+            showMenu: false,
+          }))
+          .sort((a, b) => new Date(b.postTime) - new Date(a.postTime));
+        this.posts.push(...newPosts); // 将新的帖子列表合并到原有的 posts 数组中
+      } catch (error) {
+        console.error(error);
+      }
     },
+  },
 
-    save(post) {
-      // 切换收藏状态
-      const updatedPost = { ...post, isSaved: !post.isSaved };
-      // 用更新后的 post 对象替换原先的 post 对象
-      this.posts.splice(this.posts.indexOf(post), 1, updatedPost);
-      this.userTelephone = this.userInfo.phone;
-      this.postID = post.id;
-      this.isSaved = post.isSaved;
-      // 请求
-      this.postSave({
-        userTelephone: this.userTelephone,
-        postID: this.postID,
-        isSaved: this.isSaved,
-      })
-        .then(() => {})
-        .catch((err) => {
-          console.error(err);
-        });
-    },
+  formatDate(date) {
+    // 格式化日期时间
+    const d = new Date(date);
+    return `${d.getFullYear()}年${d.getMonth() + 1}月${d.getDate()}日 ${String(
+      d.getHours(),
+    ).padStart(2, '0')}:${String(d.getMinutes()).padStart(2, '0')}:${String(
+      d.getSeconds(),
+    ).padStart(2, '0')}`;
+  },
+
+  like(post) {
+    console.error(this.userInfo);
+    const updatedPost = { ...post, isLiked: !post.isLiked };
+    updatedPost.like += post.isLiked ? -1 : 1;
+    // 用更新后的 post 对象替换原先的 post 对象
+    this.posts.splice(this.posts.indexOf(post), 1, updatedPost);
+    this.userTelephone = this.userInfo.phone;
+    this.postID = post.id;
+    this.isLiked = post.isLiked;
+    // 请求
+    this.postLike({
+      userTelephone: this.userTelephone,
+      postID: this.postID,
+      isLiked: this.isLiked,
+    })
+      .then(() => {})
+      .catch((err) => {
+        console.error(err);
+      });
+  },
+
+  save(post) {
+    // 切换收藏状态
+    const updatedPost = { ...post, isSaved: !post.isSaved };
+    // 用更新后的 post 对象替换原先的 post 对象
+    this.posts.splice(this.posts.indexOf(post), 1, updatedPost);
+    this.userTelephone = this.userInfo.phone;
+    this.postID = post.id;
+    this.isSaved = post.isSaved;
+    // 请求
+    this.postSave({
+      userTelephone: this.userTelephone,
+      postID: this.postID,
+      isSaved: this.isSaved,
+    })
+      .then(() => {})
+      .catch((err) => {
+        console.error(err);
+      });
   },
 };
 </script>
@@ -400,7 +466,7 @@ export default {
   background-color: #a9ddff;
   color: #ffffff;
 }
-.banner{
+.banner {
   width: 1000px;
   height: 304px;
   background: pink;
@@ -416,7 +482,7 @@ export default {
   justify-items: center;
   width: 150px;
   height: 150px;
-  background: skyblue;
+  /* background: skyblue; */
 }
 
 .list .item .title {
@@ -441,7 +507,7 @@ export default {
   height: 1rem;
   width: 2rem;
   font-size: xx-small;
-  background-color: darkseagreen;
+  color: midnightblue;
 }
 
 .post_title {
@@ -459,9 +525,50 @@ export default {
   vertical-align: middle;
   text-align: center;
 }
-
+.horizontal-container {
+  display: flex;
+  justify-content: space-between; /* 将子元素水平分隔放置 */
+  align-items: center; /* 垂直居中对齐子元素 */
+}
 .date {
   height: 5%;
+  flex: 1;
+}
+.container {
+  background: linear-gradient(to bottom, #a9ddff, #87cefa);
+  padding: 20px;
 }
 
+h2 {
+  font-size: 60px;
+  color: #333333;
+  margin-bottom: 20px;
+}
+
+.search-container {
+  padding: 20px;
+  border-radius: 10px;
+  overflow: hidden; /* 隐藏搜索框背景的溢出部分 */
+}
+
+.van-search__input {
+  background: rgba(255, 255, 255, 0.5); /* 将搜索框内部白色部分设为半透明白色 */
+  border-radius: 10px;
+  padding: 10px;
+}
+
+.custom-search-button {
+  background: linear-gradient(to bottom, #a9ddff, #87cefa);
+  color: #ffffff;
+  cursor: pointer;
+  padding: 10px 20px;
+  border-radius: 20px;
+}
+.icon {
+  width: 1em;
+  height: 1em;
+  vertical-align: -0.15em;
+  fill: currentColor;
+  overflow: hidden;
+}
 </style>

@@ -10,7 +10,9 @@
 .van-icon {
     font-size: 20px;
 }
-
+.van-tabbar {
+    background-color: #ffffff !important; /* 白色背景 */
+}
 .active {
     color: rgb(17, 167, 226);
 
