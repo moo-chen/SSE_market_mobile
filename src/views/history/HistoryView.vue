@@ -206,6 +206,7 @@ export default {
     };
   },
   created() {
+    this.PostNum();
     this.partitionBrowse('');
   },
   computed: {
@@ -215,6 +216,7 @@ export default {
   },
   methods: {
     ...mapActions('postModule', { postBrowse: 'browse' }),
+    ...mapActions('postModule', { getPostNum: 'getPostNum' }),
     ...mapActions('postModule', { postLike: 'like' }),
     ...mapActions('postModule', { updateLook: 'updatebrowse' }),
     ...mapActions('userModule', { postSave: 'save' }),
@@ -239,46 +241,68 @@ export default {
         query: { id: post.id, before: 'home' },
       });
     },
-
-    partitionBrowse() {
-      console.error(this.userInfo);
-      this.postBrowse({
-        userTelephone: this.userInfo.phone,
-        searchinfo: '',
-      }).then((data) => {
-        if (data.data == null) {
-          this.totalItems = 0;
-          this.posts = [];
+    // 查询满足要求的帖子数量
+    async PostNum() {
+      try {
+        if (this.userInfo) {
+          this.userTelephone = this.userInfo.phone;
         } else {
-          const filteredPosts = data.data
-            .filter((post) => post.UserTelephone === this.userInfo.phone) // 筛选用户自己发的帖子
-            .map((post) => ({
-              id: post.PostID,
-              author: post.UserName,
-              authorTelephone: post.UserTelephone,
-              authorAvatar: post.UserAvatar,
-              title: post.Title,
-              content: post.Content,
-              like: post.Like,
-              comment: post.Comment,
-              postTime: post.PostTime,
-              isSaved: post.IsSaved,
-              browse: post.Browse,
-              isLiked: post.IsLiked,
-              heat: post.Heat,
-              photos: post.Photos,
-              showMenu: false,
-            })).sort((a, b) => new Date(b.postTime) - new Date(a.postTime)); // 按时间倒序排序展示
-          this.totalItems = filteredPosts.length;
-          this.posts = filteredPosts.slice(0, this.currentPage * this.pageSize);
-          console.error(this.posts);
+          // 游客访问
+          this.userTelephone = '00000000000';
         }
-        console.error(this.totalItems);
-      }).catch((err) => {
-        this.totalItems = 0;
-        console.error(err);
-      });
+        const { data }  = await this.getPostNum({
+          userTelephone: this.userTelephone,
+          partition: this.partition,
+          searchinfo: this.searchinfo,
+          searchsort: "history"
+        })
+        this.totalItems = data.Postcount;
+      } catch (error) {
+        console.error(error);
+      }
     },
+    async partitionBrowse(chosenPartition) {
+      this.partition = chosenPartition;
+      try {
+        // 向后端发送请求并获取帖子列表
+        const { data } = await this.postBrowse({
+          userTelephone: this.userInfo.phone,
+          partition: this.partition,
+          searchinfo: this.searchinfo,
+          searchsort: "history",
+          limit: this.pageSize,
+          offset: (this.currentPage - 1) * this.pageSize,
+        });
+        // 将获取到的帖子列表数据赋值给 posts 变量
+        this.posts = data
+          .map((post) => ({
+            id: post.PostID,
+            author: post.UserName,
+            authorTelephone: post.UserTelephone,
+            authorAvatar: post.UserAvatar,
+            title: post.Title,
+            content: post.Content,
+            like: post.Like,
+            comment: post.Comment,
+            postTime: post.PostTime,
+            isSaved: post.IsSaved,
+            isLiked: post.IsLiked,
+            browse: post.Browse,
+            heat: post.Heat,
+            photos: post.Photos,
+            tag: post.Tag ? post.Tag.split(',')
+              .map((tagText) => ({
+                type: this.tagTypeMap[tagText.trim()], // 使用 this.tagTypeMap
+                label: tagText.trim(),
+              })) : [],
+            showMenu: false,
+          }))
+          .sort((a, b) => new Date(b.postTime) - new Date(a.postTime))
+      } catch (error) {
+        console.error(error);
+      }
+    },
+
 
     handleScroll() {
       this.$nextTick(() => {
@@ -298,7 +322,46 @@ export default {
       this.loading = false;
       console.error(this.currentPage);
       window.addEventListener('scroll', this.handleScroll);
-      this.partitionBrowse();
+      // 下面再请求一次数据,加到原来的posts上
+      try {
+        const { data } = await this.postBrowse({
+          userTelephone: this.userTelephone,
+          partition: this.partition,
+          searchinfo: this.searchinfo,
+          searchsort: "history",
+          limit: this.pageSize,
+          offset: (this.currentPage - 1) * this.pageSize,
+        });
+        const newPosts = data
+          .map((post) => ({
+            id: post.PostID,
+            author: post.UserName,
+            authorTelephone: post.UserTelephone,
+            authorAvatar: post.UserAvatar,
+            title: post.Title,
+            content: post.Content,
+            like: post.Like,
+            comment: post.Comment,
+            postTime: post.PostTime,
+            isSaved: post.IsSaved,
+            isLiked: post.IsLiked,
+            browse: post.Browse,
+            heat: post.Heat,
+            photos: post.Photos,
+            tag: post.Tag
+              ? post.Tag.split(',').map((tagText) => ({
+                type: this.tagTypeMap[tagText.trim()], // 使用 this.tagTypeMap
+                label: tagText.trim(),
+              }))
+              : [],
+            showMenu: false,
+          }))
+          .sort((a, b) => new Date(b.postTime) - new Date(a.postTime));
+        this.posts.push(...newPosts); // 将新的帖子列表合并到原有的 posts 数组中
+      } catch (error) {
+        console.error(error);
+      }
+     }
     },
 
     formatDate(date) {
