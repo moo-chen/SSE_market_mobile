@@ -12,6 +12,7 @@
     "axios": "^1.4.0",
     "core-js": "^3.8.3",
     "emoji-mart-vue": "^2.6.6",
+    "typescript": "^5.1.6",
     "v-avatar": "^0.1.1",
     "vant": "^2.12.54",
     "vue": "^2.6.14",
