@@ -2,24 +2,22 @@
 <!-- eslint-disable vue/no-use-v-if-with-v-for -->
 <!-- eslint-disable vuejs-accessibility/click-events-have-key-events -->
 <!-- eslint-disable vuejs-accessibility/alt-text -->
-<!-- eslint-disable max-len -->
-<!-- eslint-disable vue/no-use-v-if-with-v-for -->
-<!-- eslint-disable vuejs-accessibility/click-events-have-key-events -->
-<!-- eslint-disable vuejs-accessibility/alt-text -->
 <template>
   <div margin="0">
-    <h2>SSE_market</h2>
-    <div class="icon-container">
-      <van-icon size="27" name="add" @click="goToPost" />
-    </div>
-    <div>
-      <van-search v-model="searchinfo" show-action background="#a9ddff"
-      placeholder="请输入搜索关键词" @search="onSearch" shape="round">
-      <template #action>
-      <div class="custom-search-button"
-      @click="onSearch" @keydown.enter="onSearch" tabindex="0">搜索</div>
-      </template>
-      </van-search>
+    <div class="container">
+      <h2>SSE_market</h2>
+      <div class="icon-container">
+        <van-icon size="27" name="add" @click="goToPost" />
+      </div>
+      <div class="search-container">
+        <van-search v-model="searchinfo" show-action show-action-slot
+          placeholder="请输入搜索关键词" @search="onSearch" shape="round">
+          <template #action>
+            <div class="custom-search-button"
+              @click="onSearch" @keydown.enter="onSearch" tabindex="0">搜索</div>
+          </template>
+        </van-search>
+      </div>
     </div>
     <div class="list">
       <div
@@ -28,15 +26,16 @@
         :key="index"
         @click="partitionBrowse(card.title)"
       >
-<!--        <van-icon-->
-<!--          :name="card.icon"-->
-<!--          color="white"-->
-<!--        />-->
+        <!-- <van-icon
+          :name="card.icon"
+          color="white"
+        /> -->
         <div>
           <svg class="icon" aria-hidden="true">
             <use v-bind:xlink:href="getGoodsHref(card.icon)"></use>
           </svg>
         </div>
+
         <!-- <p v-html="line"></p> -->
         <div class="title">
           {{ card.title }}
@@ -67,8 +66,8 @@
             >
             </van-image>
           </van-col>
-          <van-col offset="2" span="4">
-            <div class="author_box">
+          <van-col>
+            <div class="author_box" style="margin-left: 5px;vertical-align: middle; margin-top: 10px;" >
               {{ post.author }}
             </div>
           </van-col>
@@ -266,6 +265,7 @@ export default {
     ...mapActions('postModule', { postLike: 'like' }),
     ...mapActions('postModule', { updateLook: 'updatebrowse' }),
     ...mapActions('userModule', { postSave: 'save' }),
+
     getGoodsHref(iconName) {
       return `#icon-${iconName}`;
     },
@@ -496,6 +496,7 @@ export default {
   justify-items: center;
   width: 150px;
   height: 150px;
+  /* background: skyblue; */
 }
 
 .list .item .title {
@@ -520,6 +521,7 @@ export default {
   height: 1rem;
   width: 2rem;
   font-size: xx-small;
+  color:midnightblue;
 }
 
 .post_title {
@@ -546,19 +548,40 @@ export default {
   height: 5%;
   flex: 1;
 }
-h2 {
-  font-size: 60px; /* 增大字体大小 */
-  background: linear-gradient(to right, #2196F3, #FF4081); /* 使用蓝色和粉色的渐变背景 */
-  -webkit-background-clip: text; /* 将背景应用到文本 */
-  -webkit-text-fill-color: transparent; /* 使文本透明 */
-  text-shadow: 2px 2px 4px rgba(62, 218, 255, 0.8),
-  2px 2px 6px rgba(255, 64, 129, 0.8); /* 添加非黑色的阴影效果 */
-}
-.icon {
-  width: 1.5em;
-  height: 1.5em;
-  vertical-align: -0.15em;
-  fill: currentColor;
-  overflow: hidden;
-}
+.container {
+    background: linear-gradient(to bottom, #a9ddff, #87cefa);
+    padding: 20px;
+  }
+
+  h2 {
+    font-size: 60px;
+    color: #333333;
+    margin-bottom: 20px;
+  }
+
+  .search-container {
+    padding: 20px;
+    border-radius: 10px;
+    overflow: hidden; /* 隐藏搜索框背景的溢出部分 */
+  }
+
+  .van-search__input {
+    background: rgba(255, 255, 255, 0.5); /* 将搜索框内部白色部分设为半透明白色 */
+    border-radius: 10px;
+    padding: 10px;
+  }
+
+  .custom-search-button {
+    background: linear-gradient(to bottom, #a9ddff, #87cefa);
+    color: #ffffff;
+    cursor: pointer;
+    padding: 10px 20px;
+    border-radius: 20px;
+  }
+  .icon {
+      width: 1em; height: 1em;
+      vertical-align: -0.15em;
+      fill: currentColor;
+      overflow: hidden;
+  }
 </style>
