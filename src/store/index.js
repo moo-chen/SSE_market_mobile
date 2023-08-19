@@ -16,7 +16,7 @@ export default new Vuex.Store({
   getters: {
   },
   mutations: {
-    getNotices(state) {
+    getNoticesNum(state) {
       request.get('/auth/getNoticeNum').then((response) => {
         state.noticesNum = response.data.unreadTotalNum;
       }).catch((error) => {

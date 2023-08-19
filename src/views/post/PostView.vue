@@ -186,6 +186,7 @@ export default {
   padding: 20px;
   font-weight: bold;
   font-family: 'Open Sans', sans-serif;
+  margin-bottom: 100px;
 }
 
 .form-buttons {

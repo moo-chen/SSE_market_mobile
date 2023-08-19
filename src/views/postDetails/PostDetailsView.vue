@@ -433,17 +433,18 @@
         <van-popup position="bottom" round
                    :style="{height:'30%'}"
                    v-model="replyshow">
-          <form @submit.prevent=
+          <van-form @submit=
                   "ccommentPost(showcommentsindex,
                           nowReplyComment.author,
                           nowReplyComment.ccommentID)">
             <van-field v-model="ccomment.content"
-                       :placeholder="'回复@'+nowReplyComment.author" rows="3">
+                       :placeholder="'回复@'+nowReplyComment.author">
             </van-field>
             <!--表情选择器-->
             <div>
               <van-button style="margin-right: 2px"
                           type='primary' size="small" plain
+                          native-type="button"
                           @click="showEmojiStatus()">😀
               </van-button>
               <div v-if="showEmoji">
@@ -459,7 +460,7 @@
                 提交回复
               </van-button>
             </div>
-          </form>
+          </van-form>
         </van-popup>
       </van-popup>
       <!--加载更多帖子评论-->
@@ -695,7 +696,7 @@ export default {
           // 弹窗提示
           this.$toast.success('回复成功');
           setTimeout(() => {
-            this.showcommentsindex = 0;
+            // this.showcommentsindex = 0;
             this.nowReplyComment = '';
             this.replyshow = false;
             this.pcommentsShow();
@@ -1037,7 +1038,7 @@ export default {
       if (this.comments[index].showAllReplies === true) {
         return this.comments[index].subComments;
       }
-      return this.comments[index].subComments.slice(0, 5);
+      return this.comments[index].subComments;
     },
   },
   beforeRouteLeave(to, from, next) {

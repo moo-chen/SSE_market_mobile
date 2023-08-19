@@ -21,10 +21,12 @@
             height="48"
             round
           />
+
         </template>
         <van-col style="margin-outside: 5px">
           <van-row style="margin-top:5px">{{ formatNoticeTitle(notice) }}</van-row>
           <van-row style="margin-top: 5px">{{ formatNoticeContent(notice) }}</van-row>
+          <van-row style="color: #888888;font-size: 14px">{{formatDate(notice.time)}}</van-row>
         </van-col>
         <van-badge v-if="notice.read===false" :content="'New'"/>
       </van-cell>
@@ -50,7 +52,7 @@
           :src="currentNotice.senderAvatar"
           width="48"
           height="48"
-          class="avatar mr-2"
+          class="avatar"
           alt=""
         >
         <div style="display: flex;flex-direction: column;">
