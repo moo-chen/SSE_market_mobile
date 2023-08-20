@@ -1,3 +1,12 @@
+/* eslint-disable import/no-extraneous-dependencies */
+/* eslint-disable import/no-duplicates */
+/* eslint-disable import/no-extraneous-dependencies */
+/* eslint-disable import/no-duplicates */
+/* eslint-disable import/no-extraneous-dependencies */
+// eslint-disable-next-line import/no-extraneous-dependencies
+/* eslint-disable import/no-duplicates */
+/* eslint-disable import/no-extraneous-dependencies */
+/* eslint-disable import/extensions */
 import Vue from 'vue';
 import Vant from 'vant';
 import 'vant/lib/index.css';

@@ -696,7 +696,7 @@ export default {
           // 弹窗提示
           this.$toast.success('回复成功');
           setTimeout(() => {
-            // this.showcommentsindex = 0;
+            this.showcommentsindex = 0;
             this.nowReplyComment = '';
             this.replyshow = false;
             this.pcommentsShow();
@@ -736,18 +736,18 @@ export default {
     },
     goback() {
       console.log(this.before);
-      this.$router.go(-1);
-      // if (this.before === 'home') {
-      //   this.$router.replace({
-      //     name: 'home',
-      //     query: { partitions: this.partition },
-      //   });
-      // } else if (this.before === 'save') {
-      //   this.$router.replace({ name: 'save' });
-      // } else if (this.before === 'history') {
-      //   this.$router.replace({ name: 'history' });
-      // } else if (this.before === 'notice') {
-      //   this.$router.replace({ name: 'notice' });
+      if (this.before === 'home') {
+        this.$router.replace({
+          name: 'home',
+          query: { partitions: this.partition },
+        });
+      } else if (this.before === 'save') {
+        this.$router.replace({ name: 'save' });
+      } else if (this.before === 'history') {
+        this.$router.replace({ name: 'history' });
+      } else if (this.before === 'notice') {
+        this.$router.replace({ name: 'notice' });
+      }
     },
     handleKeyboardEvent() {
       // 处理键盘事件，即使是一个空的处理程序
@@ -890,7 +890,7 @@ export default {
       let commentEl = document.getElementById(`comment-${this.currentPcommentID}`);
       console.log(this.currentPcommentID);
       console.log(commentEl);
-      // const commentRef = this.$refs.commentRef[2];
+      // const commentRef = this.$refs.commentRef[3];
       // if (commentRef) {
       //   commentRef.setAttribute('tabindex', '-1');
       //   commentRef.scrollIntoView({ behavior: 'smooth', duration: 500 });

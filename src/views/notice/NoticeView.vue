@@ -21,7 +21,6 @@
             height="48"
             round
           />
-
         </template>
         <van-col style="margin-outside: 5px">
           <van-row style="margin-top:5px">{{ formatNoticeTitle(notice) }}</van-row>

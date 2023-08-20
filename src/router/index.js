@@ -65,7 +65,7 @@ const routes = [
     meta: {
       auth: true,
     },
-    component: () => import('@/views/save/SaveView.vue'),
+    component: () => import('../views/save/SaveView.vue'),
   },
   {
     path: '/history',
@@ -73,7 +73,7 @@ const routes = [
     meta: {
       auth: true,
     },
-    component: () => import('@/views/history/HistoryView.vue'),
+    component: () => import('../views/history/HistoryView.vue'),
   },
   {
     path: '/feedback',
@@ -81,7 +81,17 @@ const routes = [
     meta: {
       auth: true,
     },
-    component: () => import('@/views/feedback/FeedbackView.vue'),
+    component: () => import('../views/feedback/FeedbackView.vue'),
+  },
+  {
+    path: '/register',
+    name: 'register',
+    component: () => import('../views/register/RegisterView.vue'),
+  },
+  {
+    path: '/modifyPassword',
+    name: 'modifyPassword',
+    component: () => import('../views/modifyPassword/ModifyPasswordView.vue'),
   },
 ];
 
