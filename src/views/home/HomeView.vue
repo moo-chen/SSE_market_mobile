@@ -400,57 +400,56 @@ export default {
         console.error(error);
       }
     },
-  },
+    formatDate(date) {
+      // 格式化日期时间
+      const d = new Date(date);
+      return `${d.getFullYear()}年${d.getMonth() + 1}月${d.getDate()}日 ${String(
+        d.getHours(),
+      ).padStart(2, '0')}:${String(d.getMinutes()).padStart(2, '0')}:${String(
+        d.getSeconds(),
+      ).padStart(2, '0')}`;
+    },
 
-  formatDate(date) {
-    // 格式化日期时间
-    const d = new Date(date);
-    return `${d.getFullYear()}年${d.getMonth() + 1}月${d.getDate()}日 ${String(
-      d.getHours(),
-    ).padStart(2, '0')}:${String(d.getMinutes()).padStart(2, '0')}:${String(
-      d.getSeconds(),
-    ).padStart(2, '0')}`;
-  },
+    like(post) {
+      console.error(this.userInfo);
+      const updatedPost = { ...post, isLiked: !post.isLiked };
+      updatedPost.like += post.isLiked ? -1 : 1;
+      // 用更新后的 post 对象替换原先的 post 对象
+      this.posts.splice(this.posts.indexOf(post), 1, updatedPost);
+      this.userTelephone = this.userInfo.phone;
+      this.postID = post.id;
+      this.isLiked = post.isLiked;
+      // 请求
+      this.postLike({
+        userTelephone: this.userTelephone,
+        postID: this.postID,
+        isLiked: this.isLiked,
+      })
+        .then(() => {})
+        .catch((err) => {
+          console.error(err);
+        });
+    },
 
-  like(post) {
-    console.error(this.userInfo);
-    const updatedPost = { ...post, isLiked: !post.isLiked };
-    updatedPost.like += post.isLiked ? -1 : 1;
-    // 用更新后的 post 对象替换原先的 post 对象
-    this.posts.splice(this.posts.indexOf(post), 1, updatedPost);
-    this.userTelephone = this.userInfo.phone;
-    this.postID = post.id;
-    this.isLiked = post.isLiked;
-    // 请求
-    this.postLike({
-      userTelephone: this.userTelephone,
-      postID: this.postID,
-      isLiked: this.isLiked,
-    })
-      .then(() => {})
-      .catch((err) => {
-        console.error(err);
-      });
-  },
-
-  save(post) {
-    // 切换收藏状态
-    const updatedPost = { ...post, isSaved: !post.isSaved };
-    // 用更新后的 post 对象替换原先的 post 对象
-    this.posts.splice(this.posts.indexOf(post), 1, updatedPost);
-    this.userTelephone = this.userInfo.phone;
-    this.postID = post.id;
-    this.isSaved = post.isSaved;
-    // 请求
-    this.postSave({
-      userTelephone: this.userTelephone,
-      postID: this.postID,
-      isSaved: this.isSaved,
-    })
-      .then(() => {})
-      .catch((err) => {
-        console.error(err);
-      });
+    save(post) {
+      // 切换收藏状态
+      const updatedPost = { ...post, isSaved: !post.isSaved };
+      // 用更新后的 post 对象替换原先的 post 对象
+      this.posts.splice(this.posts.indexOf(post), 1, updatedPost);
+      this.userTelephone = this.userInfo.phone;
+      this.postID = post.id;
+      this.isSaved = post.isSaved;
+      // 请求
+      this.postSave({
+        userTelephone: this.userTelephone,
+        postID: this.postID,
+        isSaved: this.isSaved,
+      })
+        .then(() => {})
+        .catch((err) => {
+          console.error(err);
+        });
+    },
   },
 };
 </script>

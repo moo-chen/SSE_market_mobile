@@ -25,6 +25,7 @@
         <van-col style="margin-outside: 5px">
           <van-row style="margin-top:5px">{{ formatNoticeTitle(notice) }}</van-row>
           <van-row style="margin-top: 5px">{{ formatNoticeContent(notice) }}</van-row>
+          <van-row style="color: #888888;font-size: 14px">{{formatDate(notice.time)}}</van-row>
         </van-col>
         <van-badge v-if="notice.read===false" :content="'New'"/>
       </van-cell>
@@ -50,7 +51,7 @@
           :src="currentNotice.senderAvatar"
           width="48"
           height="48"
-          class="avatar mr-2"
+          class="avatar"
           alt=""
         >
         <div style="display: flex;flex-direction: column;">
@@ -313,7 +314,9 @@ export default {
               pcommentID: nowNotice.target,
             },
           });
-          window.open(link.href, '_blank');
+          // 在新页面加载后，可以通过监听 popstate 事件来处理返回操作
+          // window.open(link.href, '_blank');
+          window.location.href = link.href;
         } else if (nowNotice.type === 'ccomment') {
           const link = this.$router.resolve({
             name: 'postDetails',
@@ -325,7 +328,8 @@ export default {
               ccommentID: nowNotice.target,
             },
           });
-          window.open(link.href, '_blank');
+          // window.open(link.href, '_blank');
+          window.location.href = link.href;
         }
       }, 100);
     },

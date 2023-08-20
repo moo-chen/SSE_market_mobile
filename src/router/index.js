@@ -1,5 +1,7 @@
 import Vue from 'vue';
 import VueRouter from 'vue-router';
+import { Toast } from 'vant';
+import store from '@/store';
 
 Vue.use(VueRouter);
 
@@ -7,6 +9,7 @@ const routes = [
   {
     path: '/',
     name: 'home',
+    meta: {},
     component: () => import('../views/home/HomeView.vue'),
   },
   {
@@ -22,11 +25,17 @@ const routes = [
   {
     path: '/notice',
     name: 'notice',
+    meta: {
+      auth: true,
+    },
     component: () => import('../views/notice/NoticeView.vue'),
   },
   {
     path: '/profile',
     name: 'profile',
+    meta: {
+      auth: true,
+    },
     component: () => import('../views/profile/ProfileView.vue'),
   },
   {
@@ -45,6 +54,9 @@ const routes = [
   {
     path: '/post',
     name: 'post',
+    meta: {
+      auth: true,
+    },
     component: () => import('../views/post/PostView.vue'),
   },
   {
@@ -88,5 +100,22 @@ const router = new VueRouter({
   base: process.env.BASE_URL,
   routes,
 });
-
+router.beforeEach((to, from, next) => {
+  if (to.meta.auth) { // 判断是否需要登录
+    // 判断用户是否登录
+    if (store.state.userModule.token) {
+      // 这里还要判断token 的有效性 比如有没有过期 需要后台发放token 的时候 带上token 的有效期，
+      // 如果 token 无效 需要 请求token
+      // 每次跳转路由都更新一下通知数
+      store.commit('getNoticesNum');
+      next();
+    } else {
+      // 跳转登录
+      Toast.fail('请先登录');
+      if (from.name !== 'logintest') router.push({ name: 'logintest' });
+    }
+  } else {
+    next();
+  }
+});
 export default router;

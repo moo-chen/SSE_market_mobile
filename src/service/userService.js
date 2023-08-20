@@ -14,8 +14,8 @@ const register = ({
 };
 
 // 用户登录
-const login = ({ phone, password }) => {
-  return request.post('auth/login', { phone, password });
+const login = ({ email, password }) => {
+  return request.post('auth/login', { email, password });
 };
 
 // 发帖

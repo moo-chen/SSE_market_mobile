@@ -13,6 +13,7 @@ import 'vant/lib/index.css';
 import axios from 'axios';
 import VueAxios from 'vue-axios';
 import preview from 'vue-photo-preview';
+import VueScrollTo from 'vue-scrollto';
 import App from './App.vue';
 import 'amfe-flexible';
 import './assets/css/index.css';
@@ -38,6 +39,7 @@ Vue.config.productionTip = false;
 Vue.use(Vant);
 Vue.use(VueAxios, axios);
 Vue.use(preview, options);
+Vue.use(VueScrollTo);
 Vue.prototype.$axios = axios;
 
 new Vue({

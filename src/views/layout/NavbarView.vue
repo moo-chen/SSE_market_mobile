@@ -23,6 +23,7 @@
         replace to="/notice"
         :class="{ active: $route.path === '/notice' }"
         :icon="getIcon('chat-o', 'chat', '/notice')"
+        :badge="store.state.noticesNum"
         >通知</van-tabbar-item
       >
       <van-tabbar-item
@@ -36,7 +37,14 @@
 </template>
 
 <script>
+import store from '@/store';
+
 export default {
+  computed: {
+    store() {
+      return store;
+    },
+  },
   methods: {
     getIcon(normalIcon, activeIcon, routePath) {
       return this.$route.path === routePath ? activeIcon : normalIcon;

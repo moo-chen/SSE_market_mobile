@@ -48,10 +48,10 @@
             <van-icon size="27px" name="delete-o"></van-icon>
             删除
           </van-cell>
-          <van-popup v-model="showDeleteModal" title="确认删除" ok-title="Confirm"
-                     @ok="postdelete(post)">
-            <p>你确定要删除这个帖子吗？</p>
-          </van-popup>
+          <van-dialog v-model="showDeleteModal" message="你确定要删除这个帖子吗？"
+                      showCancelButton
+                     @confirm="postdelete(post)">
+          </van-dialog>
         </van-popup>
         <div class="van-row--flex">
           <van-image :src="post.authorAvatar"
@@ -433,17 +433,18 @@
         <van-popup position="bottom" round
                    :style="{height:'30%'}"
                    v-model="replyshow">
-          <form @submit.prevent=
+          <van-form @submit=
                   "ccommentPost(showcommentsindex,
                           nowReplyComment.author,
                           nowReplyComment.ccommentID)">
             <van-field v-model="ccomment.content"
-                       :placeholder="'回复@'+nowReplyComment.author" rows="3">
+                       :placeholder="'回复@'+nowReplyComment.author">
             </van-field>
             <!--表情选择器-->
             <div>
               <van-button style="margin-right: 2px"
                           type='primary' size="small" plain
+                          native-type="button"
                           @click="showEmojiStatus()">😀
               </van-button>
               <div v-if="showEmoji">
@@ -459,7 +460,7 @@
                 提交回复
               </van-button>
             </div>
-          </form>
+          </van-form>
         </van-popup>
       </van-popup>
       <!--加载更多帖子评论-->
@@ -584,7 +585,7 @@ export default {
         localStorage.setItem('Style', JSON.stringify('day'));
       }
     }
-    console.error(this.$route.query);
+    console.log(this.$route.query);
     if (this.$route.query.before) {
       this.before = this.$route.query.before;
       // 将postID保存在本地缓存中
@@ -636,7 +637,8 @@ export default {
         this.post.browse = post.data.Browse;
       })
       .catch((err) => {
-        console.error(err);
+        this.$toast.fail(`加载失败\n${err.response.data.msg}`);
+        console.error(err.msg);
       });
     this.pcommentsShow();
     // 这里或许有比setTimeout更好的写法，但是暂时写不出来，
@@ -649,6 +651,9 @@ export default {
     // 获取当前评论ID
     this.currentPcommentID = this.$route.query.pcommentID;
     this.currentCcommentID = this.$route.query.ccommentID;
+    setTimeout(() => {
+      this.scrollToComment();
+    }, 1000);
   },
   methods: {
     addEmojiToCcomment(emoji) {
@@ -883,6 +888,7 @@ export default {
       console.log('scrollToComment');
       // 获取当前评论所在的元素
       let commentEl = document.getElementById(`comment-${this.currentPcommentID}`);
+      console.log(this.currentPcommentID);
       console.log(commentEl);
       // const commentRef = this.$refs.commentRef[3];
       // if (commentRef) {
@@ -1032,7 +1038,7 @@ export default {
       if (this.comments[index].showAllReplies === true) {
         return this.comments[index].subComments;
       }
-      return this.comments[index].subComments.slice(0, 5);
+      return this.comments[index].subComments;
     },
   },
   beforeRouteLeave(to, from, next) {

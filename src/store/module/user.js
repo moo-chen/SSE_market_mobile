@@ -97,9 +97,9 @@ const userModule = {
       });
     },
 
-    login(context, { phone, password }) {
+    login(context, { email, password }) {
       return new Promise((resolve, reject) => {
-        userService.login({ phone, password }).then((res) => {
+        userService.login({ email, password }).then((res) => {
           // 保存token
           context.commit('SET_TOKEN', res.data.data.token);
           return userService.info();
