@@ -51,7 +51,7 @@ export default {
       showKeyboard: false,
       errorInfo: '', // 密码错误提示
       errorMessage: '', // 邮箱错误提示
-      item: require('@/assets/用户条款.txt'),
+      // item: require('@/assets/用户条款.txt'),
     };
   },
   methods: {
