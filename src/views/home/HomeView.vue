@@ -3,11 +3,11 @@
 <!-- eslint-disable vuejs-accessibility/click-events-have-key-events -->
 <!-- eslint-disable vuejs-accessibility/alt-text -->
 <template>
-  <div margin='0'>
+  <div style="margin-bottom: 100px">
     <div class='container'>
       <h2>SSE_market</h2>
       <div class='icon-container'>
-        <van-icon size='27' name='add' @click='goToPost' />
+        <van-icon size='27' name='add' @click='goToPost'/>
       </div>
       <div class='search-container'>
         <van-search
@@ -54,8 +54,10 @@
         </div>
       </div>
     </div>
-
-    <div>
+    <div v-if="posts.length===0">
+      <van-empty description="暂无帖子"></van-empty>
+    </div>
+    <div v-else>
       <van-list
         v-for='post in posts'
         :key='post.postID'
@@ -124,30 +126,30 @@
 
         <van-row>
           <van-col span='6'>
-            <van-icon name='good-job-o' size='10' @click='like(post)' v-if='!post.isLiked' />
-            <van-icon v-else color='red' name='good-job' size='10' @click='like(post)' />
+            <van-icon name='good-job-o' size='10' @click='like(post)' v-if='!post.isLiked'/>
+            <van-icon v-else color='red' name='good-job' size='10' @click='like(post)'/>
             <font size='1'>
               {{ post.like }}
             </font>
           </van-col>
 
           <van-col span='6' @click='showDetail(post)'>
-            <van-icon name='eye-o' size='10' />
+            <van-icon name='eye-o' size='10'/>
             <font size='1'>
               {{ post.browse }}
             </font>
           </van-col>
 
           <van-col span='6' @click='showDetail(post)'>
-            <van-icon name='chat-o' size='10' />
+            <van-icon name='chat-o' size='10'/>
             <font size='1'>
               {{ post.comment }}
             </font>
           </van-col>
 
           <van-col span='6'>
-            <van-icon name='star-o' size='20' @click='save(post)' v-if='!post.isSaved' />
-            <van-icon v-else color='yellow' name='star' size='20' @click='save(post)' />
+            <van-icon name='star-o' size='20' @click='save(post)' v-if='!post.isSaved'/>
+            <van-icon v-else color='yellow' name='star' size='20' @click='save(post)'/>
           </van-col>
         </van-row>
       </van-list>
@@ -160,14 +162,15 @@
           >
             已划到底部
           </van-cell>
-          <van-cell class='loading' v-else-if='loading'> 正在加载... </van-cell>
-          <van-button v-else :border='false' block @click='loadMorePosts'> 加载更多 </van-button>
+          <van-cell class='loading' v-else-if='loading'> 正在加载...</van-cell>
+          <van-button v-else :border='false' block @click='loadMorePosts'> 加载更多</van-button>
         </van-col>
         <p v-html='line'></p>
         <p v-html='line'></p>
         <p v-html='line'></p>
       </van-row>
     </div>
+
   </div>
 </template>
 
@@ -275,8 +278,15 @@ export default {
         });
       this.$router.push({
         name: 'postDetails',
-        params: { id: post.id, partition: this.partition, before: 'home' },
-        query: { id: post.id, before: 'home' },
+        params: {
+          id: post.id,
+          partition: this.partition,
+          before: 'home',
+        },
+        query: {
+          id: post.id,
+          before: 'home',
+        },
       });
     },
     // 查询满足要求的帖子数量
@@ -299,6 +309,7 @@ export default {
         console.error(error);
       }
     },
+    // 我担心这个分页加载会出问题，就是在返回了第一页之后如果有人
     async partitionBrowse(chosenPartition) {
       this.partition = chosenPartition;
       try {
@@ -312,6 +323,10 @@ export default {
           offset: (this.currentPage - 1) * this.pageSize,
         });
         // 将获取到的帖子列表数据赋值给 posts 变量
+        if (data === null) {
+          this.posts = [];
+          return;
+        }
         this.posts = data
           .map((post) => ({
             id: post.PostID,
@@ -329,10 +344,11 @@ export default {
             heat: post.Heat,
             photos: post.Photos,
             tag: post.Tag
-              ? post.Tag.split(',').map((tagText) => ({
-                type: this.tagTypeMap[tagText.trim()], // 使用 this.tagTypeMap
-                label: tagText.trim(),
-              }))
+              ? post.Tag.split(',')
+                .map((tagText) => ({
+                  type: this.tagTypeMap[tagText.trim()], // 使用 this.tagTypeMap
+                  label: tagText.trim(),
+                }))
               : [],
             showMenu: false,
           }))
@@ -342,24 +358,24 @@ export default {
       }
     },
 
-    handleScroll() {
-      this.$nextTick(() => {
-        const listGroup = this.$refs.totalGroup.$el;
-        if (listGroup.getBoundingClientRect().bottom <= window.innerHeight) {
-          this.loadMorePosts();
-        }
-      });
-    },
+    // handleScroll() {
+    //   this.$nextTick(() => {
+    //     const listGroup = this.$refs.totalGroup.$el;
+    //     if (listGroup.getBoundingClientRect().bottom <= window.innerHeight) {
+    //       this.loadMorePosts();
+    //     }
+    //   });
+    // },
 
     async loadMorePosts() {
-      window.removeEventListener('scroll', this.handleScroll);
+      // window.removeEventListener('scroll', this.handleScroll);
       this.loading = true;
       // setTimeout(() => {
       this.currentPage += 1;
       // }, 500);
       this.loading = false;
-      console.error(this.currentPage);
-      window.addEventListener('scroll', this.handleScroll);
+      console.log(this.currentPage);
+      // window.addEventListener('scroll', this.handleScroll);
       // 下面再请求一次数据,加到原来的posts上
       try {
         const { data } = await this.postBrowse({
@@ -370,6 +386,7 @@ export default {
           limit: this.pageSize,
           offset: (this.currentPage - 1) * this.pageSize,
         });
+        if (data == null) return;
         const newPosts = data
           .map((post) => ({
             id: post.PostID,
@@ -387,10 +404,11 @@ export default {
             heat: post.Heat,
             photos: post.Photos,
             tag: post.Tag
-              ? post.Tag.split(',').map((tagText) => ({
-                type: this.tagTypeMap[tagText.trim()], // 使用 this.tagTypeMap
-                label: tagText.trim(),
-              }))
+              ? post.Tag.split(',')
+                .map((tagText) => ({
+                  type: this.tagTypeMap[tagText.trim()], // 使用 this.tagTypeMap
+                  label: tagText.trim(),
+                }))
               : [],
             showMenu: false,
           }))
@@ -405,14 +423,20 @@ export default {
       const d = new Date(date);
       return `${d.getFullYear()}年${d.getMonth() + 1}月${d.getDate()}日 ${String(
         d.getHours(),
-      ).padStart(2, '0')}:${String(d.getMinutes()).padStart(2, '0')}:${String(
+      )
+        .padStart(2, '0')}:${String(d.getMinutes())
+        .padStart(2, '0')}:${String(
         d.getSeconds(),
-      ).padStart(2, '0')}`;
+      )
+        .padStart(2, '0')}`;
     },
 
     like(post) {
       console.error(this.userInfo);
-      const updatedPost = { ...post, isLiked: !post.isLiked };
+      const updatedPost = {
+        ...post,
+        isLiked: !post.isLiked,
+      };
       updatedPost.like += post.isLiked ? -1 : 1;
       // 用更新后的 post 对象替换原先的 post 对象
       this.posts.splice(this.posts.indexOf(post), 1, updatedPost);
@@ -425,7 +449,8 @@ export default {
         postID: this.postID,
         isLiked: this.isLiked,
       })
-        .then(() => {})
+        .then(() => {
+        })
         .catch((err) => {
           console.error(err);
         });
@@ -433,7 +458,10 @@ export default {
 
     save(post) {
       // 切换收藏状态
-      const updatedPost = { ...post, isSaved: !post.isSaved };
+      const updatedPost = {
+        ...post,
+        isSaved: !post.isSaved,
+      };
       // 用更新后的 post 对象替换原先的 post 对象
       this.posts.splice(this.posts.indexOf(post), 1, updatedPost);
       this.userTelephone = this.userInfo.phone;
@@ -445,7 +473,8 @@ export default {
         postID: this.postID,
         isSaved: this.isSaved,
       })
-        .then(() => {})
+        .then(() => {
+        })
         .catch((err) => {
           console.error(err);
         });
@@ -461,15 +490,18 @@ export default {
   right: 0.2rem;
   z-index: 999; /* Ensure the icon is above other elements */
 }
+
 .custom-search-button {
   background-color: #a9ddff;
   color: #ffffff;
 }
+
 .banner {
   width: 1000px;
   height: 304px;
   background: pink;
 }
+
 .list {
   padding: 20px;
   justify-items: center;
@@ -477,6 +509,7 @@ export default {
   grid-gap: 40px;
   grid-template-columns: 1fr 1fr 1fr;
 }
+
 .list .item {
   justify-items: center;
   width: 150px;
@@ -524,15 +557,18 @@ export default {
   vertical-align: middle;
   text-align: center;
 }
+
 .horizontal-container {
   display: flex;
   justify-content: space-between; /* 将子元素水平分隔放置 */
   align-items: center; /* 垂直居中对齐子元素 */
 }
+
 .date {
   height: 5%;
   flex: 1;
 }
+
 .container {
   background: linear-gradient(to bottom, #a9ddff, #87cefa);
   padding: 20px;
@@ -563,6 +599,7 @@ h2 {
   padding: 10px 20px;
   border-radius: 20px;
 }
+
 .icon {
   width: 1em;
   height: 1em;
