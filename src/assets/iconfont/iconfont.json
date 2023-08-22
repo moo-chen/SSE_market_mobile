@@ -6,6 +6,27 @@
   "description": "",
   "glyphs": [
     {
+      "icon_id": "17549029",
+      "name": "全部",
+      "font_class": "quanbu",
+      "unicode": "ee16",
+      "unicode_decimal": 60950
+    },
+    {
+      "icon_id": "22781020",
+      "name": "个人求职信息",
+      "font_class": "gerenqiuzhixinxi",
+      "unicode": "e655",
+      "unicode_decimal": 58965
+    },
+    {
+      "icon_id": "27606174",
+      "name": "求职",
+      "font_class": "a-bianzu90",
+      "unicode": "e645",
+      "unicode_decimal": 58949
+    },
+    {
       "icon_id": "2696595",
       "name": "其他",
       "font_class": "qita",
