@@ -8,7 +8,6 @@ const post = ({
   content,
   partition,
   photos,
-  tagList,
 }) => {
   return request.post('auth/post', {
     userTelephone,
@@ -16,7 +15,6 @@ const post = ({
     content,
     partition,
     photos,
-    tagList,
   });
 };
 
