@@ -89,6 +89,14 @@ const routes = [
     component: () => import('../views/register/RegisterView.vue'),
   },
   {
+    path: '/changeDetail',
+    name: 'changeDetail',
+    meta: {
+      auth: true,
+    },
+    component: () => import('../views/profile/ChangeDetailView.vue'),
+  },
+  {
     path: '/modifyPassword',
     name: 'modifyPassword',
     component: () => import('../views/modifyPassword/ModifyPasswordView.vue'),

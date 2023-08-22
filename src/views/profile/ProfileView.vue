@@ -3,31 +3,28 @@
       <van-notice-bar left-icon="volume-o" :scrollable="true"
                       text="欢迎大家来到软工集市，此版本为内测版本" style="margin-bottom: 10px;"/>
       <div class="profile_box">
-        <van-uploader :after-read="afterRead" :max-count="1"
-                      accept="image/gif, image/jpeg, image/png">
           <div class="avatar-container">
             <img v-if="imageUrl" :src="imageUrl" class="avatar" alt="Uploaded Avatar"/>
             <i v-else class="van-icon van-icon-add-o avatar"></i>
           </div>
-        </van-uploader>
         <div class="user_information">
           <van-cell-group>
-            <van-field class="field-spacing" label="用户名"
-                       v-model="userInfo.name" required/>
-            <van-field class="field-spacing" label="手机号"
-                       v-model="userInfo.phone" value="输入框已禁用" disabled/>
-            <van-field class="field-spacing" label="邮箱"
-                       v-model="userInfo.email" value="输入框已禁用" disabled/>
-            <van-field class="field-spacing"
+            <van-field class="field-spacing" label="用户名" readonly="true"
+                       v-model="userInfo.name"/>
+            <van-field class="field-spacing" label="手机号" readonly="true"
+                       v-model="userInfo.phone" value="输入框已禁用" />
+            <van-field class="field-spacing" label="邮箱" readonly="true"
+                       v-model="userInfo.email" value="输入框已禁用" />
+            <van-field class="field-spacing" readonly="true"
                        v-model="userInfo.intro" rows="2" autosize label="简介" type="textarea"
                        maxlength="100" placeholder="请输入留言" show-word-limit/>
           </van-cell-group>
         </div>
       </div>
     <div class="function_box">
-      <van-cell-group>
-        <van-cell class="my_icon" title="保存更改" icon="certificate"
-                  @click="updateUserInfo" value=" " size="large" is-link/>
+      <van-cell-group title="">
+        <van-cell class="my_icon" title="修改信息" icon="certificate"
+                  value=" " size="large" is-link to="/changeDetail"/>
         <van-cell class="my_icon" title="我的收藏" icon="coupon-o"
                   @click="gotoSave" value=" " size="large" is-link/>
         <van-cell class="my_icon" title="历史记录" icon="records"
