@@ -39,6 +39,7 @@
 <script>
 
 import { mapActions } from 'vuex';
+import { len } from 'vuelidate/lib/validators/common';
 import validator from '@/helper/validator';
 
 export default {
@@ -75,8 +76,8 @@ export default {
   watch: {
     // eslint-disable-next-line func-names
     'user.password': function (password) {
-      if (password < 6) {
-        this.errorInfo = '密码长度>6';
+      if (len(password) < 6) {
+        this.errorInfo = '密码长度>=6';
       } else {
         this.errorInfo = '';
       }
