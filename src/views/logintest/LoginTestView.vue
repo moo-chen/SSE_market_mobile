@@ -59,7 +59,8 @@ export default {
     login() {
       this.userlogin(this.user)
         .then(() => {
-          this.$router.go(-1);
+          this.$toast.success('登陆成功');
+          this.$router.push({ name: 'home' });
         })
         .catch((err) => {
           console.error(err); // 打印完整的错误对象
