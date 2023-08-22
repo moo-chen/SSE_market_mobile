@@ -7,9 +7,9 @@
           <van-form>
             <van-field
               v-model="user.email"
-              label="邮箱号"
+              label="邮箱"
               type="text"
-              placeholder="请输入邮箱号"
+              placeholder="请输入邮箱"
               required
               :error-message="errorMessage"
             ></van-field>
@@ -25,8 +25,8 @@
               <van-col offset="6">
                 <van-button @click="login">登录</van-button>
               </van-col>
-              <router-link style="margin-top: 10px" to="">注册</router-link>
-              <router-link style="margin-top: 10px" to="">忘记密码</router-link>
+              <router-link style="margin-top: 10px" to="/register">注册</router-link>
+              <router-link style="margin-top: 10px" to="/modifyPassword">忘记密码</router-link>
             </van-row>
 
           </van-form>
@@ -39,6 +39,7 @@
 <script>
 
 import { mapActions } from 'vuex';
+import { len } from 'vuelidate/lib/validators/common';
 import validator from '@/helper/validator';
 
 export default {
@@ -75,8 +76,8 @@ export default {
   watch: {
     // eslint-disable-next-line func-names
     'user.password': function (password) {
-      if (password < 6) {
-        this.errorInfo = '密码长度>6';
+      if (len(password) < 6) {
+        this.errorInfo = '密码长度>=6';
       } else {
         this.errorInfo = '';
       }

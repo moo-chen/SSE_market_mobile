@@ -20,6 +20,7 @@
           type="tel"
           label="手机号"
           placeholder="请输入手机号"
+          :error-message="errorPhoneMessage"
         />
 
         <van-field
@@ -27,6 +28,7 @@
           required
           label="学号"
           placeholder="请输入学号"
+          :error-message="errorNumMessage"
         />
 
         <van-field
@@ -34,6 +36,7 @@
           required
           label="邮箱"
           placeholder="请输入邮箱"
+          :error-message="errorEmailMessage"
         />
 
         <van-field
@@ -42,6 +45,7 @@
           required
           label="密码"
           placeholder="请输入密码"
+          :error-message="errorPasswordMessage"
         />
 
         <van-field
@@ -50,6 +54,7 @@
           required
           label="再次输入密码"
           placeholder="请再次输入密码"
+          :error-message="errorPassword2Message"
         />
 
         <van-field
@@ -74,12 +79,19 @@
 <script>
 import { required, minLength, maxLength } from 'vuelidate/lib/validators';
 import { mapActions } from 'vuex';
+import { len } from 'vuelidate/lib/validators/common';
 import customValidator from '@/helper/validator';
 
 export default {
   data() {
     return {
       line: '<br/>',
+      errorEmailMessage: '',
+      errorPassword2Message: '',
+      errorPasswordMessage: '',
+      errorNumMessage: '',
+      errorPhoneMessage: '',
+      emailCheck: false,
       user: {
         phone: '',
         name: '',
@@ -127,12 +139,16 @@ export default {
     validateEmail() {
       this.user.mode = 0;
       console.error(this.user);
-      this.userValidate(this.user).then(() => {
-        this.$toast.success('已发送验证码，请将邮箱发送的验证码输入以完成注册验证');
-      }).catch((err) => {
-        console.error(err);
-        this.$toast.fail(err.response.data.msg);
-      });
+      if (this.emailCheck === true) {
+        this.userValidate(this.user).then(() => {
+          this.$toast.success('已发送验证码，请将邮箱发送的验证码输入以完成注册验证');
+        }).catch((err) => {
+          console.error(err);
+          this.$toast.fail(err.response.data.msg);
+        });
+      } else {
+        this.$toast.fail('邮箱格式有误');
+      }
     },
 
     register() {
@@ -154,6 +170,51 @@ export default {
             solid: true,
           });
         });
+    },
+  },
+
+  watch: {
+    // eslint-disable-next-line func-names
+    'user.phone': function (phone) {
+      if (!customValidator.telephoneValidator(phone)) {
+        this.errorPhoneMessage = '请输入格式正确的手机号';
+      } else {
+        this.errorPhoneMessage = '';
+      }
+    },
+    // eslint-disable-next-line func-names
+    'user.num': function (num) {
+      if (len(num) !== 8) {
+        this.errorNumMessage = '请输入8位学号';
+      } else {
+        this.errorNumMessage = '';
+      }
+    },
+    // eslint-disable-next-line func-names
+    'user.password': function (password) {
+      if (len(password) < 6) {
+        this.errorPasswordMessage = '密码长度需要不小于6位';
+      } else {
+        this.errorPasswordMessage = '';
+      }
+    },
+    // eslint-disable-next-line func-names
+    'user.password2': function (password2) {
+      if (len(password2) < 6) {
+        this.errorPassword2Message = '密码长度需要不小于6位';
+      } else {
+        this.errorPassword2Message = '';
+      }
+    },
+    // eslint-disable-next-line func-names
+    'user.email': function (email) {
+      if (!customValidator.emailValidator(email)) {
+        this.errorEmailMessage = '请输入格式正确的邮箱';
+        this.emailCheck = false;
+      } else {
+        this.errorEmailMessage = '';
+        this.emailCheck = true;
+      }
     },
   },
 };

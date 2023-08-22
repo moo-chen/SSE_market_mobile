@@ -12,39 +12,33 @@
         <van-field
           v-model="user.email"
           label="邮箱"
+          required
           type="email"
-          :rule="[
-            { required: true, message: '请输入邮箱' },
-            { pattern: '/^([a-zA-Z0-9_-])+@([a-zA-Z0-9_-])+(.[a-zA-Z0-9_-])+/', meesage: '邮箱不符合要求'}
-          ]"
           placeholder="请输入邮箱"
+          :error-message="errorEmailInfo"
         />
         <van-field
           v-model="user.password"
           type="password"
-          :rule="[
-            { required: true, message: '请输入密码' },
-          ]"
+          required
           label="密码"
           placeholder="请输入密码"
+          :error-message="errorPasswordInfo"
         />
 
         <van-field
           v-model="user.password2"
           type="password"
-          :rule="[
-            { required: true, message: '请再次输入密码' },
-          ]"
+          required
           label="再次输入密码"
           placeholder="请再次输入密码"
+          :error-message="errorPassword2Info"
         />
 
         <van-field
           v-model="user.valiCode"
           label="验证码"
-          :rule="[
-            { required: true, message: '请输入邮箱验证码' },
-          ]"
+          required
           placeholder="请输入邮箱验证码"
         >
           <template #button>
@@ -63,6 +57,8 @@
 <script>
 import { mapState, mapActions } from 'vuex';
 import { required, minLength } from 'vuelidate/lib/validators';
+import { len } from 'vuelidate/lib/validators/common';
+
 import customValidator from '@/helper/validator';
 
 export default {
@@ -72,6 +68,9 @@ export default {
   data() {
     return {
       line: '<br/>',
+      errorEmailInfo: '',
+      errorPasswordInfo: '',
+      errorPassword2Info: '',
       user: {
         mode: '',
         email: '',
@@ -103,29 +102,57 @@ export default {
     ...mapActions('userModule', { emailValidate: 'identityValidate' }),
 
     modifyPassword() {
-      console.error(this.user);
+      // console.error(this.user);
       this.emailValidate(this.user).then(() => {
-        this.user.phone = this.userInfo.phone;
         this.userModify(this.user).then(() => {
-          this.$toast.fail('修改密码成功');
+          this.$toast.success('修改密码成功');
         }).catch((err) => {
-          console.error(err);
+          // console.error(err);
           this.$toast.fail(err.response.data.msg);
         });
       }).catch((err) => {
+        console.error(err);
         this.$toast.fail(err.response.data.msg);
       });
     },
 
     validateEmail() {
       this.user.mode = 1;
-      console.error(this.user);
+      // console.error(this.user);
       this.userValidate(this.user).then(() => {
         this.$toast.success('已发送验证码，请将邮箱发送的验证码输入以完成注册验证');
       }).catch((err) => {
-        console.error(err);
+        // console.error(err);
         this.$toast.fail(err.response.data.msg);
       });
+    },
+  },
+
+  watch: {
+    // eslint-disable-next-line func-names
+    'user.password': function (password) {
+      if (len(password) < 6) {
+        this.errorPasswordInfo = '密码长度需要不小于6位';
+      } else {
+        this.errorPasswordInfo = '';
+      }
+    },
+    // eslint-disable-next-line func-names
+    'user.password2': function (password2) {
+      if (len(password2) < 6) {
+        this.errorPassword2Info = '密码长度需要不小于6位';
+      } else {
+        this.errorPassword2Info = '';
+      }
+    },
+    // eslint-disable-next-line func-names
+    'user.email': function (email) {
+      // console.error(email);
+      if (!customValidator.emailValidator(email)) {
+        this.errorEmailInfo = '请输入格式正确的邮箱';
+      } else {
+        this.errorEmailInfo = '';
+      }
     },
   },
 };

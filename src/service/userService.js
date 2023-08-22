@@ -64,8 +64,8 @@ const getInfo = ({ phone }) => {
 };
 
 // 获取密码
-const modifyPassword = ({ phone, password, password2 }) => {
-  return request.post('auth/modifyPassword', { phone, password, password2 });
+const modifyPassword = ({ email, password, password2 }) => {
+  return request.post('auth/modifyPassword', { email, password, password2 });
 };
 
 // 注册验证邮箱
