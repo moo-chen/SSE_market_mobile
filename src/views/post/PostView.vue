@@ -12,12 +12,16 @@
       type="textarea" rows="10" placeholder="请输入正文"></van-field>
     </van-cell-group>
 
-    <van-cell-group title="图片上传"><van-cell>
-    <van-uploader v-model="fileList" action='https://localhost:8080/api/auth/uploadphotos'
-      multiple :on-preview='handlePictureCardPreview' list-type='picture-card'
-      :on-remove='handleRemove' :on-success='handleSuccess'
-      accept=".jpg,.png">
-    </van-uploader></van-cell>
+    <van-cell-group title="图片上传">
+      <van-cell>
+        <van-uploader
+          :file-list="fileList"
+          :after-read="afterRead"
+          :deletable="true"
+          @delete="onDelete"
+          :max-count="9"
+        />
+      </van-cell>
     </van-cell-group>
     <van-dialog v-model="dialogVisible">
       <img width='100%' :src='dialogImageUrl' alt='' />
@@ -53,6 +57,7 @@
 <script>
 import { mapState, mapActions } from 'vuex';
 import { Notify } from 'vant';
+import axios from 'axios';
 // import { Picker } from 'emoji-mart-vue';
 
 export default {
@@ -67,6 +72,7 @@ export default {
   //   },
   data() {
     return {
+      uploadPhotosActionURL: `${process.env.VUE_APP_BASE_URL}auth/uploadPhotos`,
       fileList: [],
       dialogImageUrl: '',
       dialogVisible: false,
@@ -87,12 +93,19 @@ export default {
   },
   methods: {
     ...mapActions('postModule', { Post: 'post' }),
-    handleSuccess(response, file) {
-      this.fileList.push({ name: file.name, url: response.fileURL });
+    afterRead(file) {
+      const formData = new FormData();
+      formData.append('file', file.file);
+
+      axios
+        .post(this.uploadPhotosActionURL, formData)
+        .then((response) => {
+          const url = response.data.fileURL; // 这里直接获取fileURL
+          this.fileList.push({ url });
+        });
     },
-    handleRemove(file, fileList) {
-      this.fileList = this.fileList.filter((item) => item.name !== file.name);
-      console.log(file, fileList);
+    onDelete(index) {
+      this.fileList.splice(index, 1);
     },
     handlePictureCardPreview(file) {
       this.dialogImageUrl = file.url;
@@ -122,7 +135,7 @@ export default {
           Notify({ type: 'success', message: '发帖成功' });
           // 跳转主页
           setTimeout(() => {
-            this.$router.go(0);
+            this.$router.push({ path: '/' });
           }, 500);
         })
         .catch((err) => {
