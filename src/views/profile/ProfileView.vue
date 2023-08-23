@@ -2,25 +2,13 @@
   <div>
       <van-notice-bar left-icon="volume-o" :scrollable="true"
                       text="欢迎大家来到软工集市，此版本为内测版本" style="margin-bottom: 10px;"/>
-      <div class="profile_box">
-          <div class="avatar-container">
-            <img v-if="imageUrl" :src="imageUrl" class="avatar" alt="Uploaded Avatar"/>
-            <i v-else class="van-icon van-icon-add-o avatar"></i>
-          </div>
-        <div class="user_information">
-          <van-cell-group>
-            <van-field class="field-spacing" label="用户名" readonly="true"
-                       v-model="userInfo.name"/>
-            <van-field class="field-spacing" label="手机号" readonly="true"
-                       v-model="userInfo.phone" value="输入框已禁用" />
-            <van-field class="field-spacing" label="邮箱" readonly="true"
-                       v-model="userInfo.email" value="输入框已禁用" />
-            <van-field class="field-spacing" readonly="true"
-                       v-model="userInfo.intro" rows="2" autosize label="简介" type="textarea"
-                       maxlength="100" placeholder="请输入留言" show-word-limit/>
-          </van-cell-group>
-        </div>
+    <div class="profile_box">
+      <div class="avatar-container">
+        <img v-if="imageUrl" :src="imageUrl" class="avatar" alt="Uploaded Avatar" />
+        <i v-else class="van-icon van-icon-add-o avatar"></i>
       </div>
+      <div class="user_name field-spacing">{{ userInfo.name }}</div>
+    </div>
     <div class="function_box">
       <van-cell-group title="">
         <van-cell class="my_icon" title="修改信息" icon="certificate"
@@ -171,26 +159,36 @@ export default {
 </script>
 
 <style>
-.profile_box {
-  display: flex;
-  flex-direction: row;
-  align-items: center; /* 可选，用于垂直居中对齐 */
-  justify-content: center; /* 居中对齐 */
-}
+
 .function_box{
   padding-left: 5%;
   padding-right: 5%;
   border: 2px solid black;
 }
+.profile_box {
+  display: flex;
+  flex-direction: column; /* 使子元素垂直排列 */
+  align-items: center; /* 使子元素水平居中 */
+  justify-content: center; /* 如果需要，可以使子元素垂直居中 */
+  margin: 20px 0; /* 添加上下边距 */
+}
+
 .avatar-container {
-  width: 200px;
-  height: 200px;
+  width: 300px;
+  height: 300px;
   border-radius: 10%;
   background-color: #eee;
   display: flex;
   justify-content: center;
   align-items: center;
   overflow: hidden;
+  margin-bottom: 10px; /* 从30px减少到10px以使用户名靠近头像 */
+}
+
+.user_name {
+  text-align: center; /* 使文字居中 */
+  font-size: 50px; /* 可以根据需要调整字体大小 */
+  font-weight: bold; /* 使用户名加粗 */
 }
 
 .avatar, .van-icon.van-icon-add-o.avatar {
