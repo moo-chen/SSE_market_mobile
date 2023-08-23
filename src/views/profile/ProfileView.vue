@@ -5,7 +5,7 @@
     <div class="profile_box">
       <div class="avatar-container">
         <img v-if="imageUrl" :src="imageUrl" class="avatar" alt="Uploaded Avatar" />
-        <i v-else class="van-icon van-icon-add-o avatar"></i>
+        <i v-else class="van-icon avatar"></i>
       </div>
       <div class="user_name field-spacing">{{ userInfo.name }}</div>
     </div>
