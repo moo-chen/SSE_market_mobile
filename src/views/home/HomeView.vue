@@ -14,7 +14,7 @@
           v-model='searchinfo'
           show-action
           show-action-slot
-          placeholder='请输入搜索关键词'
+          placeholder='搜索  支持标签和内容'
           @search='onSearch'
           shape='round'
         >
@@ -54,10 +54,8 @@
         </div>
       </div>
     </div>
-    <div v-if="posts.length===0">
-      <van-empty description="暂无帖子"></van-empty>
-    </div>
-    <div v-else>
+
+    <div v-if="posts.length > 0">
       <van-list
         v-for='post in posts'
         :key='post.postID'
@@ -147,7 +145,9 @@
         <p v-html='line'></p>
       </van-row>
     </div>
-
+    <div v-else>
+      <van-empty description="没有符合要求的帖子哦"></van-empty>
+    </div>
   </div>
 </template>
 
@@ -308,36 +308,35 @@ export default {
           offset: (this.currentPage - 1) * this.pageSize,
         });
         // 将获取到的帖子列表数据赋值给 posts 变量
-        if (data === null) {
-          this.posts = [];
-          return;
-        }
-        this.posts = data
-          .map((post) => ({
-            id: post.PostID,
-            author: post.UserName,
-            authorTelephone: post.UserTelephone,
-            authorAvatar: post.UserAvatar,
-            title: post.Title,
-            content: post.Content,
-            like: post.Like,
-            comment: post.Comment,
-            postTime: post.PostTime,
-            isSaved: post.IsSaved,
-            isLiked: post.IsLiked,
-            browse: post.Browse,
-            heat: post.Heat,
-            photos: post.Photos,
-            tag: post.Tag
-              ? post.Tag.split(',')
-                .map((tagText) => ({
+        if (data && data.length > 0) {
+          this.posts = data
+            .map((post) => ({
+              id: post.PostID,
+              author: post.UserName,
+              authorTelephone: post.UserTelephone,
+              authorAvatar: post.UserAvatar,
+              title: post.Title,
+              content: post.Content,
+              like: post.Like,
+              comment: post.Comment,
+              postTime: post.PostTime,
+              isSaved: post.IsSaved,
+              isLiked: post.IsLiked,
+              browse: post.Browse,
+              heat: post.Heat,
+              photos: post.Photos,
+              tag: post.Tag
+                ? post.Tag.split(',').map((tagText) => ({
                   type: this.tagTypeMap[tagText.trim()], // 使用 this.tagTypeMap
                   label: tagText.trim(),
                 }))
-              : [],
-            showMenu: false,
-          }))
-          .sort((a, b) => new Date(b.postTime) - new Date(a.postTime));
+                : [],
+              showMenu: false,
+            }))
+            .sort((a, b) => new Date(b.postTime) - new Date(a.postTime));
+        } else {
+          this.posts = [];
+        }
       } catch (error) {
         console.error(error);
       }
