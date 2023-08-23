@@ -2,7 +2,7 @@
   <div class="login-view">
     <h2 class="login-title">SSE_market</h2>
     <div class="login-container">
-        <div class="login" @keydown.enter="login">
+        <div class="login">
           <van-row>
             <van-cell>
               <van-form>
@@ -68,7 +68,7 @@ export default {
       this.userlogin(this.user)
         .then(() => {
           this.$toast.success('登陆成功');
-          this.$router.push({ name: 'home' });
+          this.$router.replace({ name: 'home' });
         })
         .catch((err) => {
           console.error(err); // 打印完整的错误对象
