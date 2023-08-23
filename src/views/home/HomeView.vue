@@ -287,7 +287,7 @@ export default {
     fileListGet() {
       return (post) => {
         if (!post.photos || post.photos === '') return [];
-        console.error(post.photos.split('|'));
+        // console.error(post.photos.split('|'));
         return post.photos.split('|');
       };
     },
@@ -361,7 +361,11 @@ export default {
     },
     // 我担心这个分页加载会出问题，就是在返回了第一页之后如果有人
     async partitionBrowse(chosenPartition) {
-      this.partition = chosenPartition;
+      if (chosenPartition === '全部') {
+        this.partition = '';
+      } else {
+        this.partition = chosenPartition;
+      }
       try {
         // 向后端发送请求并获取帖子列表
         const { data } = await this.postBrowse({
