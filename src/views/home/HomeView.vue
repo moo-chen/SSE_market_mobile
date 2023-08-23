@@ -97,6 +97,60 @@
             {{ post.content }}
           </van-cell>
         </van-col>
+        <div v-if="fileListGet(post).length > 0" class="photo-viewer van-row">
+          <div class="thumbnail-container">
+            <template v-if="fileListGet(post).length === 4">
+              <div>
+                <img :src="fileListGet(post)[0]"
+                     width="100px"
+                     height="100px"
+                     @click="handlePictureCardPreview(0)"
+                     @keyup.enter="handlePictureCardPreview(0)"
+                     @loadeddata="handlePictureCardPreview(0)"
+                     alt="Post Photo" preview-text="Post Photo"
+                     preview="1"/>
+                <img :src="fileListGet(post)[1]"
+                     width="100px"
+                     height="100px"
+                     style="margin-top:20px"
+                     @click="handlePictureCardPreview(1)"
+                     @keyup.enter="handlePictureCardPreview(1)"
+                     @loadeddata="handlePictureCardPreview(1)"
+                     alt="Post Photo"
+                     preview/>
+              </div>
+              <div>
+                <img :src="fileListGet(post)[2]"
+                     width="100px"
+                     height="100px"
+                     @click="handlePictureCardPreview(2)"
+                     @keyup.enter="handlePictureCardPreview(2)"
+                     @loadeddata="handlePictureCardPreview(2)"
+                     alt="Post Photo"
+                     preview/>
+                <img :src="fileListGet(post)[3]"
+                     width="100px"
+                     height="100px"
+                     style="margin-top:20px"
+                     @click="handlePictureCardPreview(3)"
+                     @keyup.enter="handlePictureCardPreview(3)"
+                     @loadeddata="handlePictureCardPreview(3)"
+                     alt="Post Photo" preview/>
+              </div>
+            </template>
+            <template v-else>
+              <div v-for="(file, index) in fileListGet(post)" :key="index">
+                <img :src="file"
+                     width="100px"
+                     height="100px"
+                     @click="handlePictureCardPreview(index)"
+                     @keyup.enter="handlePictureCardPreview(index)"
+                     @loadeddata="handlePictureCardPreview(index)"
+                     alt="Post Photo" preview/>
+              </div>
+            </template>
+          </div>
+        </div>
       </van-row>
 
         <van-row>
@@ -230,6 +284,13 @@ export default {
         实习: 'danger',
       };
     },
+    fileListGet() {
+      return (post) => {
+        if (!post.photos || post.photos === '') return [];
+        console.error(post.photos.split('|'));
+        return post.photos.split('|');
+      };
+    },
   },
   methods: {
     ...mapActions('postModule', { postBrowse: 'browse' }),
@@ -294,6 +355,10 @@ export default {
         console.error(error);
       }
     },
+    handlePictureCardPreview(index) {
+      console.log(index);
+      this.$previewRefresh();
+    },
     // 我担心这个分页加载会出问题，就是在返回了第一页之后如果有人
     async partitionBrowse(chosenPartition) {
       this.partition = chosenPartition;
@@ -308,6 +373,7 @@ export default {
           offset: (this.currentPage - 1) * this.pageSize,
         });
         // 将获取到的帖子列表数据赋值给 posts 变量
+        console.error(data);
         if (data && data.length > 0) {
           this.posts = data
             .map((post) => ({
@@ -334,6 +400,7 @@ export default {
               showMenu: false,
             }))
             .sort((a, b) => new Date(b.postTime) - new Date(a.postTime));
+          console.error(this.posts);
         } else {
           this.posts = [];
         }
@@ -610,5 +677,18 @@ h2 {
 
 .username {
   vertical-align: middle;
+}
+
+.thumbnail-container {
+  float: left;
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+}
+
+.thumbnail-container div {
+  width: calc(100% / 3);
+  padding: 10px;
+  box-sizing: border-box;
 }
 </style>
