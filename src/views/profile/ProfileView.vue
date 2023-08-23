@@ -1,66 +1,45 @@
 <template>
   <div>
-    <div>
-      <van-notice-bar
-        left-icon="volume-o"
-        :scrollable="true"
-        text="欢迎大家来到软工集市，此版本为内测版本"
-        style="margin-bottom: 10px;"
-      />
-      <div>
-        <van-uploader
-          :after-read="afterRead"
-          :max-count="1"
-          accept="image/gif, image/jpeg, image/png"
-        >
+      <van-notice-bar left-icon="volume-o" :scrollable="true"
+                      text="欢迎大家来到软工集市，此版本为内测版本" style="margin-bottom: 10px;"/>
+      <div class="profile_box">
           <div class="avatar-container">
             <img v-if="imageUrl" :src="imageUrl" class="avatar" alt="Uploaded Avatar"/>
             <i v-else class="van-icon van-icon-add-o avatar"></i>
           </div>
-        </van-uploader>
+        <div class="user_information">
+          <van-cell-group>
+            <van-field class="field-spacing" label="用户名" readonly="true"
+                       v-model="userInfo.name"/>
+            <van-field class="field-spacing" label="手机号" readonly="true"
+                       v-model="userInfo.phone" value="输入框已禁用" />
+            <van-field class="field-spacing" label="邮箱" readonly="true"
+                       v-model="userInfo.email" value="输入框已禁用" />
+            <van-field class="field-spacing" readonly="true"
+                       v-model="userInfo.intro" rows="2" autosize label="简介" type="textarea"
+                       maxlength="100" placeholder="请输入留言" show-word-limit/>
+          </van-cell-group>
+        </div>
       </div>
-      <div>
-        <van-cell-group>
-          <van-field class="field-spacing"
-                     label="用户名" v-model="userInfo.name" required/>
-          <van-field class="field-spacing"
-                     label="手机号" v-model="userInfo.phone" value="输入框已禁用" disabled/>
-          <van-field class="field-spacing"
-                     label="邮箱" v-model="userInfo.email" value="输入框已禁用" disabled/>
-        </van-cell-group>
-        <van-field
-          class="field-spacing"
-          v-model="userInfo.intro"
-          rows="2"
-          autosize
-          label="简介"
-          type="textarea"
-          maxlength="100"
-          placeholder="请输入留言"
-          show-word-limit
-        />
-      </div>
-      <van-button type="primary" native-type="submit" @click="updateUserInfo"
-                  style="margin-right: 10px;">保存更改
-      </van-button>
-      <van-button type="info" @click="open">更多信息</van-button>
-    </div>
-    <div>
-      <van-button class="custom-yellow-button" @click="gotoSave"
-                  style="margin-right: 10px;">我的收藏
-      </van-button>
-      <van-button class="custom-light-blue-button" @click="gotoHistory">
-        历史记录
-      </van-button>
-    </div>
-    <div>
-      <van-cell title="退出" clickable @click="logout"/>
-    </div>
-    <div class="feedback-link">
-      <router-link to="/feedback">遇到问题了？点此反馈</router-link>
+    <div class="function_box">
+      <van-cell-group title="">
+        <van-cell class="my_icon" title="修改信息" icon="certificate"
+                  value=" " size="large" is-link to="/changeDetail"/>
+        <van-cell class="my_icon" title="我的收藏" icon="coupon-o"
+                  @click="gotoSave" value=" " size="large" is-link/>
+        <van-cell class="my_icon" title="历史记录" icon="records"
+                  @click="gotoHistory" value=" " size="large" is-link/>
+        <van-cell class="my_icon" title="更多信息" icon="chat-o"
+                  @click="open" value=" " size="large" is-link/>
+        <van-cell class="my_icon" title="退出" icon="revoke"
+                  @click="logout" value=" " size="large" is-link/>
+        <van-cell class="my_icon" title="反馈" icon="warning-o"
+                  value=" " size="large" is-link to="/feedback"/>
+      </van-cell-group>
     </div>
   </div>
 </template>
+
 <script>
 import { mapActions, mapState } from 'vuex';
 import axios from 'axios';
@@ -192,6 +171,17 @@ export default {
 </script>
 
 <style>
+.profile_box {
+  display: flex;
+  flex-direction: row;
+  align-items: center; /* 可选，用于垂直居中对齐 */
+  justify-content: center; /* 居中对齐 */
+}
+.function_box{
+  padding-left: 5%;
+  padding-right: 5%;
+  border: 2px solid black;
+}
 .avatar-container {
   width: 200px;
   height: 200px;
@@ -212,31 +202,5 @@ export default {
 .field-spacing {
   margin-left: 10px;
   margin-right: 10px;
-}
-
-.feedback-link {
-  text-align: center;
-  margin: 300px 0;
-}
-
-.feedback-link a {
-  color: #409EFF; /* 你可以选择合适的颜色 */
-  text-decoration: none;
-}
-
-.feedback-link a:hover {
-  text-decoration: underline;
-}
-
-.custom-yellow-button {
-  background-color: rgba(197, 170, 17, 0.701);
-  border-color: rgba(197, 170, 17, 0.701);
-  color: white;
-}
-
-.custom-light-blue-button {
-  background-color: #87CEEB;
-  border-color: #87CEEB;
-  color: white;
 }
 </style>

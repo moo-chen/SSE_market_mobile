@@ -1,38 +1,46 @@
 <template>
   <div class="login-view">
-    <h2>SSE_market</h2>
-    <div class="login" @keydown.enter="login">
-      <van-row>
-        <van-cell>
-          <van-form>
-            <van-field
-              v-model="user.email"
-              label="邮箱号"
-              type="text"
-              placeholder="请输入邮箱号"
-              required
-              :error-message="errorMessage"
-            ></van-field>
-            <van-field
-              v-model="user.password"
-              label="密码"
-              type="password"
-              placeholder="输入密码"
-              required
-              :error-message="errorInfo"
-            ></van-field>
-            <van-row style="margin:10px" type="flex" justify="space-around">
-              <van-col offset="6">
-                <van-button @click="login">登录</van-button>
-              </van-col>
-              <router-link style="margin-top: 10px" to="">注册</router-link>
-              <router-link style="margin-top: 10px" to="">忘记密码</router-link>
-            </van-row>
+    <h2 class="login-title">SSE_market</h2>
+    <div class="login-container">
+        <div class="login" @keydown.enter="login">
+          <van-row>
+            <van-cell>
+              <van-form>
+                <van-field
+                  v-model="user.email"
+                  label="邮箱号"
+                  type="text"
+                  placeholder="请输入邮箱号"
+                  required
+                  :error-message="errorMessage"
+                ></van-field>
+                <van-field
+                  v-model="user.password"
+                  label="密码"
+                  type="password"
+                  placeholder="输入密码"
+                  required
+                  :error-message="errorInfo"
+                ></van-field>
+                <van-row style="margin: 10px" type="flex" justify="center">
+                  <van-col>
+                    <van-button round color="skyblue" @click="login">登录</van-button>
+                  </van-col>
+                </van-row>
+                <van-row style="margin-top: 10px" type="flex" justify="center">
+                  <van-col>
+                    <router-link to="">注册</router-link>
+                    <span style="margin: 0 10px">|</span>
+                    <router-link to="">忘记密码</router-link>
+                  </van-col>
+                </van-row>
 
-          </van-form>
-        </van-cell>
-      </van-row>
-    </div>
+              </van-form>
+            </van-cell>
+          </van-row>
+        </div>
+    <div class="footer"></div>
+        </div>
   </div>
 </template>
 
@@ -90,3 +98,38 @@ export default {
   },
 };
 </script>
+
+<style scoped>
+.van-button--round {
+  width: 200px;
+}
+.login-view {
+  background-color: #edf6f9; /* 设置整体背景颜色为淡灰色 #e4e4e4*/
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: center;
+  height: 100vh;
+}
+
+.login-title {
+  padding: 20px 0;
+  margin-top: 0px; /* 将标题向上移动 20px，以覆盖灰色部分 */
+  margin-bottom: 0px;
+  background-color: skyblue; /* 设置标题的背景颜色为蓝色 */
+  width: 100%;
+  box-sizing: border-box;
+  text-align: center;
+  color:black;
+  size: 25px;
+}
+
+.login-container {
+  background-color: white;
+  padding: 20px;
+}
+
+.footer {
+  flex-grow: 1;
+}
+</style>

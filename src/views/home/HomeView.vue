@@ -67,62 +67,39 @@
         inset
         ref='totalGroup'
       >
-        <p v-html='line' @click='showDetail(post)'></p>
-        <van-row justify='center' @click='showDetail(post)'>
-          <van-col offset='1' span='1' margin='0'>
-            <van-image
-              round
-              width='30px'
-              height='30px'
-              fit='cover'
-              position='left'
-              :src='post.authorAvatar'
-            >
-            </van-image>
-          </van-col>
-          <van-col>
-            <div
-              class='author_box'
-              style='margin-left: 5px; vertical-align: middle; margin-top: 10px'
-            >
-              {{ post.author }}
+      <van-row @click='showDetail(post)'>
+        <van-col span='24' class='avatar-username-row'>
+          <div class='horizontal-container'>
+            <div class='avatar-container'>
+              <van-image
+                round
+                width='25px'
+                height='25px'
+                fit='cover'
+                position='left'
+                :src='post.authorAvatar'
+              ></van-image>
             </div>
-          </van-col>
-        </van-row>
-
-        <van-row @click='showDetail(post)'>
-          <van-col span='24'>
-            <van-cell :border='false' class='post_title'>
-              {{ post.title }}
-            </van-cell>
-          </van-col>
-
-          <van-col span='24'>
-            <van-cell :border='false' class='post_content'>
-              {{ post.content }}
-            </van-cell>
-          </van-col>
-
-          <van-col span='24'>
-            <div class='horizontal-container'>
-              <van-cell :border='false' class='date'>
-                <font size='2'>{{ formatDate(post.postTime) }}</font>
-              </van-cell>
-              <div class='tag-group'>
-                <span class='tag-group__title'></span>
-                <van-tag
-                  v-for='tag in post.tag'
-                  :key='tag.label'
-                  :type='tag.type'
-                  effect='plain'
-                  size='mini'
-                >
-                  {{ tag.label }}
-                </van-tag>
+            <div style='margin-top: 10px;' class='username-container'>
+              <div class='author_box'>
+                <span style='margin-top: 10px;' class='username'>{{ post.author }}</span>
               </div>
             </div>
-          </van-col>
-        </van-row>
+          </div>
+        </van-col>
+
+        <van-col span='24' class='post-content-row'>
+          <van-cell :border='false' class='post_title'>
+            {{ post.title }}
+          </van-cell>
+        </van-col>
+
+        <van-col span='24' class='post-content-row'>
+          <van-cell :border='false' class='post_content'>
+            {{ post.content }}
+          </van-cell>
+        </van-col>
+      </van-row>
 
         <van-row>
           <van-col span='6'>
@@ -203,6 +180,14 @@ export default {
       loading: false,
       line: '<br/>',
       cards: [
+        {
+          title: '全部',
+          icon: 'quanbu',
+        },
+        {
+          title: '求职',
+          icon: 'a-bianzu90',
+        },
         {
           title: '日常吐槽',
           icon: 'pinglunqu',
@@ -606,5 +591,25 @@ h2 {
   vertical-align: -0.15em;
   fill: currentColor;
   overflow: hidden;
+}
+.username-row {
+  display: flex;
+  align-items: center;
+}
+
+.avatar-container {
+  margin-left: 30px;  /* 调整头像容器的右边距 */
+}
+
+.username-container {
+  flex-grow: 1;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  margin-left: 1px;
+}
+
+.username {
+  vertical-align: middle;
 }
 </style>

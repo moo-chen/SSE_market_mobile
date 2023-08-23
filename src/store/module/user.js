@@ -55,9 +55,9 @@ const userModule = {
       });
     },
 
-    modifyPassword(context, { phone, password, password2 }) {
+    modifyPassword(context, { email, password, password2 }) {
       return new Promise((resolve, reject) => {
-        userService.modifyPassword({ phone, password, password2 }).then((res) => {
+        userService.modifyPassword({ email, password, password2 }).then((res) => {
           resolve(res);
         }).catch((err) => {
           reject(err);
