@@ -3,7 +3,7 @@
     <van-uploader :after-read='afterRead' :max-count='1' accept='image/gif, image/jpeg, image/png'>
       <div class='avatar-container'>
         <img v-if='imageUrl' :src='imageUrl' class='avatar' alt='Uploaded Avatar' />
-        <i v-else class='van-icon van-icon-add-o avatar'></i>
+        <i v-else class='van-icon avatar'></i>
       </div>
     </van-uploader>
 
@@ -174,6 +174,7 @@ export default {
   justify-content: center;
   align-items: center;
   overflow: hidden;
+  margin-top: 30px;
 }
 
 .avatar,
