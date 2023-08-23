@@ -70,7 +70,7 @@
       <van-row @click='showDetail(post)'>
         <van-col span='24' class='avatar-username-row'>
           <div class='horizontal-container'>
-            <div class='avatar-container'>
+            <div class='avatarContainer'>
               <van-image
                 round
                 width='25px'
@@ -597,8 +597,8 @@ h2 {
   align-items: center;
 }
 
-.avatar-container {
-  margin-left: 30px;  /* 调整头像容器的右边距 */
+.avatarContainer {
+  margin-left: 50px;  /* 调整头像容器的右边距 */
 }
 
 .username-container {
