@@ -587,6 +587,7 @@ export default {
 
 .author {
   height: 100px;
+  width: 100%;
   font-size: medium;
 }
 
@@ -599,6 +600,7 @@ export default {
   width: 2rem;
   font-size: small;
   color: midnightblue;
+  margin-left: 10px;
 }
 .post_title {
   height: 1rem;

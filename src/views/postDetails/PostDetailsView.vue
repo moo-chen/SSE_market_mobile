@@ -1112,6 +1112,7 @@ export default {
   height: 1rem;
   width: 2rem;
   font-size: middle;
+  width: 100%;
   color: midnightblue;
 }
 .post_title {
