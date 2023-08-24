@@ -182,7 +182,7 @@
 
           <van-col span='6'>
             <van-icon name='star-o' size='20' @click='save(post)' v-if='!post.isSaved'/>
-            <van-icon v-else color='yellow' name='star' size='20' @click='save(post)'/>
+            <van-icon v-else color='rgb(220,200,0)' name='star' size='20' @click='save(post)'/>
           </van-col>
         </van-row>
       </van-list>

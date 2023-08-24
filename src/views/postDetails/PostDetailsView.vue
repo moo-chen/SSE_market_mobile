@@ -22,8 +22,8 @@
             :style="{ 'background-color': isNightStyle ? 'rgb(50,50,50)' : 'white',
                     'color': isNightStyle ? 'gray' : null,
                     margin:'20px'}">
-            <van-icon size="27px" :name="post.isSaved ? 'star-o' : 'star'"
-                      @click.stop="save()" :class="{ 'text-warning': post.isSaved }"></van-icon>
+             <van-icon name='star-o' size='20' @click='save(post)' v-if='!post.isSaved'/>
+            <van-icon v-else color='rgb(220,200,0)' name='star' size='20' @click='save(post)'/>
             收藏
           </div>
           <hr>
@@ -33,7 +33,7 @@
                     'color': isNightStyle ? 'gray' : null,
                     margin:'20px'}"
             @click.stop="showReportModal = true">
-            <van-icon size="27px" name="failure" class="mr-2"></van-icon>
+            <van-icon size="20px" name="failure" class="mr-2"></van-icon>
             举报
           </van-row>
           <van-popup v-model="showReportModal" title="举报" @hidden="clearReportReason"
@@ -41,13 +41,15 @@
             <van-field v-model="reportReason" placeholder="请输入举报原因" rows="8">
             </van-field>
           </van-popup>
-          <van-cell v-if="this.post.authorTelephone === userInfo.phone"
-                    :style="{ 'background-color': isNightStyle ? 'rgb(50,50,50)' : 'white',
-                    'color': isNightStyle ? 'gray' : null}"
-                    @click.stop="showDeleteModal = true">
-            <van-icon size="27px" name="delete-o"></van-icon>
+          <van-row
+            v-if="this.post.authorTelephone === userInfo.phone"
+            :style="{ 'background-color': isNightStyle ? 'rgb(50,50,50)' : 'white',
+                    'color': isNightStyle ? 'gray' : null,
+                    margin:'20px'}"
+            @click.stop="showDeleteModal = true">
+            <van-icon size="20px" name="delete-o" class="mr-2"></van-icon>
             删除
-          </van-cell>
+          </van-row>
           <van-dialog v-model="showDeleteModal" message="你确定要删除这个帖子吗？"
                       showCancelButton
                       @confirm="postdelete(post)">
@@ -139,17 +141,17 @@
         </div>
         <div class='van-row--flex' style="margin-bottom: 5px">
           <div class="text-muted">
-            <van-icon size="27px" :name="post.isLiked ? 'like' : 'like-o'"
+            <van-icon size="20px" :name="post.isLiked ? 'like' : 'like-o'"
                       :color="post.isLiked ? '#ee0a24' : ''"
                       @click.stop="like()" :class="{ 'text-danger': post.isLiked }"></van-icon>
             {{ post.like }}
           </div>
           <div class="text-muted" style="margin-left:50px">
-            <van-icon size="27px" name="eye-o"></van-icon>
+            <van-icon size="20px" name="eye-o"></van-icon>
             {{ post.browse }}
           </div>
           <div class='text-muted' style="margin-left:50px">
-            <van-icon size="27px" name='comment-o'></van-icon>
+            <van-icon size="20px" name='comment-o'></van-icon>
             {{ commentsNum }}
           </div>
           <van-button class="div" @click="post.showCommentForm
@@ -229,7 +231,7 @@
                 <!--显示每个评论的点赞和回复数，点赞和回复图片对应点赞和回复功能-->
                 <div class='van-row--flex justify-content-between align-items-center'>
                   <div class="text-muted">
-                    <van-icon size="20px" :name="comment.isLiked ? 'like' : 'like-o'"
+                    <van-icon size="15px" :name="comment.isLiked ? 'like' : 'like-o'"
                               :color="comment.isLiked ? '#ee0a24' : ''"
                               @click.stop="pclike(index)"
                               :class="{ 'text-danger': comment.isLiked }">
@@ -237,13 +239,13 @@
                     {{ comment.likeNum }}
                   </div>
                   <div class="text-muted">{{ formatDate(comment.commentTime) }}</div>
-                  <van-icon size="20px" name="comment-o"
-                            style="vertical-align: middle; margin-top: 8px;"
+                  <van-icon size="15px" name="comment-o"
+                            style="vertical-align: middle; margin-top: 12px;"
                             @click.stop="comment.showReplyForm
             = !comment.showReplyForm">
                   </van-icon>
                   <div class='text-muted' @click.stop>
-                    <van-icon size="20px" name='ellipsis'
+                    <van-icon size="15px" name='ellipsis'
                               @click.stop="comment.showMenu =
               !comment.showMenu"></van-icon>
                   </div>
@@ -262,8 +264,8 @@
                        @click.stop='showReportModal = true'
                        @keydown="handleKeyboardEvent"
                   >
-                    <van-icon size="27px" name="failure" class='mr-2'></van-icon>
-                    举报
+                    <van-icon size="20px" name="failure" class='mr-2'></van-icon>
+                    <span style="font-size:20px;margin-left: 5px;">举报</span>
                   </div>
                   <!--                  提交举报弹窗-->
                   <van-dialog v-model='showReportModal'
@@ -282,8 +284,8 @@
                     @click.stop='showDeleteModal = true'
                     @keydown.stop="handleKeyboardEvent"
                   >
-                    <van-icon size="27px" name="delete-o" class='mr-2'></van-icon>
-                    删除
+                    <van-icon size="20px" name="delete-o" class='mr-2'></van-icon>
+                    <span style="font-size:20px;margin-left: 5px;">删除</span>
                   </div>
                   <!--              确认删除弹窗    -->
                   <van-dialog
@@ -381,7 +383,7 @@
                   <div class="text-muted">{{ formatDate(subComment.commentTime) }}</div>
                   <!--点赞图标-->
                   <div class="text-muted">
-                    <van-icon size="20px" :name="subComment.isLiked ? 'like' : 'like-o'"
+                    <van-icon size="15px" :name="subComment.isLiked ? 'like' : 'like-o'"
                               :color="subComment.isLiked ? '#ee0a24' : ''"
                               @click.stop="cclike(showcommentsindex,subIndex)"
                               :class="{ 'text-danger': subComment.isLiked }">
@@ -408,7 +410,7 @@
                     </div>
                     <!--删除图标-->
                     <div v-else>
-                      <van-icon size="20px" name='delete-o'
+                      <van-icon size="15px" name='delete-o'
                                 @click.stop='showDeleteModal = true'></van-icon>
                       <van-dialog
                         v-model='showDeleteModal'
@@ -422,10 +424,10 @@
                   </div>
                   <!--回复按钮，点击后跳出评论的评论的回复窗口-->
                   <div class="text-muted">
-                    <van-icon size="27px"
+                    <van-icon size="15px"
                               name="comment-o"
                               @click="replyshow = !replyshow; nowReplyComment=subComment">
-                      <span style="font-size: 12px;">回复</span>
+                      <span style="font-size: 8px;margin-left: 5px;">回复</span>
                     </van-icon>
                   </div>
                 </div>
