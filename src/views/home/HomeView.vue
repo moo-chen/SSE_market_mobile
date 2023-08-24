@@ -668,7 +668,7 @@ h2 {
 }
 
 .avatarContainer {
-  margin-left: 50px;  /* 调整头像容器的右边距 */
+  margin-left: 30px;  /* 调整头像容器的右边距 */
 }
 
 .username-container {
@@ -695,4 +695,5 @@ h2 {
   padding: 10px;
   box-sizing: border-box;
 }
+
 </style>

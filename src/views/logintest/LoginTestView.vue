@@ -30,7 +30,8 @@
                 <van-row style="margin-top: 10px" type="flex" justify="center">
                   <van-col>
                     <router-link style="margin-top: 10px" to="/register">注册</router-link>
-                    <router-link style="margin-top: 10px" to="/modifyPassword">忘记密码</router-link>
+                    <router-link style="margin-top: 10px;margin-left:30px"
+                      to="/modifyPassword">忘记密码?</router-link>
                   </van-col>
                 </van-row>
               </van-form>
