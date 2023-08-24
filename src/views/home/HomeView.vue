@@ -159,22 +159,22 @@
 
         <van-row>
           <van-col span='6'>
-            <van-icon name='good-job-o' size='10' @click='like(post)' v-if='!post.isLiked'/>
-            <van-icon v-else color='red' name='good-job' size='10' @click='like(post)'/>
+            <van-icon name='good-job-o' size='15' @click='like(post)' v-if='!post.isLiked'/>
+            <van-icon v-else color='red' name='good-job' size='15' @click='like(post)'/>
             <font size='1'>
               {{ post.like }}
             </font>
           </van-col>
 
           <van-col span='6' @click='showDetail(post)'>
-            <van-icon name='eye-o' size='10'/>
+            <van-icon name='eye-o' size='15'/>
             <font size='1'>
               {{ post.browse }}
             </font>
           </van-col>
 
           <van-col span='6' @click='showDetail(post)'>
-            <van-icon name='chat-o' size='10'/>
+            <van-icon name='chat-o' size='15'/>
             <font size='1'>
               {{ post.comment }}
             </font>
