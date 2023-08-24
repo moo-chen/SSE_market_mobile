@@ -577,7 +577,7 @@ export default {
 }
 
 .list .item .title {
-  font-size: 1px;
+  font-size: 25px;
 }
 
 .avatar {
