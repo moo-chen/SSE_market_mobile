@@ -152,7 +152,7 @@
             </template>
           </div>
         </div>
-        <div style="font-size:small;float: left;margin-left: 20px;">
+        <div style="font-size:small;float: left;margin-left: 15px;">
           <small class='text-muted'>{{ formatDate(post.postTime) }}</small>
         </div>
       </van-row>

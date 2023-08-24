@@ -59,16 +59,16 @@
                      height="48"
                      round class="mr-3"></van-image>
           <van-col>
-            <van-tag
-              :color="isNightStyle ? 'rgb(246, 155, 10)' : 'rgb(17, 167, 226)'">
-              {{ post.author }}
-            </van-tag>
-            <van-row class="title-font-size"
-                     style="margin: 10px">{{ post.title }}
-            </van-row>
+            <div style='margin-top: 10px;margin-left: 5px;' class='username-container'>
+              <div class='author_box'>
+                <span style='margin-top: 10px;' class='username'>{{ post.author }}</span>
+              </div>
+            </div>
           </van-col>
         </div>
-        <van-row class="van-row--flex content-font-size"
+        <van-row class="post_title">{{ post.title }}
+        </van-row>
+        <van-row class="post_content"
                  style="margin-bottom: 10px">
           {{ post.content }}
         </van-row>
@@ -144,16 +144,17 @@
                       @click.stop="like()" :class="{ 'text-danger': post.isLiked }"></van-icon>
             {{ post.like }}
           </div>
-          <div class="text-muted">
+          <div class="text-muted" style="margin-left:50px">
             <van-icon size="27px" name="eye-o"></van-icon>
             {{ post.browse }}
           </div>
-          <div class='text-muted'>
+          <div class='text-muted' style="margin-left:50px">
             <van-icon size="27px" name='comment-o'></van-icon>
             {{ commentsNum }}
           </div>
           <van-button class="div" @click="post.showCommentForm
-            = !post.showCommentForm" type="default" plain>
+            = !post.showCommentForm" type="default" plain
+            style="margin-left:20px">
             {{ post.showCommentForm ? '隐藏评论' : '评论' }}
           </van-button>
         </div>
@@ -193,7 +194,7 @@
     <!--显示和发表帖子评论、评论的评论-->
     <div class='comment'>
       <!--帖子评论排序按钮-->
-      <div class="van-row--flex">
+      <div class="van-row--flex" style="margin-left:20px">
         <van-button @click="sortkind='Date';comments=sortcomments(comments)"
                     plain hairline icon="descending"
                     type="primary" size="small" style="margin-left: 2px">时间
@@ -211,22 +212,23 @@
                :style="{ 'background-color': isNightStyle ? 'rgb(50,50,50)' : 'white',
           'color': isNightStyle ? 'gray' : null }">
             <!-- 显示评论详情-->
-            <div style="margin-bottom: 0.5px">
+            <div style="margin-bottom: 0.5px;margin-left: 20px;">
               <!--              评论头像-->
               <div class="van-col">
                 <van-image :src="comment.authorAvatar"
-                           width="48"
-                           height="48"
+                           width="30"
+                           height="30"
                            round style="margin-right: 20px"></van-image>
               </div>
               <!--        评论作者和评论内容-->
               <div class="van-row" style="margin-top: 20px">
-                <div class="van-row--flex author-name">{{ comment.author }}</div>
-                <div class="comment-content">{{ comment.content }}</div>
+                <div class="comment-author-name">{{ comment.author }}</div>
+                <div class="comment-content" style="margin-top:20px;">
+                    {{ comment.content }}</div>
                 <!--显示每个评论的点赞和回复数，点赞和回复图片对应点赞和回复功能-->
                 <div class='van-row--flex justify-content-between align-items-center'>
                   <div class="text-muted">
-                    <van-icon size="27px" :name="comment.isLiked ? 'like' : 'like-o'"
+                    <van-icon size="20px" :name="comment.isLiked ? 'like' : 'like-o'"
                               :color="comment.isLiked ? '#ee0a24' : ''"
                               @click.stop="pclike(index)"
                               :class="{ 'text-danger': comment.isLiked }">
@@ -234,13 +236,13 @@
                     {{ comment.likeNum }}
                   </div>
                   <div class="text-muted">{{ formatDate(comment.commentTime) }}</div>
-                  <van-icon size="27px" name="comment-o"
+                  <van-icon size="20px" name="comment-o"
                   style="vertical-align: middle; margin-top: 8px;"
                   @click.stop="comment.showReplyForm
             = !comment.showReplyForm">
                   </van-icon>
                   <div class='text-muted' @click.stop>
-                    <van-icon size="27px" name='ellipsis'
+                    <van-icon size="20px" name='ellipsis'
                     @click.stop="comment.showMenu =
               !comment.showMenu"></van-icon>
                   </div>
@@ -350,15 +352,15 @@
             <div class="van-row">
               <!-- 头像-->
               <div class="van-col" style="margin-right: 5px">
-                <van-image width="48"
-                           height="48" round class="mr-3"
+                <van-image width="30"
+                           height="30" round class="mr-3"
                            :src="subComment.authorAvatar"></van-image>
               </div>
               <!-- 作者名称和回复内容、时间&点赞、举报和回复图标-->
               <div class="van-row">
                 <!--作者名称和回复内容-->
                 <div class="van-row">
-                  <div class="van-row--flex author-name">{{ subComment.author }}</div>
+                  <div class="comment-author-name">{{ subComment.author }}</div>
                   <div
                     class="van-row--flex"
                     v-if="subComment.userTargetName !== ''">
@@ -377,7 +379,7 @@
                   <div class="text-muted">{{ formatDate(subComment.commentTime) }}</div>
                   <!--点赞图标-->
                   <div class="text-muted">
-                    <van-icon size="27px" :name="subComment.isLiked ? 'like' : 'like-o'"
+                    <van-icon size="20px" :name="subComment.isLiked ? 'like' : 'like-o'"
                               :color="subComment.isLiked ? '#ee0a24' : ''"
                               @click.stop="cclike(showcommentsindex,subIndex)"
                               :class="{ 'text-danger': subComment.isLiked }">
@@ -389,7 +391,7 @@
                     <!--举报图标-->
                     <div v-if="subComment.authorTelephone !== userInfo.phone"
                          style="position: absolute; top: 0; right: 0;">
-                      <van-icon size="27px" name='failure'
+                      <van-icon size="20px" name='failure'
                                 @click.stop='showReportModal = true'></van-icon>
                       <van-popup
                         v-model='showReportModal'
@@ -404,7 +406,7 @@
                     </div>
                     <!--删除图标-->
                     <div v-else>
-                      <van-icon  size="27px" name='delete-o'
+                      <van-icon  size="20px" name='delete-o'
                                 @click.stop='showDeleteModal = true'></van-icon>
                       <van-dialog
                         v-model='showDeleteModal'
@@ -1105,5 +1107,20 @@ export default {
   border: 1px solid #d9d9d9;
   border-radius: 5px;
   background: #fff;
+}
+.author_box {
+  height: 1rem;
+  width: 2rem;
+  font-size: middle;
+  color: midnightblue;
+}
+.post_title {
+  vertical-align: middle;
+  font-size: large;
+  font-weight: bold;
+  margin-top: 10px;
+}
+.post_content {
+  vertical-align: middle;
 }
 </style>

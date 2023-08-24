@@ -3,10 +3,12 @@
     padding: 0.25rem 0.5rem;
     width: 0.5rem;
     height: 0.25rem;
-    display: inline-block;
     border-radius: 0.25rem;
 }
-.author-name{
+.comment-author-name{
+    display: flex;
+    align-items: center;
+    height: 50px;
     font-size:20px;
     color: #888888;
 }
@@ -49,6 +51,6 @@
 }
 .comment-content{
     text-align: left;
-    font-size: 15px;
+    font-size: 30px;
 }
 
