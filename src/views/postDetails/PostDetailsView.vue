@@ -50,7 +50,7 @@
           </van-cell>
           <van-dialog v-model="showDeleteModal" message="你确定要删除这个帖子吗？"
                       showCancelButton
-                     @confirm="postdelete(post)">
+                      @confirm="postdelete(post)">
           </van-dialog>
         </van-popup>
         <div class="van-row--flex">
@@ -127,15 +127,15 @@
           </div>
         </div>
         <div>
-        <div class='d-flex justify-content-between'>
-          <small class='text-muted'>{{ formatDate(post.postTime) }}</small>
-        </div>
-        <div class="tag-group">
-          <span class="tag-group__title"></span>
-          <van-tag v-for="tag in post.tag" :key="tag.label" :type="tag.type"
-          effect="plain" size="mini">{{ tag.label }}
-          </van-tag>
-        </div>
+          <div class='d-flex justify-content-between'>
+            <small class='text-muted'>{{ formatDate(post.postTime) }}</small>
+          </div>
+          <div class="tag-group">
+            <span class="tag-group__title"></span>
+            <van-tag v-for="tag in post.tag" :key="tag.label" :type="tag.type"
+                     effect="plain" size="mini">{{ tag.label }}
+            </van-tag>
+          </div>
         </div>
         <div class='van-row--flex' style="margin-bottom: 5px">
           <div class="text-muted">
@@ -154,7 +154,7 @@
           </div>
           <van-button class="div" @click="post.showCommentForm
             = !post.showCommentForm" type="default" plain
-            style="margin-left:20px">
+                      style="margin-left:20px">
             {{ post.showCommentForm ? '隐藏评论' : '评论' }}
           </van-button>
         </div>
@@ -167,10 +167,10 @@
                      placeholder="请写下你的精彩评论..." rows="3">
           </van-field>
         </div>
-        <div class="van-row">
+        <div class="van-row" style="margin-right: 5px">
           <van-button style="margin-right: 2px"
-                      type='default' size="mini" plain
-                      round
+                      type='default' size="small" plain
+                      round native-type="button"
                       @click="showEmojiStatus()">😀
           </van-button>
           <div v-if="showEmoji">
@@ -184,7 +184,7 @@
           </div>
           <van-button
             @click="pcommentPost"
-            round type="primary">提交评论
+            round type="primary" :loading="buttonLoading">提交评论
           </van-button>
         </div>
 
@@ -224,7 +224,8 @@
               <div class="van-row" style="margin-top: 20px">
                 <div class="comment-author-name">{{ comment.author }}</div>
                 <div class="comment-content" style="margin-top:20px;">
-                    {{ comment.content }}</div>
+                  {{ comment.content }}
+                </div>
                 <!--显示每个评论的点赞和回复数，点赞和回复图片对应点赞和回复功能-->
                 <div class='van-row--flex justify-content-between align-items-center'>
                   <div class="text-muted">
@@ -237,13 +238,13 @@
                   </div>
                   <div class="text-muted">{{ formatDate(comment.commentTime) }}</div>
                   <van-icon size="20px" name="comment-o"
-                  style="vertical-align: middle; margin-top: 8px;"
-                  @click.stop="comment.showReplyForm
+                            style="vertical-align: middle; margin-top: 8px;"
+                            @click.stop="comment.showReplyForm
             = !comment.showReplyForm">
                   </van-icon>
                   <div class='text-muted' @click.stop>
                     <van-icon size="20px" name='ellipsis'
-                    @click.stop="comment.showMenu =
+                              @click.stop="comment.showMenu =
               !comment.showMenu"></van-icon>
                   </div>
                 </div>
@@ -305,7 +306,7 @@
                     <!--                    表情选择器和提交评论按钮-->
                     <div>
                       <van-button style="margin-right: 2px"
-                                  type="default"
+                                  type="default" native-type="button"
                                   plain size="small"
                                   @click="showEmojiStatus()">😀
                       </van-button>
@@ -318,7 +319,8 @@
                           @select="addEmojiToCcomment"
                         />
                       </div>
-                      <van-button type="primary" plain native-type="submit">
+                      <van-button type="primary"
+                                  plain native-type="submit" :loading="buttonLoading">
                         提交评论
                       </van-button>
                     </div>
@@ -406,7 +408,7 @@
                     </div>
                     <!--删除图标-->
                     <div v-else>
-                      <van-icon  size="20px" name='delete-o'
+                      <van-icon size="20px" name='delete-o'
                                 @click.stop='showDeleteModal = true'></van-icon>
                       <van-dialog
                         v-model='showDeleteModal'
@@ -421,8 +423,8 @@
                   <!--回复按钮，点击后跳出评论的评论的回复窗口-->
                   <div class="text-muted">
                     <van-icon size="27px"
-                      name="comment-o"
-                      @click="replyshow = !replyshow; nowReplyComment=subComment">
+                              name="comment-o"
+                              @click="replyshow = !replyshow; nowReplyComment=subComment">
                       <span style="font-size: 12px;">回复</span>
                     </van-icon>
                   </div>
@@ -436,7 +438,7 @@
                    :style="{height:'30%'}"
                    v-model="replyshow">
           <van-form @submit=
-                  "ccommentPost(showcommentsindex,
+                      "ccommentPost(showcommentsindex,
                           nowReplyComment.author,
                           nowReplyComment.ccommentID)">
             <van-field v-model="ccomment.content"
@@ -458,7 +460,7 @@
                   @select="addEmojiToCcomment"
                 />
               </div>
-              <van-button type="primary" plain native-type="submit">
+              <van-button type="primary" plain native-type="submit" :loading="buttonLoading">
                 提交回复
               </van-button>
             </div>
@@ -540,6 +542,7 @@ export default {
       nowReplyComment: -1, // 当前想要回复的评论的评论
       showRepliesModal: false, // 显示窗口
       showEmoji: false,
+      buttonLoading: false,
     };
   },
   computed: {
@@ -613,6 +616,9 @@ export default {
       this.partition = JSON.parse(localStorage.getItem('Partition'));
     }
     this.userTelephone = this.userInfo.phone;
+    // 获取当前评论ID
+    this.currentPcommentID = this.$route.query.pcommentID;
+    this.currentCcommentID = this.$route.query.ccommentID;
     // 根据该id向后端发送请求，获取该帖子的详细信息，并展示在页面上
     this.postShowDetails({
       userTelephone: this.userTelephone,
@@ -628,10 +634,11 @@ export default {
         this.post.like = post.data.Like;
         this.post.comment = post.data.Comment;
         this.post.postTime = post.data.PostTime;
-        this.post.tag = post.data.Tag ? post.data.Tag.split(',').map((tagText) => ({
-          type: this.tagTypeMap[tagText.trim()],
-          label: tagText.trim(),
-        })) : [];
+        this.post.tag = post.data.Tag ? post.data.Tag.split(',')
+          .map((tagText) => ({
+            type: this.tagTypeMap[tagText.trim()],
+            label: tagText.trim(),
+          })) : [];
         this.post.isSaved = post.data.IsSaved;
         this.post.isLiked = post.data.IsLiked;
         this.post.showMenu = false;
@@ -645,17 +652,10 @@ export default {
     this.pcommentsShow();
     // 这里或许有比setTimeout更好的写法，但是暂时写不出来，
     // 所以先用setTimeout的方法来确保pcommentsShow执行完成之后再执行this.scrollToComment()
-    setTimeout(() => {
-      // this.scrollToComment();
-    }, 500);
-  },
-  mounted() {
-    // 获取当前评论ID
-    this.currentPcommentID = this.$route.query.pcommentID;
-    this.currentCcommentID = this.$route.query.ccommentID;
-    setTimeout(() => {
-      this.scrollToComment();
-    }, 1000);
+    // 已解决，在pcommentsShow中实现了
+    // setTimeout(() => {
+    //   // this.scrollToComment();
+    // }, 500);
   },
   methods: {
     addEmojiToCcomment(emoji) {
@@ -687,6 +687,7 @@ export default {
     },
     // 发表评论的评论或者回复评论的评论
     ccommentPost(index, author, ccommentID) {
+      this.buttonLoading = true; // 按钮进入加载状态
       const comment = this.comments[index];
       this.ccomment.postID = this.post.postID;
       this.ccomment.pcommentID = comment.pcommentID;
@@ -698,17 +699,18 @@ export default {
           // 弹窗提示
           this.$toast.success('回复成功');
           setTimeout(() => {
-            this.showcommentsindex = 0;
             this.nowReplyComment = '';
             this.replyshow = false;
             this.pcommentsShow();
             // 清空输入的内容
             this.ccomment.content = '';
             this.ccomment.ccommentID = 0;
+            this.buttonLoading = false; // 按钮恢复
           }, 1000);
         })
         .catch((err) => {
           this.$toast.fail(`回复失败${err.response.data.msg}`);
+          this.buttonLoading = false; // 按钮恢复
         });
     },
     ccommentdelete(SubComment) {
@@ -803,6 +805,7 @@ export default {
     },
     // 发表帖子评论
     pcommentPost() {
+      this.buttonLoading = true; // 按钮进入加载状态
       this.pcomment.postID = this.post.postID;
       this.pcomment.userTelephone = this.userTelephone;
       this.postPcomment(this.pcomment)
@@ -811,10 +814,12 @@ export default {
           setTimeout(() => {
             this.pcommentsShow();
             this.pcomment.content = '';
+            this.buttonLoading = false; // 按钮恢复
           }, 1000);
         })
         .catch((err) => {
           this.$toast.fail(`评论失败${err.response.data.msg}`);
+          this.buttonLoading = false; // 按钮恢复
         });
     },
     pcommentdelete(comment) {
@@ -829,32 +834,43 @@ export default {
           console.error(err);
         });
     },
-    async pcommentsShow() {
+    pcommentsShow() {
       const postid = this.post.postID;
       // 请求
       try {
-        const { data } = await this.showPcomments({
+        this.showPcomments({
           userTelephone: this.userTelephone,
           postID: postid,
-        });
-        const comments = data.map((pcomment) => ({
-          pcommentID: pcomment.PcommentID,
-          author: pcomment.Author,
-          authorAvatar: pcomment.AuthorAvatar,
-          authorTelephone: pcomment.AuthorTelephone,
-          commentTime: pcomment.CommentTime,
-          content: pcomment.Content,
-          likeNum: pcomment.LikeNum,
-          subComments: pcomment.SubComments,
-          isLiked: pcomment.IsLiked,
-          showMenu: false,
-          showReplyForm: false,
-          showAllReplies: false,
-          heat: pcomment.LikeNum + len(pcomment.SubComments),
-        }));
-        this.comments = this.sortcomments(comments);
-        // .sort((a, b) => new Date(b.commentTime) - new Date(a.commentTime))
-        // this.comments = data;
+        })
+          .then(({ data }) => {
+            const comments = data.map((pcomment) => ({
+              pcommentID: pcomment.PcommentID,
+              author: pcomment.Author,
+              authorAvatar: pcomment.AuthorAvatar,
+              authorTelephone: pcomment.AuthorTelephone,
+              commentTime: pcomment.CommentTime,
+              content: pcomment.Content,
+              likeNum: pcomment.LikeNum,
+              subComments: pcomment.SubComments,
+              isLiked: pcomment.IsLiked,
+              showMenu: false,
+              showReplyForm: false,
+              showAllReplies: false,
+              heat: pcomment.LikeNum + len(pcomment.SubComments),
+            }));
+            this.comments = this.sortcomments(comments);
+            // .sort((a, b) => new Date(b.commentTime) - new Date(a.commentTime))
+            // this.comments = data;
+          })
+          .catch((err) => {
+            console.error(err);
+          })
+          .then(() => {
+            this.scrollToComment();
+          })
+          .catch((err) => {
+            console.error(err);
+          });
       } catch (err) {
         console.error(err);
       }
@@ -965,6 +981,11 @@ export default {
           setTimeout(() => {
             let childEl = document.getElementById(`ccomment-${this.currentCcommentID}`);
             console.log(childEl, this.currentCcommentID);
+            childEl.focus();
+            childEl.classList.add('blink');
+            setTimeout(() => {
+              childEl.classList.remove('blink');
+            }, 10000);
             if (childEl === null) {
               this.showAllReplies(this.showcommentsindex);
               const get = new Promise((resolve, reject) => {
@@ -978,11 +999,14 @@ export default {
                 });
               });
               get.then(() => {
-                childEl.focus();
-                childEl.classList.add('blink');
                 setTimeout(() => {
-                  childEl.classList.remove('blink');
-                }, 10000);
+                  console.log('移动到对应位置');
+                  childEl.focus();
+                  childEl.classList.add('blink');
+                  setTimeout(() => {
+                    childEl.classList.remove('blink');
+                  }, 10000);
+                }, 500);
               })
                 .catch((error) => {
                   console.log(error);
@@ -1108,6 +1132,7 @@ export default {
   border-radius: 5px;
   background: #fff;
 }
+
 .author_box {
   height: 1rem;
   width: 2rem;
@@ -1115,12 +1140,14 @@ export default {
   width: 100%;
   color: midnightblue;
 }
+
 .post_title {
   vertical-align: middle;
   font-size: large;
   font-weight: bold;
   margin-top: 10px;
 }
+
 .post_content {
   vertical-align: middle;
 }
