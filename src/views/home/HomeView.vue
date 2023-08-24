@@ -60,6 +60,7 @@
         v-for='post in posts'
         :key='post.postID'
         :border='true'
+        style='margin: 5px;box-shadow: 0 0 1px rgb(0,0,0,0.2);'
         fit='cover'
         position='left'
         inset
@@ -78,7 +79,7 @@
                 :src='post.authorAvatar'
               ></van-image>
             </div>
-            <div style='margin-top: 10px;' class='username-container'>
+            <div style='margin-top: 20px;margin-left: -5px;' class='username-container'>
               <div class='author_box'>
                 <span style='margin-top: 10px;' class='username'>{{ post.author }}</span>
               </div>
@@ -86,14 +87,14 @@
           </div>
         </van-col>
 
-        <van-col span='24' class='post-content-row'>
+        <van-col span='24' class='post-content-row' style = "margin-top: -15px">
           <van-cell :border='false' class='post_title'>
             {{ post.title }}
           </van-cell>
         </van-col>
 
         <van-col span='24' class='post-content-row'>
-          <van-cell :border='false' class='post_content'>
+          <van-cell :border='false' class='post_content' style = "margin-top: -10px">
             {{ post.content }}
           </van-cell>
         </van-col>
@@ -112,7 +113,7 @@
                 <img :src="fileListGet(post)[1]"
                      width="100px"
                      height="100px"
-                     style="margin-top:20px"
+                     style="margin-top:10px"
                      @click="handlePictureCardPreview(1)"
                      @keyup.enter="handlePictureCardPreview(1)"
                      @loadeddata="handlePictureCardPreview(1)"
@@ -131,7 +132,7 @@
                 <img :src="fileListGet(post)[3]"
                      width="100px"
                      height="100px"
-                     style="margin-top:20px"
+                     style="margin-top:10px"
                      @click="handlePictureCardPreview(3)"
                      @keyup.enter="handlePictureCardPreview(3)"
                      @loadeddata="handlePictureCardPreview(3)"
@@ -150,6 +151,9 @@
               </div>
             </template>
           </div>
+        </div>
+        <div style="font-size:small;float: left;margin-left: 20px;">
+          <small class='text-muted'>{{ formatDate(post.postTime) }}</small>
         </div>
       </van-row>
 
@@ -593,12 +597,11 @@ export default {
 .author_box {
   height: 1rem;
   width: 2rem;
-  font-size: xx-small;
+  font-size: small;
   color: midnightblue;
 }
-
 .post_title {
-  height: 1.25rem;
+  height: 1rem;
   vertical-align: middle;
   font-size: large;
   font-weight: bold;
@@ -686,7 +689,6 @@ h2 {
 .thumbnail-container {
   float: left;
   display: flex;
-  flex-direction: row;
   flex-wrap: wrap;
 }
 
@@ -696,4 +698,7 @@ h2 {
   box-sizing: border-box;
 }
 
+.thumbnail-container img {
+  margin-left: 20px;
+}
 </style>
