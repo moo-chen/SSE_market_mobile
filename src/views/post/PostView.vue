@@ -20,6 +20,7 @@
           :deletable="true"
           @delete="onDelete"
           :max-count="9"
+          multiple
         />
       </van-cell>
     </van-cell-group>
@@ -93,16 +94,24 @@ export default {
   },
   methods: {
     ...mapActions('postModule', { Post: 'post' }),
-    afterRead(file) {
-      const formData = new FormData();
-      formData.append('file', file.file);
+    afterRead(files) {
+      const filesArray = Array.isArray(files) ? files : [files];
 
-      axios
-        .post(this.uploadPhotosActionURL, formData)
-        .then((response) => {
-          const url = response.data.fileURL; // 这里直接获取fileURL
-          this.fileList.push({ url });
-        });
+      filesArray.forEach((file) => {
+        const formData = new FormData();
+        formData.append('file', file.file);
+
+        axios
+          .post(this.uploadPhotosActionURL, formData)
+          .then((response) => {
+            const url = response.data.fileURL;
+            this.fileList.push({ url });
+          })
+          .catch((error) => {
+            console.error('Error uploading file:', error);
+            // 在这里可以添加错误处理逻辑，比如提示用户上传失败等
+          });
+      });
     },
     onDelete(index) {
       this.fileList.splice(index, 1);
