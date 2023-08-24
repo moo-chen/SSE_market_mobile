@@ -72,10 +72,11 @@
                   @click="showDetails" @keydown.enter="showDetails">评论了你的帖子: </span>
             <span v-if="currentNotice.type === 'ccomment'" class="postjump"
                   @click="showDetails" @keydown.enter="showDetails">回复了你的评论: </span>
-            <span v-if="currentNotice.type === 'punishment'"
-                  style="color: red">警告，你的账号出现违规： </span>
-            <span v-if="currentNotice.type === 'sue'">你的举报已得到处理： </span>
-            <span v-if="currentNotice.type === 'feedback'">你的反馈已得到处理回复： </span>
+            <span v-if="currentNotice.type === 'punish'"
+                  style="color: red;font-size: 18px">警告，你的账号出现违规： </span>
+            <span v-if="currentNotice.type === 'sue'" style="font-size: 18px">你的举报已得到处理： </span>
+            <span v-if="currentNotice.type === 'feedback'"
+                  style="font-size: 18px">你的反馈已得到处理回复： </span>
             <span class="preview mb-2" style="color:black">{{ currentNotice.content }}</span>
           </div>
         </div>
@@ -99,7 +100,7 @@ export default {
       loading: false,
       page: 1,
       notices: [],
-      noticesType: 'unread',
+      noticesType: 'unread', //
       more: true,
       noticesNum: {
         totalNum: 0,
@@ -173,7 +174,7 @@ export default {
         case 'ccomment':
           content += '回复了你的评论：';
           break;
-        case 'punishment':
+        case 'punish':
           content += '警告，你的账号出现违规：';
           break;
         case 'sue':

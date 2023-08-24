@@ -5,8 +5,23 @@
 > # debug
 > 1.遇到了CRLF的问题，晖哥的方法是在终端输入 "eslint --ext .js,.vue --fix ."，
 > 我（龚敬）的方法是在.eslintrc.js中添加"linebreak-style": ["error", "windows"],"、如果IDE开启了适配项目editorconfig，需要修改end_of_line = crlf
-> 
+>
 > 2.遇到了手机开热点但不能连接到的问题，我（龚敬）的方法是在vue.config.js中的host用
 > 无线局域网适配器的IPv4地址替换（在终端输入"ipconfig"可查到）
-> 
+>
 > 3.用edge，别用Chrome！！！
+
+# 	本地测试说明
+
+1. 手机和电脑在同一个网络下，且该网络支持局域网（校园网不行），建议手机开热点。设备允许的情况下，多个设备连接到一个路由器上。
+
+2. 服务器（也就是电脑）前端的.env.development里的VUE_APP_BASE_URL改为电脑在局域网中的地址（比如192.168.124.7，一般都是192.x.x.x的）
+
+3. 电脑后端main.go修改监听地址为电脑在局域网中的地址
+
+   ```go
+   	srv := &http.Server{
+   		Addr:    "192.168.124.7:8080",
+   		Handler: r,
+   	}
+   ```
