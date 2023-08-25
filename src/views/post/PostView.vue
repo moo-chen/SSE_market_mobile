@@ -1,15 +1,15 @@
 <template>
   <div class="post-form">
     <van-nav-bar title="发帖"
-    left-arrow @click-left="onClickLeft"/>
+                 left-arrow @click-left="onClickLeft"/>
     <van-cell-group>
       <van-field v-model="posts.title" label-width="50px"
-      label="标题" placeholder="请输入标题"></van-field>
+                 label="标题" placeholder="请输入标题"></van-field>
     </van-cell-group>
 
     <van-cell-group>
       <van-field v-model="posts.content" label="正文" label-width="50px" clearable
-      type="textarea" rows="10" placeholder="请输入正文"></van-field>
+                 type="textarea" rows="10" placeholder="请输入正文"></van-field>
     </van-cell-group>
 
     <van-cell-group title="图片上传">
@@ -25,7 +25,7 @@
       </van-cell>
     </van-cell-group>
     <van-dialog v-model="dialogVisible">
-      <img width='100%' :src='dialogImageUrl' alt='' />
+      <img width='100%' :src='dialogImageUrl' alt=''/>
     </van-dialog>
 
     <van-cell-group>
@@ -50,7 +50,8 @@
     </van-cell-group>
     <div class="form-buttons">
       <van-button type="primary" size="large"
-      @click='post()' class="custom-send-button">发送</van-button>
+                  @click='post()' class="custom-send-button">发送
+      </van-button>
     </div>
   </div>
 </template>
@@ -113,8 +114,8 @@ export default {
           });
       });
     },
-    onDelete(index) {
-      this.fileList.splice(index, 1);
+    onDelete(item) {
+      this.fileList = this.fileList.filter((v) => v.url !== item.url);
     },
     handlePictureCardPreview(file) {
       this.dialogImageUrl = file.url;
@@ -137,18 +138,25 @@ export default {
     post() {
       this.posts.userTelephone = this.userInfo.phone;
       // 提取 fileList 中的所有 url，并连接成一个字符串
-      this.posts.photos = this.fileList.map((file) => file.url).join('|');
+      this.posts.photos = this.fileList.map((file) => file.url)
+        .join('|');
       // 请求
       this.Post(this.posts)
         .then(() => {
-          Notify({ type: 'success', message: '发帖成功' });
+          Notify({
+            type: 'success',
+            message: '发帖成功',
+          });
           // 跳转主页
           setTimeout(() => {
             this.$router.push({ path: '/' });
           }, 500);
         })
         .catch((err) => {
-          Notify({ type: 'danger', message: err.response.data.msg });
+          Notify({
+            type: 'danger',
+            message: err.response.data.msg,
+          });
         });
     },
     addEmoji(emoji) {
@@ -167,7 +175,7 @@ export default {
 
 <style>
 .van-uploader__input {
-    size : 20px !important;
+  size: 20px !important;
 }
 
 .post-form {
