@@ -3,7 +3,7 @@
 <!-- eslint-disable vuejs-accessibility/click-events-have-key-events -->
 <!-- eslint-disable vuejs-accessibility/alt-text -->
 <template>
-  <div style="margin-bottom: 100px">
+  <div style="margin-bottom: 115px">
     <div class='container'>
       <h2>SSE_market</h2>
       <div class='icon-container'>
@@ -98,21 +98,21 @@
             {{ post.content }}
           </van-cell>
         </van-col>
-        <div v-if="fileListGet(post).length > 0" class="photo-viewer van-row">
+        <div v-if="fileListGet(post).length > 0" class="photo-viewer van-row" style="margin-right: 20px">
           <div class="thumbnail-container">
             <template v-if="fileListGet(post).length === 4">
               <div>
                 <img :src="fileListGet(post)[0]"
-                     width="100px"
-                     height="100px"
+                     width="115px"
+                     height="115px"
                      @click="handlePictureCardPreview(0)"
                      @keyup.enter="handlePictureCardPreview(0)"
                      @loadeddata="handlePictureCardPreview(0)"
                      alt="Post Photo" preview-text="Post Photo"
                      preview="1"/>
                 <img :src="fileListGet(post)[1]"
-                     width="100px"
-                     height="100px"
+                     width="115px"
+                     height="115px"
                      style="margin-top:10px"
                      @click="handlePictureCardPreview(1)"
                      @keyup.enter="handlePictureCardPreview(1)"
@@ -122,16 +122,16 @@
               </div>
               <div>
                 <img :src="fileListGet(post)[2]"
-                     width="100px"
-                     height="100px"
+                     width="115px"
+                     height="115px"
                      @click="handlePictureCardPreview(2)"
                      @keyup.enter="handlePictureCardPreview(2)"
                      @loadeddata="handlePictureCardPreview(2)"
                      alt="Post Photo"
                      preview/>
                 <img :src="fileListGet(post)[3]"
-                     width="100px"
-                     height="100px"
+                     width="115px"
+                     height="115px"
                      style="margin-top:10px"
                      @click="handlePictureCardPreview(3)"
                      @keyup.enter="handlePictureCardPreview(3)"
@@ -142,8 +142,8 @@
             <template v-else>
               <div v-for="(file, index) in fileListGet(post)" :key="index">
                 <img :src="file"
-                     width="100px"
-                     height="100px"
+                     width="115px"
+                     height="115px"
                      @click="handlePictureCardPreview(index)"
                      @keyup.enter="handlePictureCardPreview(index)"
                      @loadeddata="handlePictureCardPreview(index)"
@@ -586,7 +586,7 @@ export default {
 }
 
 .author {
-  height: 100px;
+  height: 115px;
   width: 100%;
   font-size: medium;
 }
