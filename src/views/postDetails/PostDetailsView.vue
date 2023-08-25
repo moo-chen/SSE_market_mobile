@@ -36,11 +36,16 @@
             <van-icon size="20px" name="failure" class="mr-2"></van-icon>
             举报
           </van-row>
-          <van-popup v-model="showReportModal" title="举报" @hidden="clearReportReason"
-                     @ok="submitReport('post',post.postID)" ok-title="Submit">
-            <van-field v-model="reportReason" placeholder="请输入举报原因" rows="8">
+          <van-dialog v-model='showReportModal'
+                      title='举报'
+                      @confirm='submitReport("post",post.postID)'
+                      @cancel='clearReportReason'
+                      @hidden='clearReportReason'
+                      confirm-button-text="提交"
+                      show-cancel-button>
+            <van-field v-model='reportReason' placeholder='请输入举报原因' rows='8'>
             </van-field>
-          </van-popup>
+          </van-dialog>
           <van-row
             v-if="this.post.authorTelephone === userInfo.phone"
             :style="{ 'background-color': isNightStyle ? 'rgb(50,50,50)' : 'white',
@@ -395,20 +400,19 @@
                   <!--举报/删除图标-->
                   <div class='text-muted'>
                     <!--举报图标-->
-                    <div v-if="subComment.authorTelephone !== userInfo.phone"
-                         style="position: absolute; top: 0; right: 0;">
+                    <div v-if="subComment.authorTelephone !== userInfo.phone">
                       <van-icon size="20px" name='failure'
                                 @click.stop='showReportModal = true'></van-icon>
-                      <van-popup
-                        v-model='showReportModal'
-                        title='举报'
-                        @hidden='clearReportReason'
-                        @ok='submitReport("ccomment",subComment.ccommentID)'
-                        ok-title='Submit'
-                      >
-                        <van-field v-model='reportReason'
-                                   placeholder='请输入举报原因' rows='8'></van-field>
-                      </van-popup>
+                      <van-dialog v-model='showReportModal'
+                                  title='举报'
+                                  @confirm='submitReport("ccomment",subComment.ccommentID)'
+                                  @cancel='clearReportReason'
+                                  @hidden='clearReportReason'
+                                  confirm-button-text="提交"
+                                  show-cancel-button>
+                        <van-field v-model='reportReason' placeholder='请输入举报原因' rows='8'>
+                        </van-field>
+                      </van-dialog>
                     </div>
                     <!--删除图标-->
                     <div v-else>

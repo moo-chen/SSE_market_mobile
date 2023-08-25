@@ -4,8 +4,15 @@
 <!-- eslint-disable vuejs-accessibility/alt-text -->
 <template>
   <div margin='0'>
-    <h3>我的收藏</h3>
-
+    <van-nav-bar
+      title="我的收藏"
+      left-text="返回"
+      left-arrow
+      @click-left="$router.push({name:'profile'})"
+      fixed
+      placeholder
+      safe-area-inset-top
+    />
     <div>
       <van-list
         v-for='post in posts'
