@@ -18,36 +18,39 @@
       >
         <p v-html='line' @click='showDetail(post)'></p>
         <van-row justify='center' @click='showDetail(post)'>
-          <van-col offset='1' span='1' margin='0'>
-            <van-image
-              round
-              width='30px'
-              height='30px'
-              fit='cover'
-              position='left'
-              :src='post.authorAvatar'
-            >
-            </van-image>
-          </van-col>
-          <van-col offset='2' span='4'>
-            <div class='author_box'>
-              {{ post.author }}
+          <van-col span='24' class='avatar-username-row'>
+          <div class='horizontal-container'>
+            <div class='avatarContainer'>
+              <van-image
+                round
+                width='25px'
+                height='25px'
+                fit='cover'
+                position='left'
+                :src='post.authorAvatar'
+              ></van-image>
             </div>
-          </van-col>
+            <div style='margin-top: 20px;margin-left: -5px;' class='username-container'>
+              <div class='author_box'>
+                <span style='margin-top: 10px;' class='username'>{{ post.author }}</span>
+              </div>
+            </div>
+          </div>
+        </van-col>
         </van-row>
 
         <van-row @click='showDetail(post)'>
-          <van-col span='24'>
-            <van-cell :border='false' class='post_title'>
-              {{ post.title }}
-            </van-cell>
-          </van-col>
+          <van-col span='24' class='post-content-row' style = "margin-top: -15px">
+          <van-cell :border='false' class='post_title'>
+            {{ post.title }}
+          </van-cell>
+        </van-col>
 
-          <van-col span='24'>
-            <van-cell :border='false' class='post_content'>
-              {{ post.content }}
-            </van-cell>
-          </van-col>
+        <van-col span='24' class='post-content-row'>
+          <van-cell :border='false' class='post_content' style = "margin-top: -10px">
+            {{ post.content }}
+          </van-cell>
+        </van-col>
 
           <van-col span='24'>
             <van-cell :border='false' class='date'>
@@ -83,7 +86,7 @@
 
           <van-col span='6'>
             <van-icon name='star-o' size='20' @click='save(post)' v-if='!post.isSaved' />
-            <van-icon v-else color='yellow' name='star' size='20' @click='save(post)' />
+            <van-icon v-else color='rgb(255,220,0)' name='star' size='20' @click='save(post)' />
           </van-col>
         </van-row>
       </van-list>
@@ -410,26 +413,32 @@ export default {
   height: 100px;
   font-size: medium;
 }
-
+.horizontal-container {
+  display: flex;
+  justify-content: space-between; /* 将子元素水平分隔放置 */
+  align-items: center; /* 垂直居中对齐子元素 */
+}
+.avatarContainer {
+  margin-left: 30px;  /* 调整头像容器的右边距 */
+}
 .post {
   display: flex;
 }
-
+.username-container {
+  flex-grow: 1;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  margin-left: 1px;
+}
 .author_box {
   height: 1rem;
   width: 2rem;
-  font-size: xx-small;
-  background-color: darkseagreen;
+  font-size: small;
+  color: midnightblue;
+  margin-left: 10px;
 }
-
-.post_title {
-  height: 1.25rem;
-  vertical-align: middle;
-  font-size: large;
-  font-weight: bold;
-}
-
-.post_content {
+.username {
   vertical-align: middle;
 }
 
@@ -440,5 +449,16 @@ export default {
 
 .date {
   height: 5%;
+}
+
+.post_title {
+  height: 1rem;
+  vertical-align: middle;
+  font-size: large;
+  font-weight: bold;
+}
+
+.post_content {
+  vertical-align: middle;
 }
 </style>
