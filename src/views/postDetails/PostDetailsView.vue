@@ -231,24 +231,26 @@
                 <!--显示每个评论的点赞和回复数，点赞和回复图片对应点赞和回复功能-->
                 <div class='van-row--flex justify-content-between align-items-center'>
                   <div class="text-muted">
-                    <van-icon size="15px" :name="comment.isLiked ? 'like' : 'like-o'"
+                    <van-icon size="20px" :name="comment.isLiked ? 'like' : 'like-o'"
                               :color="comment.isLiked ? '#ee0a24' : ''"
                               @click.stop="pclike(index)"
                               :class="{ 'text-danger': comment.isLiked }">
                     </van-icon>
                     {{ comment.likeNum }}
                   </div>
-                  <div class="text-muted">{{ formatDate(comment.commentTime) }}</div>
-                  <van-icon size="15px" name="comment-o"
-                            style="vertical-align: middle; margin-top: 12px;"
+                  <van-icon size="20px" name="comment-o"
+                            style="vertical-align: middle; margin-top: 12px;
+                            margin-left: 20px;"
                             @click.stop="comment.showReplyForm
             = !comment.showReplyForm">
                   </van-icon>
                   <div class='text-muted' @click.stop>
-                    <van-icon size="15px" name='ellipsis'
+                    <van-icon size="20px" name='ellipsis'
                               @click.stop="comment.showMenu =
-              !comment.showMenu"></van-icon>
+              !comment.showMenu" style="margin-left: 20px;"></van-icon>
                   </div>
+                  <div class="text-muted" style="margin-top:15px;margin-left:130px">
+                      {{ formatDate(comment.commentTime) }}</div>
                 </div>
                 <!--对帖子评论的更多功能选择菜单：举报和删除-->
                 <van-popup
