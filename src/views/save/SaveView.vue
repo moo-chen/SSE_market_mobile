@@ -540,7 +540,6 @@ export default {
 }
 
 .post_title {
-  height: 1.25rem;
   vertical-align: middle;
   font-size: large;
   font-weight: bold;
