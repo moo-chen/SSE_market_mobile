@@ -58,7 +58,60 @@
             {{ post.content }}
           </van-cell>
         </van-col>
-
+        <div v-if="fileListGet(post).length > 0" class="photo-viewer van-row" style="margin-right: 20px">
+          <div class="thumbnail-container">
+            <template v-if="fileListGet(post).length === 4">
+              <div>
+                <img :src="fileListGet(post)[0]"
+                     width="115px"
+                     height="115px"
+                     @click="handlePictureCardPreview(0)"
+                     @keyup.enter="handlePictureCardPreview(0)"
+                     @loadeddata="handlePictureCardPreview(0)"
+                     alt="Post Photo" preview-text="Post Photo"
+                     preview="1"/>
+                <img :src="fileListGet(post)[1]"
+                     width="115px"
+                     height="115px"
+                     style="margin-top:10px"
+                     @click="handlePictureCardPreview(1)"
+                     @keyup.enter="handlePictureCardPreview(1)"
+                     @loadeddata="handlePictureCardPreview(1)"
+                     alt="Post Photo"
+                     preview/>
+              </div>
+              <div>
+                <img :src="fileListGet(post)[2]"
+                     width="115px"
+                     height="115px"
+                     @click="handlePictureCardPreview(2)"
+                     @keyup.enter="handlePictureCardPreview(2)"
+                     @loadeddata="handlePictureCardPreview(2)"
+                     alt="Post Photo"
+                     preview/>
+                <img :src="fileListGet(post)[3]"
+                     width="115px"
+                     height="115px"
+                     style="margin-top:10px"
+                     @click="handlePictureCardPreview(3)"
+                     @keyup.enter="handlePictureCardPreview(3)"
+                     @loadeddata="handlePictureCardPreview(3)"
+                     alt="Post Photo" preview/>
+              </div>
+            </template>
+            <template v-else>
+              <div v-for="(file, index) in fileListGet(post)" :key="index">
+                <img :src="file"
+                     width="115px"
+                     height="115px"
+                     @click="handlePictureCardPreview(index)"
+                     @keyup.enter="handlePictureCardPreview(index)"
+                     @loadeddata="handlePictureCardPreview(index)"
+                     alt="Post Photo" preview/>
+              </div>
+            </template>
+          </div>
+        </div>
           <van-col span='24'>
             <van-cell :border='false' class='date'>
               <font size='2'>
@@ -181,6 +234,20 @@ export default {
     ...mapState({
       userInfo: (state) => state.userModule.userInfo,
     }),
+    tagTypeMap() {
+      return {
+        大厂: 'primary',
+        高工资: 'success',
+        实习: 'danger',
+      };
+    },
+    fileListGet() {
+      return (post) => {
+        if (!post.photos || post.photos === '') return [];
+        // console.error(post.photos.split('|'));
+        return post.photos.split('|');
+      };
+    },
   },
   methods: {
     ...mapActions('postModule', { postBrowse: 'browse' }),
@@ -467,5 +534,19 @@ export default {
 
 .post_content {
   vertical-align: middle;
+}
+.thumbnail-container {
+  float: left;
+  display: flex;
+  flex-wrap: wrap;
+}
+.thumbnail-container div {
+  width: calc(100% / 3);
+  padding: 10px;
+  box-sizing: border-box;
+}
+
+.thumbnail-container img {
+  margin-left: 20px;
 }
 </style>
