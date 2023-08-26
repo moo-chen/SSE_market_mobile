@@ -1159,4 +1159,9 @@ export default {
 .post_content {
   vertical-align: middle;
 }
+
+.tag-group{
+  margin-left: 500px;
+  margin-top: -50px;
+}
 </style>

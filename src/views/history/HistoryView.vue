@@ -118,6 +118,12 @@
                 {{ formatDate(post.postTime) }}
               </span>
             </van-cell>
+            <div class="tag-group">
+                <span class="tag-group__title"></span>
+                <van-tag v-for="tag in post.tag" :key="tag.label" :type="tag.type"
+                        effect="plain" size="mini">{{ tag.label }}
+                </van-tag>
+            </div>
           </van-col>
         </van-row>
 
@@ -556,5 +562,10 @@ export default {
 
 .thumbnail-container img {
   margin-left: 20px;
+}
+
+.tag-group{
+  margin-top: -110px !important;
+  margin-left: 500px;
 }
 </style>

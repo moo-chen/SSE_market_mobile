@@ -155,6 +155,12 @@
         <div style="font-size:small;float: left;margin-left: 15px;">
           <small class='text-muted'>{{ formatDate(post.postTime) }}</small>
         </div>
+        <div class="tag-group">
+            <span class="tag-group__title"></span>
+            <van-tag v-for="tag in post.tag" :key="tag.label" :type="tag.type"
+                     effect="plain" size="mini">{{ tag.label }}
+            </van-tag>
+        </div>
       </van-row>
 
         <van-row>
@@ -702,5 +708,10 @@ h2 {
 
 .thumbnail-container img {
   margin-left: 20px;
+}
+
+.tag-group{
+  margin-top: -40px;
+  margin-left: 500px;
 }
 </style>
