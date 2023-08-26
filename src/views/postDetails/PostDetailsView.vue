@@ -86,38 +86,38 @@
                 <img :src="fileListGet[0]"
                      width="115px"
                      height="115px"
-                     @click="handlePictureCardPreview(0)"
-                     @keyup.enter="handlePictureCardPreview(0)"
-                     @loadeddata="handlePictureCardPreview(0)"
+                     @click="handlePictureCardPreview(fileListGet[0])"
+                     @keyup.enter="handlePictureCardPreview(fileListGet[0])"
+                     @loadeddata="handlePictureCardPreview(fileListGet[0])"
                      alt="Post Photo" preview-text="Post Photo"
-                     preview="1"/>
+                />
                 <img :src="fileListGet[1]"
                      width="115px"
                      height="115px"
                      style="margin-top:5px"
-                     @click="handlePictureCardPreview(1)"
-                     @keyup.enter="handlePictureCardPreview(1)"
-                     @loadeddata="handlePictureCardPreview(1)"
+                     @click="handlePictureCardPreview(fileListGet[1])"
+                     @keyup.enter="handlePictureCardPreview(fileListGet[1])"
+                     @loadeddata="handlePictureCardPreview(fileListGet[1])"
                      alt="Post Photo"
-                     preview/>
+                />
               </div>
               <div>
                 <img :src="fileListGet[2]"
                      width="115px"
                      height="115px"
-                     @click="handlePictureCardPreview(2)"
-                     @keyup.enter="handlePictureCardPreview(2)"
-                     @loadeddata="handlePictureCardPreview(2)"
+                     @click="handlePictureCardPreview(fileListGet[2])"
+                     @keyup.enter="handlePictureCardPreview(fileListGet[2])"
+                     @loadeddata="handlePictureCardPreview(fileListGet[2])"
                      alt="Post Photo"
-                     preview/>
+                />
                 <img :src="fileListGet[3]"
                      width="115px"
                      height="115px"
                      style="margin-top:5px"
-                     @click="handlePictureCardPreview(3)"
-                     @keyup.enter="handlePictureCardPreview(3)"
-                     @loadeddata="handlePictureCardPreview(3)"
-                     alt="Post Photo" preview/>
+                     @click="handlePictureCardPreview(fileListGet[3])"
+                     @keyup.enter="handlePictureCardPreview(fileListGet[3])"
+                     @loadeddata="handlePictureCardPreview(fileListGet[3])"
+                     alt="Post Photo"/>
               </div>
             </template>
             <template v-else>
@@ -125,10 +125,10 @@
                 <img :src="file"
                      width="115px"
                      height="115px"
-                     @click="handlePictureCardPreview(index)"
-                     @keyup.enter="handlePictureCardPreview(index)"
-                     @loadeddata="handlePictureCardPreview(index)"
-                     alt="Post Photo" preview/>
+                     @click="handlePictureCardPreview(file)"
+                     @keyup.enter="handlePictureCardPreview(file)"
+                     @loadeddata="handlePictureCardPreview(file)"
+                     alt="Post Photo"/>
               </div>
             </template>
           </div>
@@ -496,10 +496,12 @@
 import { mapState, mapActions } from 'vuex';
 import { len } from 'vuelidate/lib/validators/common';
 import { Picker } from 'emoji-mart-vue';
+import { ImagePreview } from 'vant';
 
 export default {
   components: {
     Picker,
+    [ImagePreview.Component.name]: ImagePreview.Component,
   },
   data() {
     return {
@@ -794,9 +796,16 @@ export default {
     handleKeyboardEvent() {
       // 处理键盘事件，即使是一个空的处理程序
     },
-    handlePictureCardPreview(index) {
-      console.log(index);
-      this.$previewRefresh();
+    handlePictureCardPreview(url) {
+      console.log(url);
+      ImagePreview({
+        images: [this.getImage(url)],
+        closeable: true,
+      });
+    },
+    getImage(url) {
+      const replacedUrl = url.replace('resized', 'uploads');
+      return replacedUrl;
     },
     len,
     like() {
@@ -1172,7 +1181,7 @@ export default {
 .author_box {
   height: 1rem;
   width: 2rem;
-  font-size: middle;
+  font-size: medium;
   width: 100%;
   color: midnightblue;
 }
