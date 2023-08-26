@@ -135,16 +135,17 @@
         </div>
         <div>
           <div class='d-flex justify-content-between'>
-            <small class='text-muted'>{{ formatDate(post.postTime) }}</small>
+            <small class='text-muted' style="font-size:10px;margin-left:5px">
+              {{ formatDate(post.postTime) }}</small>
           </div>
-          <div class="tag-group">
+          <div class="tag-group" v-if="post.tag">
             <span class="tag-group__title"></span>
             <van-tag v-for="tag in post.tag" :key="tag.label" :type="tag.type"
                      effect="plain" size="mini">{{ tag.label }}
             </van-tag>
           </div>
         </div>
-        <div class='van-row--flex' style="margin-bottom: 5px">
+        <div class='van-row--flex' style="margin-bottom: 5px;margin-top: 20px;">
           <div class="text-muted">
             <van-icon size="20px" :name="post.isLiked ? 'like' : 'like-o'"
                       :color="post.isLiked ? '#ee0a24' : ''"
