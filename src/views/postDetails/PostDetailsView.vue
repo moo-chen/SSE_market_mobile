@@ -22,7 +22,7 @@
             :style="{ 'background-color': isNightStyle ? 'rgb(50,50,50)' : 'white',
                     'color': isNightStyle ? 'gray' : null,
                     margin:'20px'}">
-             <van-icon name='star-o' size='20' @click='save(post)' v-if='!post.isSaved'/>
+            <van-icon name='star-o' size='20' @click='save(post)' v-if='!post.isSaved'/>
             <van-icon v-else color='rgb(255,220,0)' name='star' size='20' @click='save(post)'/>
             收藏
           </div>
@@ -169,9 +169,11 @@
       </van-cell>
 
       <!--显示帖子评论窗口-->
-      <van-popup v-model="post.showCommentForm" position="bottom" :style="{ height: '30%' }">
+      <van-popup v-model="post.showCommentForm" position="bottom" :style="{ height: '50%' }">
         <div>
           <van-field v-model="pcomment.content"
+                     ref="pcommentTextarea"
+                     id="pcommentInput"
                      placeholder="请写下你的精彩评论..." rows="3">
           </van-field>
         </div>
@@ -256,7 +258,8 @@
               !comment.showMenu" style="margin-left: 20px;"></van-icon>
                   </div>
                   <div class="text-muted" style="margin-top:15px;margin-left:130px">
-                      {{ formatDate(comment.commentTime) }}</div>
+                    {{ formatDate(comment.commentTime) }}
+                  </div>
                 </div>
                 <!--对帖子评论的更多功能选择菜单：举报和删除-->
                 <van-popup
@@ -307,10 +310,11 @@
                 <!--如果点击了评论，将显示评论窗口-->
                 <van-popup
                   round
-                  position="bottom" :style="{ height: '30%' }"
+                  position="bottom" :style="{ height: '50%' }"
                   v-model="comment.showReplyForm">
                   <van-form @submit="ccommentPost(index)">
                     <van-field v-model="ccomment.content"
+                               ref="ccommentTextarea"
                                placeholder="请写下你的精彩评论..." autosize>
                     </van-field>
                     <!--                    表情选择器和提交评论按钮-->
@@ -327,6 +331,7 @@
                           :showPreview="false"
                           :showCategories="false"
                           @select="addEmojiToCcomment"
+                          style="height: 100px"
                         />
                       </div>
                       <van-button type="primary"
@@ -444,13 +449,14 @@
         </van-list>
         <!-- 弹出评论回复窗口-->
         <van-popup position="bottom" round
-                   :style="{height:'30%'}"
+                   :style="{height:'50%'}"
                    v-model="replyshow">
           <van-form @submit=
                       "ccommentPost(showcommentsindex,
                           nowReplyComment.author,
                           nowReplyComment.ccommentID)">
             <van-field v-model="ccomment.content"
+                       id="ccommentInput"
                        :placeholder="'回复@'+nowReplyComment.author">
             </van-field>
             <!--表情选择器-->
@@ -668,10 +674,31 @@ export default {
   },
   methods: {
     addEmojiToCcomment(emoji) {
-      this.ccomment.content += emoji.native;
+      const textarea = document.getElementById('ccommentInput');// Get the textarea element
+      const startPos = textarea.selectionStart; // Get the cursor's start position
+      const endPos = textarea.selectionEnd; // Get the cursor's end position
+      // Insert the emoji at the cursor position
+      this.ccomment.content = this.ccomment.content.slice(0, startPos)
+        + emoji.native + this.ccomment.content.slice(endPos);
+
+      // Update the cursor position to be after the inserted emoji
+      const newCursorPos = startPos + emoji.native.length;
+      textarea.setSelectionRange(newCursorPos, newCursorPos);
+      // this.ccomment.content += emoji.native;
     },
     addEmojiToPcomment(emoji) {
-      this.pcomment.content += emoji.native;
+      const textarea = document.getElementById('pcommentInput');
+      // const textarea = this.$refs.pcommentTextarea.$el; // Get the textarea element
+      const startPos = textarea.selectionStart; // Get the cursor's start position
+      const endPos = textarea.selectionEnd; // Get the cursor's end position
+
+      // Insert the emoji at the cursor position
+      this.pcomment.content = this.pcomment.content.slice(0, startPos)
+        + emoji.native + this.pcomment.content.slice(endPos);
+
+      // Update the cursor position to be after the inserted emoji
+      const newCursorPos = startPos + emoji.native.length;
+      textarea.setSelectionRange(newCursorPos, newCursorPos);
     },
     cclike(index, subIndex) {
       this.ccommentlike({
@@ -752,7 +779,7 @@ export default {
       if (this.before === 'home') {
         this.$router.replace({
           name: 'home',
-          query: { partitions: this.partition },
+          query: { partition: this.partition },
         });
       } else if (this.before === 'save') {
         this.$router.replace({ name: 'save' });
@@ -1161,7 +1188,7 @@ export default {
   vertical-align: middle;
 }
 
-.tag-group{
+.tag-group {
   margin-left: 500px;
   margin-top: -50px;
 }

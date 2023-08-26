@@ -278,11 +278,19 @@ export default {
         .catch((err) => {
           console.error(err);
         });
-      this.$router.push({
+      const routeLink = this.$router.resolve({
         name: 'postDetails',
-        params: { id: post.id, partition: this.partition, before: 'home' },
-        query: { id: post.id, before: 'home' },
+        params: { partition: this.partition },
+        query: {
+          id: post.id, title: post.title, before: this.$route.name, partition: this.partition,
+        },
       });
+      window.open(routeLink.href, '_blank');
+      // this.$router.push({
+      //   name: 'postDetails',
+      //   params: { id: post.id, partition: this.partition, before: 'home' },
+      //   query: { id: post.id, before: 'home' },
+      // });
     },
 
     // 查询满足要求的帖子数量

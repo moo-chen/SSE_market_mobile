@@ -4,14 +4,50 @@
                  left-arrow @click-left="onClickLeft"/>
     <van-cell-group>
       <van-field v-model="posts.title" label-width="50px"
-                 label="标题" placeholder="请输入标题"></van-field>
+                 id="titleInput"
+                 label="标题" placeholder="请输入标题">
+        <!--      表情选择器-->
+        <template #button>
+          <van-button style="margin-right: 2px"
+                      type='primary' size="small" plain
+                      native-type="button"
+                      @click="showTitleEmojiStatus">😀
+          </van-button>
+        </template>
+      </van-field>
+      <div v-if="showTitleEmoji">
+        <picker
+          :include="['people']"
+          :showSearch="false"
+          :showPreview="false"
+          :showCategories="false"
+          @select="addEmojiToTitle"
+        />
+      </div>
     </van-cell-group>
-
     <van-cell-group>
       <van-field v-model="posts.content" label="正文" label-width="50px" clearable
-                 type="textarea" rows="10" placeholder="请输入正文"></van-field>
+                 id="contentInput"
+                 type="textarea" rows="10" placeholder="请输入正文">
+        <!--      表情选择器-->
+        <template #button>
+          <van-button style="margin-right: 2px"
+                      type='primary' size="small" plain
+                      native-type="button"
+                      @click="showContentEmojiStatus">😀
+          </van-button>
+        </template>
+      </van-field>
+      <div v-if="showContentEmoji">
+        <picker
+          :include="['people']"
+          :showSearch="false"
+          :showPreview="false"
+          :showCategories="false"
+          @select="addEmojiToContent"
+        />
+      </div>
     </van-cell-group>
-
     <van-cell-group title="图片上传">
       <van-cell>
         <van-uploader
@@ -60,9 +96,12 @@
 import { mapState, mapActions } from 'vuex';
 import { Notify } from 'vant';
 import axios from 'axios';
-// import { Picker } from 'emoji-mart-vue';
+import { Picker } from 'emoji-mart-vue';
 
 export default {
+  components: {
+    Picker,
+  },
   computed: mapState({
     userInfo: (state) => state.userModule.userInfo,
   }),
@@ -86,7 +125,8 @@ export default {
         photos: '',
         tagList: '',
       },
-      showEmoji: false,
+      showContentEmoji: false,
+      showTitleEmoji: false,
       showTagPicker: false,
       rounded: true,
       showPicker: false,
@@ -159,11 +199,35 @@ export default {
           });
         });
     },
-    addEmoji(emoji) {
-      this.posts.content += emoji.native;
+    addEmojiToContent(emoji) {
+      const textarea = document.getElementById('contentInput');
+      const startPos = textarea.selectionStart; // Get the cursor's start position
+      const endPos = textarea.selectionEnd; // Get the cursor's end position
+      // Insert the emoji at the cursor position
+      this.posts.content = this.posts.content.slice(0, startPos)
+        + emoji.native + this.posts.content.slice(endPos);
+
+      // Update the cursor position to be after the inserted emoji
+      const newCursorPos = startPos + emoji.native.length;
+      textarea.setSelectionRange(newCursorPos, newCursorPos);
     },
-    showEmojiStatus() {
-      this.showEmoji = !this.showEmoji;
+    addEmojiToTitle(emoji) {
+      const textarea = document.getElementById('titleInput');
+      const startPos = textarea.selectionStart; // Get the cursor's start position
+      const endPos = textarea.selectionEnd; // Get the cursor's end position
+      // Insert the emoji at the cursor position
+      this.posts.title = this.posts.title.slice(0, startPos)
+        + emoji.native + this.posts.title.slice(endPos);
+
+      // Update the cursor position to be after the inserted emoji
+      const newCursorPos = startPos + emoji.native.length;
+      textarea.setSelectionRange(newCursorPos, newCursorPos);
+    },
+    showContentEmojiStatus() {
+      this.showContentEmoji = !this.showContentEmoji;
+    },
+    showTitleEmojiStatus() {
+      this.showTitleEmoji = !this.showTitleEmoji;
     },
     onPartitionConfirm(selectedValues) {
       this.posts.partition = selectedValues;
