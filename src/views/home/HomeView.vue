@@ -281,7 +281,7 @@ export default {
   },
   created() {
     this.PostNum();
-    this.partitionBrowse('');
+    this.partitionBrowse(this.$route.query.partition);
   },
   computed: {
     ...mapState({
@@ -319,7 +319,6 @@ export default {
       this.partitionBrowse('');
       this.searchinfo = '';
     },
-
     showDetail(post) {
       console.error(post);
       this.updateLook({
@@ -332,18 +331,26 @@ export default {
         .catch((err) => {
           console.error(err);
         });
-      this.$router.push({
+      const routeLink = this.$router.resolve({
         name: 'postDetails',
-        params: {
-          id: post.id,
-          partition: this.partition,
-          before: 'home',
-        },
+        params: { partition: this.partition },
         query: {
-          id: post.id,
-          before: 'home',
+          id: post.id, title: post.title, before: this.$route.name, partition: this.partition,
         },
       });
+      window.open(routeLink.href, '_blank');
+      // this.$router.push({
+      //   name: 'postDetails',
+      //   params: {
+      //     id: post.id,
+      //     partition: this.partition,
+      //     before: 'home',
+      //   },
+      //   query: {
+      //     id: post.id,
+      //     before: 'home',
+      //   },
+      // });
     },
     // 查询满足要求的帖子数量
     async PostNum() {
@@ -369,7 +376,7 @@ export default {
       console.log(index);
       this.$previewRefresh();
     },
-    // 我担心这个分页加载会出问题，就是在返回了第一页之后如果有人
+    // 我担心这个分页加载会出问题，就是在返回了第一页之后如果有人发了新帖子
     async partitionBrowse(chosenPartition) {
       if (chosenPartition === '全部') {
         this.partition = '';

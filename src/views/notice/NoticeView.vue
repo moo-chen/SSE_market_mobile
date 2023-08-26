@@ -25,7 +25,7 @@
         <van-col style="margin-outside: 5px">
           <van-row style="margin-top:5px">{{ formatNoticeTitle(notice) }}</van-row>
           <van-row style="margin-top: 5px">{{ formatNoticeContent(notice) }}</van-row>
-          <van-row style="color: #888888;font-size: 14px">{{formatDate(notice.time)}}</van-row>
+          <van-row style="color: #888888;font-size: 14px">{{ formatDate(notice.time) }}</van-row>
         </van-col>
         <van-badge v-if="notice.read===false" :content="'New'"/>
       </van-cell>
@@ -74,7 +74,8 @@
                   @click="showDetails" @keydown.enter="showDetails">回复了你的评论: </span>
             <span v-if="currentNotice.type === 'punish'"
                   style="color: red;font-size: 18px">警告，你的账号出现违规： </span>
-            <span v-if="currentNotice.type === 'sue'" style="font-size: 18px">你的举报已得到处理： </span>
+            <span v-if="currentNotice.type === 'sue'"
+                  style="font-size: 18px">你的举报已得到处理： </span>
             <span v-if="currentNotice.type === 'feedback'"
                   style="font-size: 18px">你的反馈已得到处理回复： </span>
             <span class="preview mb-2" style="color:black">{{ currentNotice.content }}</span>
@@ -329,8 +330,8 @@ export default {
               ccommentID: nowNotice.target,
             },
           });
-          // window.open(link.href, '_blank');
-          window.location.href = link.href;
+          window.open(link.href, '_blank');
+          // window.location.href = link.href;
         }
       }, 100);
     },
