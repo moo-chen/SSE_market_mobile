@@ -73,12 +73,13 @@
             <span v-if="currentNotice.type === 'ccomment'" class="postjump"
                   @click="showDetails" @keydown.enter="showDetails">回复了你的评论: </span>
             <span v-if="currentNotice.type === 'punish'"
-                  style="color: red;font-size: 18px">警告，你的账号出现违规： </span>
+                  style="color: red;font-size: 20px">警告，你的账号出现违规： </span>
             <span v-if="currentNotice.type === 'sue'"
-                  style="font-size: 18px">你的举报已得到处理： </span>
+                  style="font-size: 20px">你的举报已得到处理： </span>
             <span v-if="currentNotice.type === 'feedback'"
-                  style="font-size: 18px">你的反馈已得到处理回复： </span>
-            <span class="preview mb-2" style="color:black">{{ currentNotice.content }}</span>
+                  style="font-size: 20px">你的反馈已得到处理回复： </span>
+            <span class="preview mb-2"
+                  style="font-size: 18px;color:black">{{ currentNotice.content }}</span>
           </div>
         </div>
       </div>
@@ -372,7 +373,7 @@ p {
 }
 
 .postjump {
-  font-size: 14px;
+  font-size: 38px;
   cursor: pointer;
   color: #409eff;
   text-decoration: underline;
@@ -392,7 +393,7 @@ p {
 }
 
 .title {
-  font-size: 18px; /* 调整为适合的字体大小 */
+  font-size: 38px; /* 调整为适合的字体大小 */
 }
 
 </style>
