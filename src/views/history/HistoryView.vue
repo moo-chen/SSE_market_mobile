@@ -16,6 +16,7 @@
     <div>
       <van-list
         v-for='post in posts'
+        style='margin: 5px;box-shadow: 0 0 1px rgb(0,0,0,0.2);'
         :key='post.postID'
         :border='true'
         fit='cover'
@@ -128,7 +129,7 @@
         </van-row>
 
         <van-row>
-          <van-col span='6'>
+          <van-col span='6' style="margin-top:20px">
             <van-icon name='good-job-o' size='10' @click='like(post)' v-if='!post.isLiked' />
             <van-icon v-else color='red' name='good-job' size='10' @click='like(post)' />
             <span style="font-size: xx-small; ">
@@ -136,21 +137,21 @@
             </span>
           </van-col>
 
-          <van-col span='6' @click='showDetail(post)'>
+          <van-col span='6' @click='showDetail(post)' style="margin-top:20px">
             <van-icon name='eye-o' size='10' />
             <font size='1'>
               {{ post.browse }}
             </font>
           </van-col>
 
-          <van-col span='6' @click='showDetail(post)'>
+          <van-col span='6' @click='showDetail(post)' style="margin-top:20px">
             <van-icon name='chat-o' size='10' />
             <font size='1'>
               {{ post.comment }}
             </font>
           </van-col>
 
-          <van-col span='6'>
+          <van-col span='6' style="margin-top:20px">
             <van-icon name='star-o' size='20' @click='save(post)' v-if='!post.isSaved' />
             <van-icon v-else color='rgb(255,220,0)' name='star' size='20' @click='save(post)' />
           </van-col>

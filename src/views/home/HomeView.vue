@@ -55,7 +55,7 @@
       </div>
     </div>
 
-    <div v-if="posts.length > 0">
+    <div v-if="posts.length > 0" style="display: flex; flex-direction: column; gap: 2px;">
       <van-list
         v-for='post in posts'
         :key='post.postID'
@@ -69,7 +69,7 @@
       <van-row @click='showDetail(post)'>
         <van-col span='24' class='avatar-username-row'>
           <div class='horizontal-container'>
-            <div class='avatarContainer'>
+            <div class='avatarContainer' style="margin-top:20px">
               <van-image
                 round
                 width='25px'
@@ -79,7 +79,7 @@
                 :src='post.authorAvatar'
               ></van-image>
             </div>
-            <div style='margin-top: 20px;margin-left: -5px;' class='username-container'>
+            <div style='margin-top: 40px;margin-left: -5px;' class='username-container'>
               <div class='author_box'>
                 <span style='margin-top: 10px;' class='username'>{{ post.author }}</span>
               </div>
