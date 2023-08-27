@@ -278,7 +278,8 @@ export default {
   },
   created() {
     this.PostNum();
-    this.partitionBrowse(this.$route.query.partition);
+    if (this.$route.query.partition) this.partitionBrowse(this.$route.query.partition);
+    else this.partitionBrowse('');
   },
   computed: {
     ...mapState({
@@ -316,6 +317,8 @@ export default {
       this.$router.push({ path: '/post' });
     },
     onSearch() {
+      // 记得在进行切换加载操作的时候currentPage要恢复为1
+      this.currentPage = 1;
       this.partitionBrowse('');
       this.searchinfo = '';
     },
@@ -384,12 +387,16 @@ export default {
       // });
     },
     // 我担心这个分页加载会出问题，就是在返回了第一页之后如果有人发了新帖子
+    // 经测试似乎没有明显的问题
     async partitionBrowse(chosenPartition) {
+      // 如果分区并没有变化，那么不需要执行下面的东西
+      if (this.partition === chosenPartition && this.currentPage > 1) return;
       if (chosenPartition === '全部') {
         this.partition = '';
       } else {
         this.partition = chosenPartition;
       }
+      this.currentPage = 1; // 恢复页数
       try {
         // 向后端发送请求并获取帖子列表
         const { data } = await this.postBrowse({
