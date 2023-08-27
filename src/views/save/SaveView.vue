@@ -23,6 +23,7 @@
         position='left'
         inset
         ref='totalGroup'
+        @load="loadMorePosts"
       >
         <p v-html='line' @click='showDetail(post)'></p>
         <van-row justify='center' @click='showDetail(post)'>
@@ -64,16 +65,14 @@
             <template v-if="fileListGet(post).length === 4">
               <div>
                 <img :src="fileListGet(post)[0]"
-                     width="115px"
-                     height="115px"
+                     class="photo"
                      @click="handlePictureCardPreview(0)"
                      @keyup.enter="handlePictureCardPreview(0)"
                      @loadeddata="handlePictureCardPreview(0)"
                      alt="Post Photo" preview-text="Post Photo"
                      preview="1"/>
                 <img :src="fileListGet(post)[1]"
-                     width="115px"
-                     height="115px"
+                     class="photo"
                      style="margin-top:10px"
                      @click="handlePictureCardPreview(1)"
                      @keyup.enter="handlePictureCardPreview(1)"
@@ -83,16 +82,14 @@
               </div>
               <div>
                 <img :src="fileListGet(post)[2]"
-                     width="115px"
-                     height="115px"
+                     class="photo"
                      @click="handlePictureCardPreview(2)"
                      @keyup.enter="handlePictureCardPreview(2)"
                      @loadeddata="handlePictureCardPreview(2)"
                      alt="Post Photo"
                      preview/>
                 <img :src="fileListGet(post)[3]"
-                     width="115px"
-                     height="115px"
+                     class="photo"
                      style="margin-top:10px"
                      @click="handlePictureCardPreview(3)"
                      @keyup.enter="handlePictureCardPreview(3)"
@@ -103,8 +100,7 @@
             <template v-else>
               <div v-for="(file, index) in fileListGet(post)" :key="index">
                 <img :src="file"
-                     width="115px"
-                     height="115px"
+                     class="photo"
                      @click="handlePictureCardPreview(index)"
                      @keyup.enter="handlePictureCardPreview(index)"
                      @loadeddata="handlePictureCardPreview(index)"
@@ -129,22 +125,22 @@
         </van-row>
         <van-row>
           <van-col span='6' style="margin-top:20px">
-            <van-icon name='good-job-o' size='10' @click='like(post)' v-if='!post.isLiked' />
-            <van-icon v-else color='red' name='good-job' size='10' @click='like(post)' />
+            <van-icon name='good-job-o' size='20' @click='like(post)' v-if='!post.isLiked' />
+            <van-icon v-else color='red' name='good-job' size='20' @click='like(post)' />
             <font size='1'>
               {{ post.like }}
             </font>
           </van-col>
 
           <van-col span='6' @click='showDetail(post)' style="margin-top:20px">
-            <van-icon name='eye-o' size='10' />
+            <van-icon name='eye-o' size='20' />
             <font size='1'>
               {{ post.browse }}
             </font>
           </van-col>
 
           <van-col span='6' @click='showDetail(post)' style="margin-top:20px">
-            <van-icon name='chat-o' size='10' />
+            <van-icon name='chat-o' size='20' />
             <font size='1'>
               {{ post.comment }}
             </font>
@@ -359,24 +355,25 @@ export default {
     },
 
     async loadMorePosts() {
-      window.removeEventListener('scroll', this.handleScroll);
+      if (this.currentPage * this.pageSize >= this.totalItems) return;
+      // window.removeEventListener('scroll', this.handleScroll);
       this.loading = true;
       // setTimeout(() => {
       this.currentPage += 1;
       // }, 500);
-      this.loading = false;
-      console.error(this.currentPage);
-      window.addEventListener('scroll', this.handleScroll);
+      console.log(this.currentPage);
+      // window.addEventListener('scroll', this.handleScroll);
       // 下面再请求一次数据,加到原来的posts上
       try {
         const { data } = await this.postBrowse({
           userTelephone: this.userTelephone,
           partition: this.partition,
           searchinfo: this.searchinfo,
-          searchsort: 'save',
+          searchsort: 'home',
           limit: this.pageSize,
           offset: (this.currentPage - 1) * this.pageSize,
         });
+        if (data == null) return;
         const newPosts = data
           .map((post) => ({
             id: post.PostID,
@@ -394,15 +391,17 @@ export default {
             heat: post.Heat,
             photos: post.Photos,
             tag: post.Tag
-              ? post.Tag.split(',').map((tagText) => ({
-                type: this.tagTypeMap[tagText.trim()], // 使用 this.tagTypeMap
-                label: tagText.trim(),
-              }))
+              ? post.Tag.split(',')
+                .map((tagText) => ({
+                  type: this.tagTypeMap[tagText.trim()], // 使用 this.tagTypeMap
+                  label: tagText.trim(),
+                }))
               : [],
             showMenu: false,
           }))
           .sort((a, b) => new Date(b.postTime) - new Date(a.postTime));
         this.posts.push(...newPosts); // 将新的帖子列表合并到原有的 posts 数组中
+        this.loading = false;
       } catch (error) {
         console.error(error);
       }
@@ -463,108 +462,5 @@ export default {
 </script>
 
 <style scoped>
-.icon-container {
-  position: fixed;
-  top: 0.2rem;
-  right: 0.2rem;
-  z-index: 999; /* Ensure the icon is above other elements */
-}
-.banner {
-  width: 1000px;
-  height: 304px;
-  background: pink;
-}
-.list {
-  padding: 20px;
-  justify-items: center;
-  display: grid;
-  grid-gap: 40px;
-  grid-template-columns: 1fr 1fr 1fr;
-}
-.list .item {
-  justify-items: center;
-  width: 150px;
-  height: 150px;
-  background: skyblue;
-}
-
-.list .item .title {
-  font-size: 1px;
-}
-
-.avatar {
-  width: 30px;
-  height: 30px;
-}
-
-.author {
-  height: 100px;
-  font-size: medium;
-}
-.horizontal-container {
-  display: flex;
-  justify-content: space-between; /* 将子元素水平分隔放置 */
-  align-items: center; /* 垂直居中对齐子元素 */
-}
-.avatarContainer {
-  margin-left: 30px;  /* 调整头像容器的右边距 */
-}
-.post {
-  display: flex;
-}
-.username-container {
-  flex-grow: 1;
-  overflow: hidden;
-  white-space: nowrap;
-  text-overflow: ellipsis;
-  margin-left: 1px;
-}
-.author_box {
-  height: 1rem;
-  width: 2rem;
-  font-size: small;
-  color: midnightblue;
-  margin-left: 10px;
-}
-.username {
-  vertical-align: middle;
-}
-
-.tips {
-  vertical-align: middle;
-  text-align: center;
-}
-
-.date {
-  height: 5%;
-}
-
-.post_title {
-  vertical-align: middle;
-  font-size: large;
-  font-weight: bold;
-}
-
-.post_content {
-  vertical-align: middle;
-}
-.thumbnail-container {
-  float: left;
-  display: flex;
-  flex-wrap: wrap;
-}
-.thumbnail-container div {
-  width: calc(100% / 3);
-  padding: 10px;
-  box-sizing: border-box;
-}
-
-.thumbnail-container img {
-  margin-left: 20px;
-}
-
-.tag-group{
-  margin-top: -110px !important;
-  margin-left: 500px;
-}
+@import '@/style/css/PostList.css';
 </style>

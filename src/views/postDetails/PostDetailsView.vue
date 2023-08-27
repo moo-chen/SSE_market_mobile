@@ -67,9 +67,7 @@
                      round class="mr-3"></van-image>
           <van-col>
             <div style='margin-top: 10px;margin-left: 5px;' class='username-container'>
-              <div class='author_box'>
-                <span style='margin-top: 10px;' class='username'>{{ post.author }}</span>
-              </div>
+              <span style='margin-top: 10px;' class='username'>{{ post.author }}</span>
             </div>
           </van-col>
         </div>
@@ -84,59 +82,54 @@
             <template v-if="fileListGet.length === 4">
               <div>
                 <img :src="fileListGet[0]"
-                     width="115px"
-                     height="115px"
-                     @click="handlePictureCardPreview(0)"
-                     @keyup.enter="handlePictureCardPreview(0)"
-                     @loadeddata="handlePictureCardPreview(0)"
+                     class="photo"
+                     @click="handlePictureCardPreview(fileListGet[0])"
+                     @keyup.enter="handlePictureCardPreview(fileListGet[0])"
+                     @loadeddata="handlePictureCardPreview(fileListGet[0])"
                      alt="Post Photo" preview-text="Post Photo"
-                     preview="1"/>
+                />
                 <img :src="fileListGet[1]"
-                     width="115px"
-                     height="115px"
+                     class="photo"
                      style="margin-top:5px"
-                     @click="handlePictureCardPreview(1)"
-                     @keyup.enter="handlePictureCardPreview(1)"
-                     @loadeddata="handlePictureCardPreview(1)"
+                     @click="handlePictureCardPreview(fileListGet[1])"
+                     @keyup.enter="handlePictureCardPreview(fileListGet[1])"
+                     @loadeddata="handlePictureCardPreview(fileListGet[1])"
                      alt="Post Photo"
-                     preview/>
+                />
               </div>
               <div>
                 <img :src="fileListGet[2]"
-                     width="115px"
-                     height="115px"
-                     @click="handlePictureCardPreview(2)"
-                     @keyup.enter="handlePictureCardPreview(2)"
-                     @loadeddata="handlePictureCardPreview(2)"
+                     class="photo"
+                     @click="handlePictureCardPreview(fileListGet[2])"
+                     @keyup.enter="handlePictureCardPreview(fileListGet[2])"
+                     @loadeddata="handlePictureCardPreview(fileListGet[2])"
                      alt="Post Photo"
-                     preview/>
+                />
                 <img :src="fileListGet[3]"
-                     width="115px"
-                     height="115px"
+                     class="photo"
                      style="margin-top:5px"
-                     @click="handlePictureCardPreview(3)"
-                     @keyup.enter="handlePictureCardPreview(3)"
-                     @loadeddata="handlePictureCardPreview(3)"
-                     alt="Post Photo" preview/>
+                     @click="handlePictureCardPreview(fileListGet[3])"
+                     @keyup.enter="handlePictureCardPreview(fileListGet[3])"
+                     @loadeddata="handlePictureCardPreview(fileListGet[3])"
+                     alt="Post Photo"/>
               </div>
             </template>
             <template v-else>
               <div v-for="(file, index) in fileListGet" :key="index">
                 <img :src="file"
-                     width="115px"
-                     height="115px"
-                     @click="handlePictureCardPreview(index)"
-                     @keyup.enter="handlePictureCardPreview(index)"
-                     @loadeddata="handlePictureCardPreview(index)"
-                     alt="Post Photo" preview/>
+                     class="photo"
+                     @click="handlePictureCardPreview(file)"
+                     @keyup.enter="handlePictureCardPreview(file)"
+                     @loadeddata="handlePictureCardPreview(file)"
+                     alt="Post Photo"/>
               </div>
             </template>
           </div>
         </div>
         <div>
           <div class='d-flex justify-content-between'>
-            <small class='text-muted' style="font-size:10px;margin-left:5px">
-              {{ formatDate(post.postTime) }}</small>
+            <span class='text-muted' style="color:gray;margin-left:5px">
+              {{ formatDate(post.postTime) }}</span>
           </div>
           <div class="tag-group" v-if="post.tag">
             <span class="tag-group__title"></span>
@@ -496,10 +489,12 @@
 import { mapState, mapActions } from 'vuex';
 import { len } from 'vuelidate/lib/validators/common';
 import { Picker } from 'emoji-mart-vue';
+import { ImagePreview } from 'vant';
 
 export default {
   components: {
     Picker,
+    [ImagePreview.Component.name]: ImagePreview.Component,
   },
   data() {
     return {
@@ -794,9 +789,16 @@ export default {
     handleKeyboardEvent() {
       // 处理键盘事件，即使是一个空的处理程序
     },
-    handlePictureCardPreview(index) {
-      console.log(index);
-      this.$previewRefresh();
+    handlePictureCardPreview(url) {
+      console.log(url);
+      ImagePreview({
+        images: [this.getImage(url)],
+        closeable: true,
+      });
+    },
+    getImage(url) {
+      const replacedUrl = url.replace('resized', 'uploads');
+      return replacedUrl;
     },
     len,
     like() {
@@ -1168,18 +1170,9 @@ export default {
   border-radius: 5px;
   background: #fff;
 }
-
-.author_box {
-  height: 1rem;
-  width: 2rem;
-  font-size: middle;
-  width: 100%;
-  color: midnightblue;
-}
-
 .post_title {
   vertical-align: middle;
-  font-size: large;
+  font-size: 30px;
   font-weight: bold;
   margin-top: 10px;
 }
@@ -1191,5 +1184,10 @@ export default {
 .tag-group {
   margin-left: 500px;
   margin-top: -50px;
+}
+
+.photo {
+  width: 200px;
+  height: 200px;
 }
 </style>

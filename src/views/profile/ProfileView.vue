@@ -4,8 +4,8 @@
                       text="欢迎大家来到软工集市，此版本为内测版本" style="margin-bottom: 10px;"/>
     <div class="profile_box">
       <div class="avatar-container">
-        <img v-if="imageUrl" :src="imageUrl" class="avatar" alt="Uploaded Avatar" />
-        <i v-else class="van-icon avatar"></i>
+        <img v-if="imageUrl" :src="imageUrl" class="profile_avatar" alt="Uploaded Avatar" />
+        <i v-else class="van-icon profile_avatar"></i>
       </div>
       <div class="user_name field-spacing">{{ userInfo.name }}</div>
     </div>
@@ -191,7 +191,7 @@ export default {
   font-weight: bold; /* 使用户名加粗 */
 }
 
-.avatar, .van-icon.van-icon-add-o.avatar {
+.profile_avatar, .van-icon.van-icon-add-o.avatar {
   width: 100%;
   height: 100%;
   object-fit: fill; /* 使图片填满容器 */
