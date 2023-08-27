@@ -67,9 +67,7 @@
                      round class="mr-3"></van-image>
           <van-col>
             <div style='margin-top: 10px;margin-left: 5px;' class='username-container'>
-              <div class='author_box'>
-                <span style='margin-top: 10px;' class='username'>{{ post.author }}</span>
-              </div>
+              <span style='margin-top: 10px;' class='username'>{{ post.author }}</span>
             </div>
           </van-col>
         </div>
@@ -84,16 +82,14 @@
             <template v-if="fileListGet.length === 4">
               <div>
                 <img :src="fileListGet[0]"
-                     width="115px"
-                     height="115px"
+                     class="photo"
                      @click="handlePictureCardPreview(fileListGet[0])"
                      @keyup.enter="handlePictureCardPreview(fileListGet[0])"
                      @loadeddata="handlePictureCardPreview(fileListGet[0])"
                      alt="Post Photo" preview-text="Post Photo"
                 />
                 <img :src="fileListGet[1]"
-                     width="115px"
-                     height="115px"
+                     class="photo"
                      style="margin-top:5px"
                      @click="handlePictureCardPreview(fileListGet[1])"
                      @keyup.enter="handlePictureCardPreview(fileListGet[1])"
@@ -103,16 +99,14 @@
               </div>
               <div>
                 <img :src="fileListGet[2]"
-                     width="115px"
-                     height="115px"
+                     class="photo"
                      @click="handlePictureCardPreview(fileListGet[2])"
                      @keyup.enter="handlePictureCardPreview(fileListGet[2])"
                      @loadeddata="handlePictureCardPreview(fileListGet[2])"
                      alt="Post Photo"
                 />
                 <img :src="fileListGet[3]"
-                     width="115px"
-                     height="115px"
+                     class="photo"
                      style="margin-top:5px"
                      @click="handlePictureCardPreview(fileListGet[3])"
                      @keyup.enter="handlePictureCardPreview(fileListGet[3])"
@@ -123,8 +117,7 @@
             <template v-else>
               <div v-for="(file, index) in fileListGet" :key="index">
                 <img :src="file"
-                     width="115px"
-                     height="115px"
+                     class="photo"
                      @click="handlePictureCardPreview(file)"
                      @keyup.enter="handlePictureCardPreview(file)"
                      @loadeddata="handlePictureCardPreview(file)"
@@ -135,8 +128,8 @@
         </div>
         <div>
           <div class='d-flex justify-content-between'>
-            <small class='text-muted' style="font-size:10px;margin-left:5px">
-              {{ formatDate(post.postTime) }}</small>
+            <span class='text-muted' style="color:gray;margin-left:5px">
+              {{ formatDate(post.postTime) }}</span>
           </div>
           <div class="tag-group" v-if="post.tag">
             <span class="tag-group__title"></span>
@@ -1177,18 +1170,9 @@ export default {
   border-radius: 5px;
   background: #fff;
 }
-
-.author_box {
-  height: 1rem;
-  width: 2rem;
-  font-size: medium;
-  width: 100%;
-  color: midnightblue;
-}
-
 .post_title {
   vertical-align: middle;
-  font-size: large;
+  font-size: 30px;
   font-weight: bold;
   margin-top: 10px;
 }
@@ -1200,5 +1184,10 @@ export default {
 .tag-group {
   margin-left: 500px;
   margin-top: -50px;
+}
+
+.photo {
+  width: 200px;
+  height: 200px;
 }
 </style>

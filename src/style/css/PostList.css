@@ -1,0 +1,168 @@
+.icon-container {
+    position: fixed;
+    top: 0.2rem;
+    right: 0.2rem;
+    z-index: 999; /* Ensure the icon is above other elements */
+}
+
+.custom-search-button {
+    background-color: #a9ddff;
+    color: #ffffff;
+}
+
+.banner {
+    width: 1000px;
+    height: 304px;
+    background: pink;
+}
+
+.list {
+    padding: 20px;
+    justify-items: center;
+    display: grid;
+    grid-gap: 40px;
+    grid-template-columns: 1fr 1fr 1fr;
+}
+
+.list .item {
+    justify-items: center;
+    width: 150px;
+    height: 150px;
+    /* background: skyblue; */
+}
+
+.list .item .title {
+    font-size: 25px;
+}
+
+.avatar {
+    width: 50px;
+    height: 50px;
+}
+
+.author {
+    height: 115px;
+    width: 100%;
+    font-size: medium;
+}
+
+.post {
+    display: flex;
+}
+
+.author_box {
+    height: 1rem;
+    width: 2rem;
+    font-size: 20px;
+    color: midnightblue;
+}
+
+.post_title {
+    vertical-align: middle;
+    font-size: 50px;
+    font-weight: bold;
+}
+
+.post_content {
+    vertical-align: middle;
+}
+
+.tips {
+    vertical-align: middle;
+    text-align: center;
+}
+
+.horizontal-container {
+    display: flex;
+    justify-content: space-between; /* 将子元素水平分隔放置 */
+    align-items: center; /* 垂直居中对齐子元素 */
+}
+
+.date {
+    height: 5%;
+    flex: 1;
+}
+
+.container {
+    background: linear-gradient(to bottom, #a9ddff, #87cefa);
+    padding: 20px;
+}
+
+h2 {
+    font-size: 60px;
+    color: #333333;
+    margin-bottom: 20px;
+}
+
+.search-container {
+    padding: 20px;
+    border-radius: 10px;
+    overflow: hidden; /* 隐藏搜索框背景的溢出部分 */
+}
+
+.van-search__input {
+    background: rgba(255, 255, 255, 0.5); /* 将搜索框内部白色部分设为半透明白色 */
+    border-radius: 10px;
+    padding: 10px;
+}
+
+.custom-search-button {
+    background: linear-gradient(to bottom, #a9ddff, #87cefa);
+    color: #ffffff;
+    cursor: pointer;
+    padding: 10px 20px;
+    border-radius: 20px;
+}
+
+.icon {
+    width: 1em;
+    height: 1em;
+    vertical-align: -0.15em;
+    fill: currentColor;
+    overflow: hidden;
+}
+
+.username-row {
+    display: flex;
+    align-items: center;
+}
+
+.avatarContainer {
+    margin-left: 30px; /* 调整头像容器的右边距 */
+}
+
+.username-container {
+    flex-grow: 1;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+}
+
+.username {
+    vertical-align: middle;
+}
+
+.thumbnail-container {
+    float: left;
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.thumbnail-container div {
+    width: calc(100% / 3);
+    padding: 10px;
+    box-sizing: border-box;
+}
+
+.thumbnail-container img {
+    margin-left: 20px;
+}
+
+.tag-group {
+    margin-top: -40px;
+    margin-left: 500px;
+}
+.photo{
+    width: 200px;
+    height: 200px;
+}
