@@ -8,11 +8,11 @@
                  label="标题" placeholder="请输入标题">
         <!--      表情选择器-->
         <template #button>
-          <van-button style="margin-right: 2px"
+          <!-- <van-button style="margin-right: 2px"
                       type='primary' size="small" plain
                       native-type="button"
                       @click="showTitleEmojiStatus">😀
-          </van-button>
+          </van-button> -->
         </template>
       </van-field>
       <div v-if="showTitleEmoji">
@@ -31,11 +31,11 @@
                  type="textarea" rows="10" placeholder="请输入正文">
         <!--      表情选择器-->
         <template #button>
-          <van-button style="margin-right: 2px"
+          <!-- <van-button style="margin-right: 2px"
                       type='primary' size="small" plain
                       native-type="button"
                       @click="showContentEmojiStatus">😀
-          </van-button>
+          </van-button> -->
         </template>
       </van-field>
       <div v-if="showContentEmoji">

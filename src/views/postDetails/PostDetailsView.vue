@@ -171,11 +171,11 @@
           </van-field>
         </div>
         <div class="van-row" style="margin-right: 5px">
-          <van-button style="margin-right: 2px"
+          <!-- <van-button style="margin-right: 2px"
                       type='default' size="small" plain
                       round native-type="button"
                       @click="showEmojiStatus()">😀
-          </van-button>
+          </van-button> -->
           <div v-if="showEmoji">
             <picker
               :include="['people']"
@@ -312,11 +312,11 @@
                     </van-field>
                     <!--                    表情选择器和提交评论按钮-->
                     <div>
-                      <van-button style="margin-right: 2px"
+                      <!-- <van-button style="margin-right: 2px"
                                   type="default" native-type="button"
                                   plain size="small"
                                   @click="showEmojiStatus()">😀
-                      </van-button>
+                      </van-button> -->
                       <div v-if="showEmoji">
                         <picker
                           :include="['people']"
@@ -454,11 +454,11 @@
             </van-field>
             <!--表情选择器-->
             <div>
-              <van-button style="margin-right: 2px"
+              <!-- <van-button style="margin-right: 2px"
                           type='primary' size="small" plain
                           native-type="button"
                           @click="showEmojiStatus()">😀
-              </van-button>
+              </van-button> -->
               <div v-if="showEmoji">
                 <picker
                   :include="['people']"
