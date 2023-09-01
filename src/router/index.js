@@ -9,7 +9,9 @@ const routes = [
   {
     path: '/',
     name: 'home',
-    meta: {},
+    meta: {
+      auth: true,
+    },
     component: () => import('../views/home/HomeView.vue'),
   },
   {
@@ -20,6 +22,9 @@ const routes = [
   {
     path: '/discover',
     name: 'discover',
+    meta: {
+      auth: true,
+    },
     component: () => import('../views/discover/DiscoverView.vue'),
   },
   {
