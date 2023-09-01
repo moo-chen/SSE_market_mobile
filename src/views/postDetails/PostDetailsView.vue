@@ -171,11 +171,11 @@
           </van-field>
         </div>
         <div class="van-row" style="margin-right: 5px">
-          <van-button style="margin-right: 2px"
+          <!-- <van-button style="margin-right: 2px"
                       type='default' size="small" plain
                       round native-type="button"
                       @click="showEmojiStatus()">😀
-          </van-button>
+          </van-button> -->
           <div v-if="showEmoji">
             <picker
               :include="['people']"
@@ -312,11 +312,11 @@
                     </van-field>
                     <!--                    表情选择器和提交评论按钮-->
                     <div>
-                      <van-button style="margin-right: 2px"
+                      <!-- <van-button style="margin-right: 2px"
                                   type="default" native-type="button"
                                   plain size="small"
                                   @click="showEmojiStatus()">😀
-                      </van-button>
+                      </van-button> -->
                       <div v-if="showEmoji">
                         <picker
                           :include="['people']"
@@ -454,11 +454,11 @@
             </van-field>
             <!--表情选择器-->
             <div>
-              <van-button style="margin-right: 2px"
+              <!-- <van-button style="margin-right: 2px"
                           type='primary' size="small" plain
                           native-type="button"
                           @click="showEmojiStatus()">😀
-              </van-button>
+              </van-button> -->
               <div v-if="showEmoji">
                 <picker
                   :include="['people']"
@@ -622,8 +622,7 @@ export default {
       // 将partition保存在本地缓存中
       localStorage.setItem('Partition', JSON.stringify(this.$route.query.partition));
     } else {
-      // 在本地缓存在直接读取postID
-      this.partition = JSON.parse(localStorage.getItem('Partition'));
+      this.partition = '';
     }
     this.userTelephone = this.userInfo.phone;
     // 获取当前评论ID
@@ -770,6 +769,8 @@ export default {
         .padStart(2, '0')}`;
     },
     goback() {
+      // 返回采用直接关闭的形式
+      window.close();
       console.log(this.before);
       if (this.before === 'home') {
         this.$router.replace({
@@ -797,7 +798,7 @@ export default {
       });
     },
     getImage(url) {
-      const replacedUrl = url.replace('resized', 'uploads');
+      const replacedUrl = url.replace('/resized/', '/uploads/');
       return replacedUrl;
     },
     len,

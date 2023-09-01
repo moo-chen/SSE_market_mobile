@@ -2,7 +2,7 @@
   <div>
     <van-uploader :after-read='afterRead' :max-count='1' accept='image/gif, image/jpeg, image/png'>
       <div class='avatar-container'>
-        <img v-if='imageUrl' :src='imageUrl' class='avatar' alt='Uploaded Avatar' />
+        <img v-if='imageUrl' :src='imageUrl' class='profile_avatar' alt='Uploaded Avatar' />
         <i v-else class='van-icon avatar'></i>
       </div>
     </van-uploader>
@@ -177,8 +177,7 @@ export default {
   margin-top: 30px;
 }
 
-.avatar,
-.van-icon.van-icon-add-o.avatar {
+.profile_avatar, .van-icon.van-icon-add-o.avatar {
   width: 100%;
   height: 100%;
   object-fit: fill; /* 使图片填满容器 */

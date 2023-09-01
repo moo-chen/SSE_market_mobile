@@ -4,6 +4,9 @@
 <!-- eslint-disable vuejs-accessibility/alt-text -->
 <template>
   <div style="margin-bottom: 115px">
+    <van-overlay :show="showloading" duration="0.1" :custom-style="{background:'rgba(0,0,0,0.1)'}">
+      <van-loading class="wrapper" size="24px" vertical>加载中...</van-loading>
+    </van-overlay>
     <div class='container'>
       <h2>SSE_market</h2>
       <div class='icon-container'>
@@ -238,7 +241,8 @@ export default {
       showReportModal: false,
       reportReason: '',
       toLogin: false,
-      loading: false,
+      loading: false, // 是否正在加载帖子
+      showloading: true, // 显示加载动画
       line: '<br/>',
       cards: [
         {
@@ -277,8 +281,13 @@ export default {
     };
   },
   created() {
+    this.showloading = true;
     this.PostNum();
-    this.partitionBrowse(this.$route.query.partition);
+    if (this.$route.query.partition) {
+      this.partitionBrowse(this.$route.query.partition);
+    } else {
+      this.partitionBrowse('');
+    }
   },
   computed: {
     ...mapState({
@@ -316,11 +325,13 @@ export default {
       this.$router.push({ path: '/post' });
     },
     onSearch() {
+      // 记得在进行切换加载操作的时候currentPage要恢复为1
+      this.currentPage = 1;
       this.partitionBrowse('');
-      this.searchinfo = '';
+      // this.searchinfo = '';
     },
     showDetail(post) {
-      console.error(post);
+      console.log(post);
       this.updateLook({
         userTelephone: this.userInfo.phone,
         postID: post.id,
@@ -384,13 +395,18 @@ export default {
       // });
     },
     // 我担心这个分页加载会出问题，就是在返回了第一页之后如果有人发了新帖子
+    // 经测试似乎没有明显的问题
     async partitionBrowse(chosenPartition) {
+      // 如果分区并没有变化，那么不需要执行下面的东西
+      if (this.partition === chosenPartition && this.currentPage > 1) return;
       if (chosenPartition === '全部') {
         this.partition = '';
       } else {
         this.partition = chosenPartition;
       }
+      this.currentPage = 1; // 恢复页数
       try {
+        this.showloading = true;
         // 向后端发送请求并获取帖子列表
         const { data } = await this.postBrowse({
           userTelephone: this.userTelephone,
@@ -401,7 +417,7 @@ export default {
           offset: (this.currentPage - 1) * this.pageSize,
         });
         // 将获取到的帖子列表数据赋值给 posts 变量
-        console.error(data);
+        console.log(data);
         if (data && data.length > 0) {
           this.posts = data
             .map((post) => ({
@@ -429,11 +445,14 @@ export default {
               showMenu: false,
             }))
             .sort((a, b) => new Date(b.postTime) - new Date(a.postTime));
-          console.error(this.posts);
+          // console.log(this.posts);
+          this.showloading = false;
         } else {
           this.posts = [];
+          this.showloading = false;
         }
       } catch (error) {
+        this.showloading = false;
         console.error(error);
       }
     },
