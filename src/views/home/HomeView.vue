@@ -328,7 +328,7 @@ export default {
       // 记得在进行切换加载操作的时候currentPage要恢复为1
       this.currentPage = 1;
       this.partitionBrowse('');
-      this.searchinfo = '';
+      // this.searchinfo = '';
     },
     showDetail(post) {
       console.log(post);
