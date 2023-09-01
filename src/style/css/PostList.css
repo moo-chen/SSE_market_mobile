@@ -166,3 +166,9 @@ h2 {
     width: 200px;
     height: 200px;
 }
+.wrapper {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+}
