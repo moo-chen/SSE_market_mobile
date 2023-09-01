@@ -34,7 +34,7 @@ const userModule = {
       password,
       password2,
       email,
-      num,
+      CDKey,
       valiCode,
     }) {
       return new Promise((resolve, reject) => {
@@ -45,71 +45,118 @@ const userModule = {
           password,
           password2,
           email,
-          num,
+          CDKey,
           valiCode,
-        }).then((res) => {
-          resolve(res);
-        }).catch((err) => {
-          reject(err);
-        });
+        })
+          .then((res) => {
+            resolve(res);
+          })
+          .catch((err) => {
+            reject(err);
+          });
       });
     },
 
-    modifyPassword(context, { email, password, password2 }) {
+    modifyPassword(context, {
+      email,
+      password,
+      password2,
+    }) {
       return new Promise((resolve, reject) => {
-        userService.modifyPassword({ email, password, password2 }).then((res) => {
-          resolve(res);
-        }).catch((err) => {
-          reject(err);
-        });
+        userService.modifyPassword({
+          email,
+          password,
+          password2,
+        })
+          .then((res) => {
+            resolve(res);
+          })
+          .catch((err) => {
+            reject(err);
+          });
       });
     },
 
-    deleteMe(context, { phone, email }) {
+    deleteMe(context, {
+      phone,
+      email,
+    }) {
       console.error(email);
       return new Promise((resolve, reject) => {
-        userService.deleteUser({ phone, email }).then((res) => {
-          resolve(res);
-        }).catch((err) => {
-          reject(err);
-        });
+        userService.deleteUser({
+          phone,
+          email,
+        })
+          .then((res) => {
+            resolve(res);
+          })
+          .catch((err) => {
+            reject(err);
+          });
       });
     },
 
-    identityValidate(context, { email, valiCode, mode }) {
+    identityValidate(context, {
+      email,
+      valiCode,
+      mode,
+    }) {
       return new Promise((resolve, reject) => {
-        userService.identityValidate({ email, valiCode, mode }).then((res) => {
-          resolve(res);
-        }).catch((err) => {
-          reject(err);
-        });
+        userService.identityValidate({
+          email,
+          valiCode,
+          mode,
+        })
+          .then((res) => {
+            resolve(res);
+          })
+          .catch((err) => {
+            reject(err);
+          });
       });
     },
 
-    validateEmail(context, { email, mode }) {
+    validateEmail(context, {
+      email,
+      mode,
+    }) {
       return new Promise((resolve, reject) => {
-        userService.validateEmail({ email, mode }).then((res) => {
-          console.error('1');
-          resolve(res);
-        }).catch((err) => {
-          reject(err);
-        });
+        userService.validateEmail({
+          email,
+          mode,
+        })
+          .then((res) => {
+            console.error('1');
+            resolve(res);
+          })
+          .catch((err) => {
+            reject(err);
+          });
       });
     },
 
-    login(context, { email, password }) {
+    login(context, {
+      email,
+      password,
+    }) {
       return new Promise((resolve, reject) => {
-        userService.login({ email, password }).then((res) => {
-          // 保存token
-          context.commit('SET_TOKEN', res.data.data.token);
-          return userService.info();
-        }).then((res) => {
-          // 保存用户信息
-          context.commit('SET_USERINFO', res.data.data.user);
-          resolve(res);
-        }).catch((err) => {
-          reject(err);
-        });
+        userService.login({
+          email,
+          password,
+        })
+          .then((res) => {
+            // 保存token
+            context.commit('SET_TOKEN', res.data.data.token);
+            return userService.info();
+          })
+          .then((res) => {
+            // 保存用户信息
+            context.commit('SET_USERINFO', res.data.data.user);
+            resolve(res);
+          })
+          .catch((err) => {
+            reject(err);
+          });
       });
     },
 
@@ -124,22 +171,34 @@ const userModule = {
       window.location.reload();
     },
 
-    save(context, { userTelephone, postID, isSaved }) {
+    save(context, {
+      userTelephone,
+      postID,
+      isSaved,
+    }) {
       return new Promise((resolve, reject) => {
-        userService.save({ userTelephone, postID, isSaved }).then((res) => {
-          resolve(res);
-        }).catch((err) => {
-          reject(err);
-        });
+        userService.save({
+          userTelephone,
+          postID,
+          isSaved,
+        })
+          .then((res) => {
+            resolve(res);
+          })
+          .catch((err) => {
+            reject(err);
+          });
       });
     },
     getInfo(context, { phone }) {
       return new Promise((resolve, reject) => {
-        userService.getInfo({ phone }).then((res) => {
-          resolve(res);
-        }).catch((err) => {
-          reject(err);
-        });
+        userService.getInfo({ phone })
+          .then((res) => {
+            resolve(res);
+          })
+          .catch((err) => {
+            reject(err);
+          });
       });
     },
   },

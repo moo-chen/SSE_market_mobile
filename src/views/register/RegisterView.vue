@@ -16,21 +16,11 @@
 
         <van-field
           v-model="user.phone"
-          required
           type="tel"
           label="手机号"
-          placeholder="请输入手机号"
+          placeholder="请输入手机号,可不填或乱填11位手机号"
           :error-message="errorPhoneMessage"
         />
-
-        <van-field
-          v-model="user.num"
-          required
-          label="学号"
-          placeholder="请输入学号"
-          :error-message="errorNumMessage"
-        />
-
         <van-field
           v-model="user.email"
           required
@@ -67,8 +57,13 @@
             <van-button size="small" type="info" @click="validateEmail">发送验证码</van-button>
           </template>
         </van-field>
+        <van-field
+          v-model="user.CDKey"
+          required
+          label="邀请码"
+          placeholder="请输入邀请码"
+        />
       </van-cell-group>
-
       <van-button size="normal" type="info" @click="register">
         注册
       </van-button>
@@ -99,8 +94,8 @@ export default {
         email: '',
         password2: '',
         valiCode: '',
+        CDKey: '',
         mode: '',
-        num: '',
       },
       validator: {
         name: {},
@@ -126,6 +121,7 @@ export default {
           maxLength: maxLength(8),
         },
         valiCode: {},
+        CDKey: {},
         mode: {},
       },
     };
@@ -140,12 +136,14 @@ export default {
       this.user.mode = 0;
       console.error(this.user);
       if (this.emailCheck === true) {
-        this.userValidate(this.user).then(() => {
-          this.$toast.success('已发送验证码，请将邮箱发送的验证码输入以完成注册验证');
-        }).catch((err) => {
-          console.error(err);
-          this.$toast.fail(err.response.data.msg);
-        });
+        this.userValidate(this.user)
+          .then(() => {
+            this.$toast.success('已发送验证码，请将邮箱发送的验证码输入以完成注册验证');
+          })
+          .catch((err) => {
+            console.error(err);
+            this.$toast.fail(err.response.data.msg);
+          });
       } else {
         this.$toast.fail('邮箱格式有误');
       }
@@ -160,6 +158,9 @@ export default {
             title: '系统提醒',
             variant: 'primary',
             solid: true,
+          });
+          setTimeout(() => {
+            this.$router.push({ name: 'logintest' });
           });
         })
         .catch((err) => {
@@ -180,14 +181,6 @@ export default {
         this.errorPhoneMessage = '请输入格式正确的手机号';
       } else {
         this.errorPhoneMessage = '';
-      }
-    },
-    // eslint-disable-next-line func-names
-    'user.num': function (num) {
-      if (len(num) !== 8) {
-        this.errorNumMessage = '请输入8位学号';
-      } else {
-        this.errorNumMessage = '';
       }
     },
     // eslint-disable-next-line func-names
