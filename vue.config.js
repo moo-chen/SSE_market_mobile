@@ -7,7 +7,7 @@ module.exports = defineConfig({
 
 module.exports = {
   devServer: {
-    host: '172.17.3.10',
+    host: '172.27.1.73',
     port: 8081,
   },
   configureWebpack: {

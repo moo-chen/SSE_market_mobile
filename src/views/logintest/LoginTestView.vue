@@ -47,6 +47,9 @@
 
 import { mapActions } from 'vuex';
 import { len } from 'vuelidate/lib/validators/common';
+// eslint-disable-next-line import/no-extraneous-dependencies
+import CryptoJS from 'crypto-js';
+
 import validator from '@/helper/validator';
 
 export default {
@@ -59,12 +62,22 @@ export default {
       showKeyboard: false,
       errorInfo: '', // 密码错误提示
       errorMessage: '', // 邮箱错误提示
+      key: '16bit secret key',
       // item: require('@/assets/用户条款.txt'),
     };
   },
   methods: {
     ...mapActions('userModule', { userlogin: 'login' }),
+    setPassword(data, key) {
+      const cypherKey = CryptoJS.enc.Utf8.parse(key);
+      CryptoJS.pad.ZeroPadding.pad(cypherKey, 4);
+      const iv = CryptoJS.SHA256(key).toString();
+      const cfg = { iv: CryptoJS.enc.Utf8.parse(iv) };
+      return CryptoJS.AES.encrypt(data, cypherKey, cfg).toString();
+    },
     login() {
+      this.user.password = this.setPassword(this.user.password, this.key);
+      // console.error(this.user);
       this.userlogin(this.user)
         .then(() => {
           this.$toast.success('登录成功');
