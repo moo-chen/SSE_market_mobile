@@ -27,88 +27,76 @@
       >
         <p v-html='line' @click='showDetail(post)'></p>
         <van-row justify='center' @click='showDetail(post)'>
-          <van-col span='24' class='avatar-username-row'>
-          <div class='horizontal-container'>
-            <div class='avatarContainer'>
-              <van-image
-                round
-                width='25px'
-                height='25px'
-                fit='cover'
-                position='left'
-                :src='post.authorAvatar'
-              ></van-image>
-            </div>
-            <div style='margin-top: 20px;margin-left: -5px;' class='username-container'>
-              <div class='author_box'>
+          <div class="van-row--flex">
+            <van-image :src="post.authorAvatar"
+                       width="48"
+                       height="48"
+                       round class="mr-3"></van-image>
+            <van-col>
+              <div style='margin-top: 10px;margin-left: 5px;' class='username-container'>
                 <span style='margin-top: 10px;' class='username'>{{ post.author }}</span>
               </div>
-            </div>
+            </van-col>
           </div>
-        </van-col>
         </van-row>
 
         <van-row @click='showDetail(post)'>
-          <van-col span='24' class='post-content-row' style = "margin-top: -15px">
-          <van-cell :border='false' class='post_title'>
-            {{ post.title }}
-          </van-cell>
-        </van-col>
-
-        <van-col span='24' class='post-content-row'>
-          <van-cell :border='false' class='post_content' style = "margin-top: -10px">
+          <van-row class="post_title">{{ post.title }}
+          </van-row>
+          <van-row class="post_content"
+                   style="margin-bottom: 10px">
             {{ post.content }}
-          </van-cell>
-        </van-col>
-        <div v-if="fileListGet(post).length > 0" class="photo-viewer van-row" style="margin-right: 20px">
-          <div class="thumbnail-container">
-            <template v-if="fileListGet(post).length === 4">
-              <div>
-                <img :src="fileListGet(post)[0]"
-                     class="photo"
-                     @click="handlePictureCardPreview(0)"
-                     @keyup.enter="handlePictureCardPreview(0)"
-                     @loadeddata="handlePictureCardPreview(0)"
-                     alt="Post Photo" preview-text="Post Photo"
-                     preview="1"/>
-                <img :src="fileListGet(post)[1]"
-                     class="photo"
-                     style="margin-top:10px"
-                     @click="handlePictureCardPreview(1)"
-                     @keyup.enter="handlePictureCardPreview(1)"
-                     @loadeddata="handlePictureCardPreview(1)"
-                     alt="Post Photo"
-                     preview/>
-              </div>
-              <div>
-                <img :src="fileListGet(post)[2]"
-                     class="photo"
-                     @click="handlePictureCardPreview(2)"
-                     @keyup.enter="handlePictureCardPreview(2)"
-                     @loadeddata="handlePictureCardPreview(2)"
-                     alt="Post Photo"
-                     preview/>
-                <img :src="fileListGet(post)[3]"
-                     class="photo"
-                     style="margin-top:10px"
-                     @click="handlePictureCardPreview(3)"
-                     @keyup.enter="handlePictureCardPreview(3)"
-                     @loadeddata="handlePictureCardPreview(3)"
-                     alt="Post Photo" preview/>
-              </div>
-            </template>
-            <template v-else>
-              <div v-for="(file, index) in fileListGet(post)" :key="index">
-                <img :src="file"
-                     class="photo"
-                     @click="handlePictureCardPreview(index)"
-                     @keyup.enter="handlePictureCardPreview(index)"
-                     @loadeddata="handlePictureCardPreview(index)"
-                     alt="Post Photo" preview/>
-              </div>
-            </template>
+          </van-row>
+          <div v-if="fileListGet(post).length > 0" class="photo-viewer van-row"
+               style="margin-right: 20px">
+            <div class="thumbnail-container">
+              <template v-if="fileListGet(post).length === 4">
+                <div>
+                  <img :src="fileListGet(post)[0]"
+                       class="photo"
+                       @click="handlePictureCardPreview(0)"
+                       @keyup.enter="handlePictureCardPreview(0)"
+                       @loadeddata="handlePictureCardPreview(0)"
+                       alt="Post Photo" preview-text="Post Photo"
+                       preview="1"/>
+                  <img :src="fileListGet(post)[1]"
+                       class="photo"
+                       style="margin-top:10px"
+                       @click="handlePictureCardPreview(1)"
+                       @keyup.enter="handlePictureCardPreview(1)"
+                       @loadeddata="handlePictureCardPreview(1)"
+                       alt="Post Photo"
+                       preview/>
+                </div>
+                <div>
+                  <img :src="fileListGet(post)[2]"
+                       class="photo"
+                       @click="handlePictureCardPreview(2)"
+                       @keyup.enter="handlePictureCardPreview(2)"
+                       @loadeddata="handlePictureCardPreview(2)"
+                       alt="Post Photo"
+                       preview/>
+                  <img :src="fileListGet(post)[3]"
+                       class="photo"
+                       style="margin-top:10px"
+                       @click="handlePictureCardPreview(3)"
+                       @keyup.enter="handlePictureCardPreview(3)"
+                       @loadeddata="handlePictureCardPreview(3)"
+                       alt="Post Photo" preview/>
+                </div>
+              </template>
+              <template v-else>
+                <div v-for="(file, index) in fileListGet(post)" :key="index">
+                  <img :src="file"
+                       class="photo"
+                       @click="handlePictureCardPreview(index)"
+                       @keyup.enter="handlePictureCardPreview(index)"
+                       @loadeddata="handlePictureCardPreview(index)"
+                       alt="Post Photo" preview/>
+                </div>
+              </template>
+            </div>
           </div>
-        </div>
           <van-col span='24'>
             <van-cell :border='false' class='date'>
               <font size='2'>
@@ -116,39 +104,39 @@
               </font>
             </van-cell>
             <div class="tag-group" v-if="post.tag">
-                <span class="tag-group__title"></span>
-                <van-tag v-for="tag in post.tag" :key="tag.label" :type="tag.type"
-                        effect="plain" size="mini">{{ tag.label }}
-                </van-tag>
+              <span class="tag-group__title"></span>
+              <van-tag v-for="tag in post.tag" :key="tag.label" :type="tag.type"
+                       effect="plain" size="mini">{{ tag.label }}
+              </van-tag>
             </div>
           </van-col>
         </van-row>
         <van-row>
           <van-col span='6' style="margin-top:20px">
-            <van-icon name='good-job-o' size='20' @click='like(post)' v-if='!post.isLiked' />
-            <van-icon v-else color='red' name='good-job' size='20' @click='like(post)' />
+            <van-icon name='good-job-o' size='20' @click='like(post)' v-if='!post.isLiked'/>
+            <van-icon v-else color='red' name='good-job' size='20' @click='like(post)'/>
             <font size='1'>
               {{ post.like }}
             </font>
           </van-col>
 
           <van-col span='6' @click='showDetail(post)' style="margin-top:20px">
-            <van-icon name='eye-o' size='20' />
+            <van-icon name='eye-o' size='20'/>
             <font size='1'>
               {{ post.browse }}
             </font>
           </van-col>
 
           <van-col span='6' @click='showDetail(post)' style="margin-top:20px">
-            <van-icon name='chat-o' size='20' />
+            <van-icon name='chat-o' size='20'/>
             <font size='1'>
               {{ post.comment }}
             </font>
           </van-col>
 
           <van-col span='6' style="margin-top:20px">
-            <van-icon name='star-o' size='20' @click='save(post)' v-if='!post.isSaved' />
-            <van-icon v-else color='rgb(255,220,0)' name='star' size='20' @click='save(post)' />
+            <van-icon name='star-o' size='20' @click='save(post)' v-if='!post.isSaved'/>
+            <van-icon v-else color='rgb(255,220,0)' name='star' size='20' @click='save(post)'/>
           </van-col>
         </van-row>
       </van-list>
@@ -161,8 +149,8 @@
           >
             已划到底部
           </van-cell>
-          <van-cell class='loading' v-else-if='loading'> 正在加载... </van-cell>
-          <van-button v-else :border='false' block @click='loadMorePosts'> 加载更多 </van-button>
+          <van-cell class='loading' v-else-if='loading'> 正在加载...</van-cell>
+          <van-button v-else :border='false' block @click='loadMorePosts'> 加载更多</van-button>
         </van-col>
         <p v-html='line'></p>
         <p v-html='line'></p>
@@ -278,7 +266,10 @@ export default {
         name: 'postDetails',
         params: { partition: this.partition },
         query: {
-          id: post.id, title: post.title, before: this.$route.name, partition: this.partition,
+          id: post.id,
+          title: post.title,
+          before: this.$route.name,
+          partition: this.partition,
         },
       });
       window.open(routeLink.href, '_blank');
@@ -332,10 +323,11 @@ export default {
             heat: post.Heat,
             photos: post.Photos,
             tag: post.Tag
-              ? post.Tag.split(',').map((tagText) => ({
-                type: this.tagTypeMap[tagText.trim()], // 使用 this.tagTypeMap
-                label: tagText.trim(),
-              }))
+              ? post.Tag.split(',')
+                .map((tagText) => ({
+                  type: this.tagTypeMap[tagText.trim()], // 使用 this.tagTypeMap
+                  label: tagText.trim(),
+                }))
               : [],
             showMenu: false,
           }))
@@ -412,14 +404,20 @@ export default {
       const d = new Date(date);
       return `${d.getFullYear()}年${d.getMonth() + 1}月${d.getDate()}日 ${String(
         d.getHours(),
-      ).padStart(2, '0')}:${String(d.getMinutes()).padStart(2, '0')}:${String(
+      )
+        .padStart(2, '0')}:${String(d.getMinutes())
+        .padStart(2, '0')}:${String(
         d.getSeconds(),
-      ).padStart(2, '0')}`;
+      )
+        .padStart(2, '0')}`;
     },
 
     like(post) {
       console.error(this.userInfo);
-      const updatedPost = { ...post, isLiked: !post.isLiked };
+      const updatedPost = {
+        ...post,
+        isLiked: !post.isLiked,
+      };
       updatedPost.like += post.isLiked ? -1 : 1;
       // 用更新后的 post 对象替换原先的 post 对象
       this.posts.splice(this.posts.indexOf(post), 1, updatedPost);
@@ -432,7 +430,8 @@ export default {
         postID: this.postID,
         isLiked: this.isLiked,
       })
-        .then(() => {})
+        .then(() => {
+        })
         .catch((err) => {
           console.error(err);
         });
@@ -440,7 +439,10 @@ export default {
 
     save(post) {
       // 切换收藏状态
-      const updatedPost = { ...post, isSaved: !post.isSaved };
+      const updatedPost = {
+        ...post,
+        isSaved: !post.isSaved,
+      };
       // 用更新后的 post 对象替换原先的 post 对象
       this.posts.splice(this.posts.indexOf(post), 1, updatedPost);
       this.userTelephone = this.userInfo.phone;
@@ -452,7 +454,8 @@ export default {
         postID: this.postID,
         isSaved: this.isSaved,
       })
-        .then(() => {})
+        .then(() => {
+        })
         .catch((err) => {
           console.error(err);
         });

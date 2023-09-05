@@ -1,5 +1,8 @@
 <template>
   <div>
+    <van-overlay :show="showloading" duration="0.1" :custom-style="{background:'rgba(0,0,0,0.1)'}">
+      <van-loading class="wrapper" size="24px" vertical>加载中...</van-loading>
+    </van-overlay>
     <van-nav-bar
       :title="post.title"
       left-text="返回"
@@ -553,6 +556,7 @@ export default {
       showRepliesModal: false, // 显示窗口
       showEmoji: false,
       buttonLoading: false,
+      showloading: true,
     };
   },
   computed: {
@@ -653,8 +657,10 @@ export default {
         this.post.showMenu = false;
         this.post.photos = post.data.Photos;
         this.post.browse = post.data.Browse;
+        this.showloading = false;
       })
       .catch((err) => {
+        this.showloading = false;
         this.$toast.fail(`加载失败\n${err.response.data.msg}`);
         console.error(err.msg);
       });
@@ -770,7 +776,10 @@ export default {
     },
     goback() {
       // 返回采用直接关闭的形式
-      window.close();
+      // window.close();
+      // eslint-disable-next-line no-restricted-globals
+      history.back();
+      localStorage.setItem('NowPostID', JSON.stringify(this.post.postID));
       console.log(this.before);
       if (this.before === 'home') {
         this.$router.replace({
@@ -1171,9 +1180,11 @@ export default {
   border-radius: 5px;
   background: #fff;
 }
+
 .post_title {
   vertical-align: middle;
-  font-size: 30px;
+  text-align: center;
+  font-size: 35px;
   font-weight: bold;
   margin-top: 10px;
 }

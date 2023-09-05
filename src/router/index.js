@@ -11,6 +11,7 @@ const routes = [
     name: 'home',
     meta: {
       auth: true,
+      keepAlive: true,
     },
     component: () => import('../views/home/HomeView.vue'),
   },
@@ -111,6 +112,12 @@ const routes = [
 const router = new VueRouter({
   mode: 'history',
   base: process.env.BASE_URL,
+  scrollBehavior(to, from, savePosition) {
+    if (savePosition) {
+      return savePosition;
+    }
+    return { x: 0, y: 0 };
+  },
   routes,
 });
 router.beforeEach((to, from, next) => {
