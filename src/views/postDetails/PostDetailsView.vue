@@ -1183,7 +1183,8 @@ export default {
 
 .post_title {
   vertical-align: middle;
-  font-size: 30px;
+  text-align: center;
+  font-size: 35px;
   font-weight: bold;
   margin-top: 10px;
 }

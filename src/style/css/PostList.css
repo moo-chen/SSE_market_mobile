@@ -59,12 +59,16 @@
 
 .post_title {
     vertical-align: middle;
-    font-size: 50px;
+    font-size: 35px;
     font-weight: bold;
+    margin-top: 10px;
 }
 
 .post_content {
-    vertical-align: middle;
+    /*vertical-align: middle;*/
+    margin-left: 50px;
+    text-align: left;
+    font-size: 22px;
 }
 
 .tips {
@@ -140,6 +144,7 @@ h2 {
 
 .username {
     vertical-align: middle;
+    font-size: 25px;
 }
 
 .thumbnail-container {

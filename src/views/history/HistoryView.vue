@@ -27,39 +27,25 @@
       >
         <p v-html='line' @click='showDetail(post)'></p>
         <van-row justify='center' @click='showDetail(post)'>
-          <van-col span='24' class='avatar-username-row'>
-          <div class='horizontal-container'>
-            <div class='avatarContainer'>
-              <van-image
-                round
-                width='25px'
-                height='25px'
-                fit='cover'
-                position='left'
-                :src='post.authorAvatar'
-              ></van-image>
-            </div>
-            <div style='margin-top: 20px;margin-left: -5px;' class='username-container'>
-              <div class='author_box'>
+          <div class="van-row--flex">
+            <van-image :src="post.authorAvatar"
+                       width="48"
+                       height="48"
+                       round class="mr-3"></van-image>
+            <van-col>
+              <div style='margin-top: 10px;margin-left: 5px;' class='username-container'>
                 <span style='margin-top: 10px;' class='username'>{{ post.author }}</span>
               </div>
-            </div>
+            </van-col>
           </div>
-        </van-col>
         </van-row>
-
         <van-row @click='showDetail(post)'>
-          <van-col span='24' class='post-content-row' style = "margin-top: -15px">
-          <van-cell :border='false' class='post_title'>
-            {{ post.title }}
-          </van-cell>
-        </van-col>
-
-        <van-col span='24' class='post-content-row'>
-          <van-cell :border='false' class='post_content' style = "margin-top: -10px">
+          <van-row class="post_title">{{ post.title }}
+          </van-row>
+          <van-row class="post_content"
+                   style="margin-bottom: 10px">
             {{ post.content }}
-          </van-cell>
-        </van-col>
+          </van-row>
         <div v-if="fileListGet(post).length > 0" class="photo-viewer van-row" style="margin-right: 20px">
           <div class="thumbnail-container">
             <template v-if="fileListGet(post).length === 4">
