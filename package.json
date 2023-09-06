@@ -12,6 +12,7 @@
     "axios": "^1.4.0",
     "core-js": "^3.8.3",
     "cors": "^2.8.5",
+    "crypto-js": "^4.1.1",
     "emoji-mart-vue": "^2.6.6",
     "postcss": "^8.0.0",
     "typescript": "^5.1.6",

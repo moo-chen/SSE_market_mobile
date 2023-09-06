@@ -75,6 +75,9 @@
 import { required, minLength, maxLength } from 'vuelidate/lib/validators';
 import { mapActions } from 'vuex';
 import { len } from 'vuelidate/lib/validators/common';
+// eslint-disable-next-line import/no-extraneous-dependencies
+import CryptoJS from 'crypto-js';
+
 import customValidator from '@/helper/validator';
 
 export default {
@@ -97,6 +100,7 @@ export default {
         CDKey: '',
         mode: '',
       },
+      key: '16bit secret key',
       validator: {
         name: {},
         phone: {
@@ -132,9 +136,17 @@ export default {
     ...mapActions('userModule', { userValidate: 'validateEmail' }),
     ...mapActions('userModule', { emailValidate: 'identityValidate' }),
 
+    setPassword(data, key) {
+      const cypherKey = CryptoJS.enc.Utf8.parse(key);
+      CryptoJS.pad.ZeroPadding.pad(cypherKey, 4);
+      const iv = CryptoJS.SHA256(key).toString();
+      const cfg = { iv: CryptoJS.enc.Utf8.parse(iv) };
+      return CryptoJS.AES.encrypt(data, cypherKey, cfg).toString();
+    },
+
     validateEmail() {
       this.user.mode = 0;
-      console.error(this.user);
+      // console.error(this.user);
       if (this.emailCheck === true) {
         this.userValidate(this.user)
           .then(() => {
@@ -150,6 +162,8 @@ export default {
     },
 
     register() {
+      this.user.password = this.setPassword(this.user.password, this.key);
+      this.user.password2 = this.setPassword(this.user.password2, this.key);
       // 请求
       this.userRegister(this.user)
         .then(() => {
