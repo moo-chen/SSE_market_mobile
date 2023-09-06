@@ -17,6 +17,7 @@ import VueScrollTo from 'vue-scrollto';
 import App from './App.vue';
 import 'amfe-flexible';
 import './assets/css/index.css';
+// eslint-disable-next-line
 import router from './router';
 import store from './store';
 import 'vue-photo-preview/dist/skin.css';

@@ -60,7 +60,7 @@
 
     <div v-if="posts.length > 0" style="display: flex; flex-direction: column; gap: 2px;">
       <van-list
-        v-for='post in posts'
+        v-for='(post,index) in posts'
         :key='post.postID'
         :border='true'
         style='margin: 5px;box-shadow: 0 0 1px rgb(0,0,0,0.2);'
@@ -70,37 +70,24 @@
         ref='totalGroup'
         @load="loadMorePosts"
       >
-        <van-row @click='showDetail(post)'>
-          <van-col span='24' class='avatar-username-row'>
-            <div class='horizontal-container'>
-              <div class='avatarContainer' style="margin-top:20px">
-                <van-image
-                  round
-                  class="avatar"
-                  fit='cover'
-                  position='left'
-                  :src='post.authorAvatar'
-                ></van-image>
+        <van-row @click='showDetail(post,index)'>
+          <div class="van-row--flex">
+            <van-image :src="post.authorAvatar"
+                       width="48"
+                       height="48"
+                       round class="mr-3"></van-image>
+            <van-col>
+              <div style='margin-top: 10px;margin-left: 5px;' class='username-container'>
+                <span style='margin-top: 10px;' class='username'>{{ post.author }}</span>
               </div>
-              <div style='margin-top: 40px;margin-left: -5px;' class='username-container'>
-                <div class='author_box'>
-                  <span style='margin-top: 10px;' class='username'>{{ post.author }}</span>
-                </div>
-              </div>
-            </div>
-          </van-col>
-
-          <van-col span='24' class='post-content-row' style="margin-top: -15px">
-            <van-cell :border='false' class='post_title'>
-              {{ post.title }}
-            </van-cell>
-          </van-col>
-
-          <van-col span='24' class='post-content-row'>
-            <van-cell :border='false' class='post_content' style="margin-top: -10px">
-              {{ post.content }}
-            </van-cell>
-          </van-col>
+            </van-col>
+          </div>
+          <van-row class="post_title">{{ post.title }}
+          </van-row>
+          <van-row class="post_content"
+                   style="margin-bottom: 10px">
+            {{ post.content }}
+          </van-row>
           <div v-if="fileListGet(post).length > 0" class="photo-viewer van-row"
                style="margin-right: 20px">
             <div class="thumbnail-container">
@@ -231,6 +218,7 @@ export default {
       dialogVisible: false,
       userTelephone: '',
       postID: '',
+      nowPostIndex: 0, // nowPostID存储的是当前点击进去的帖子index，用于从页面详情返回的时候实现精准刷新
       isSaved: '',
       isLiked: '',
       title: '',
@@ -289,6 +277,42 @@ export default {
       this.partitionBrowse('');
     }
   },
+  activated() {
+    if (this.nowPostIndex !== 0) {
+      console.log(`nowPostIndex:${this.nowPostIndex}`);
+      this.postShowDetails({
+        userTelephone: this.userTelephone,
+        postID: this.posts[this.nowPostIndex].id,
+      })
+        .then((post) => {
+          this.posts[this.nowPostIndex].id = post.data.PostID;
+          this.posts[this.nowPostIndex].author = post.data.UserName;
+          this.posts[this.nowPostIndex].authorTelephone = post.data.UserTelephone;
+          this.posts[this.nowPostIndex].authorAvatar = post.data.UserAvatar;
+          this.posts[this.nowPostIndex].title = post.data.Title;
+          this.posts[this.nowPostIndex].content = post.data.Content;
+          this.posts[this.nowPostIndex].like = post.data.Like;
+          this.posts[this.nowPostIndex].comment = post.data.Comment;
+          this.posts[this.nowPostIndex].postTime = post.data.PostTime;
+          this.posts[this.nowPostIndex].tag = post.data.Tag ? post.data.Tag.split(',')
+            .map((tagText) => ({
+              type: this.tagTypeMap[tagText.trim()],
+              label: tagText.trim(),
+            })) : [];
+          this.posts[this.nowPostIndex].isSaved = post.data.IsSaved;
+          this.posts[this.nowPostIndex].isLiked = post.data.IsLiked;
+          this.posts[this.nowPostIndex].showMenu = false;
+          this.posts[this.nowPostIndex].photos = post.data.Photos;
+          this.posts[this.nowPostIndex].browse = post.data.Browse;
+          this.showloading = false;
+        })
+        .catch((err) => {
+          this.showloading = false;
+          this.$toast.fail(`加载失败\n${err.response.data.msg}`);
+          console.error(err.msg);
+        });
+    }
+  },
   computed: {
     ...mapState({
       userInfo: (state) => state.userModule.userInfo,
@@ -309,6 +333,7 @@ export default {
     },
   },
   methods: {
+    ...mapActions('postModule', { postShowDetails: 'showDetails' }),
     ...mapActions('postModule', { postBrowse: 'browse' }),
     ...mapActions('postModule', { getPostNum: 'getPostNum' }),
     ...mapActions('postModule', { postLike: 'like' }),
@@ -330,8 +355,10 @@ export default {
       this.partitionBrowse('');
       // this.searchinfo = '';
     },
-    showDetail(post) {
+    showDetail(post, index) {
+      this.nowPostIndex = index;
       console.log(post);
+      console.log(`nowPostIndex: ${this.nowPostIndex}`);
       this.updateLook({
         userTelephone: this.userInfo.phone,
         postID: post.id,
@@ -342,29 +369,29 @@ export default {
         .catch((err) => {
           console.error(err);
         });
-      const routeLink = this.$router.resolve({
-        name: 'postDetails',
-        params: { partition: this.partition },
-        query: {
-          id: post.id,
-          title: post.title,
-          before: this.$route.name,
-          partition: this.partition,
-        },
-      });
-      window.open(routeLink.href, '_blank');
-      // this.$router.push({
+      // const routeLink = this.$router.resolve({
       //   name: 'postDetails',
-      //   params: {
-      //     id: post.id,
-      //     partition: this.partition,
-      //     before: 'home',
-      //   },
+      //   params: { partition: this.partition },
       //   query: {
       //     id: post.id,
-      //     before: 'home',
+      //     title: post.title,
+      //     before: this.$route.name,
+      //     partition: this.partition,
       //   },
       // });
+      // window.open(routeLink.href, '_blank');
+      this.$router.push({
+        name: 'postDetails',
+        params: {
+          id: post.id,
+          partition: this.partition,
+          before: 'home',
+        },
+        query: {
+          id: post.id,
+          before: 'home',
+        },
+      });
     },
     // 查询满足要求的帖子数量
     async PostNum() {
