@@ -71,7 +71,7 @@
         @load="loadMorePosts"
       >
         <van-row @click='showDetail(post,index)'>
-          <div class="van-row--flex">
+          <div class="van-row--flex" style="margin:5px">
             <van-image :src="post.authorAvatar"
                        width="48"
                        height="48"
