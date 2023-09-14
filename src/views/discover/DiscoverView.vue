@@ -57,10 +57,10 @@ export default {
       refreshing: false,
 
       imagebox: [
-        { id: 0, idView: require('../../assets/image/caraousel1.png') },
-        { id: 1, idView: require('../../assets/image/caraousel2.png') },
-        { id: 2, idView: require('../../assets/image/caraousel3.png') },
-        { id: 3, idView: require('../../assets/image/caraousel4.png') },
+        { id: 0, idView: 'https://sse-market-source-1320172928.cos.ap-guangzhou.myqcloud.com/assets/image/caraousel1.png' },
+        { id: 1, idView: 'https://sse-market-source-1320172928.cos.ap-guangzhou.myqcloud.com/assets/image/caraousel2.png' },
+        { id: 2, idView: 'https://sse-market-source-1320172928.cos.ap-guangzhou.myqcloud.com/assets/image/caraousel3.png' },
+        { id: 3, idView: 'https://sse-market-source-1320172928.cos.ap-guangzhou.myqcloud.com/assets/image/caraousel4.png' },
       ],
     };
   },

@@ -105,7 +105,7 @@ export default {
     // eslint-disable-next-line func-names
     'user.email': function (email) {
       if (!validator.emailValidator(email)) {
-        this.errorMessage = '请输入格式正确的中大邮箱';
+        this.errorMessage = '请输入格式正确的邮箱';
       }
     },
   },
