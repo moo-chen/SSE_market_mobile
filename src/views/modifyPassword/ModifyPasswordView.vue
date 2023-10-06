@@ -42,7 +42,8 @@
           placeholder="请输入邮箱验证码"
         >
           <template #button>
-            <van-button size="small" type="info" @click="validateEmail">发送验证码</van-button>
+            <van-button size="small" type="info" v-show="timeshow === true" disabled>{{time}}秒后重新获取</van-button>
+            <van-button size="small" type="info" v-show="timeshow === false" @click="validateEmail">发送验证码</van-button>
           </template>
         </van-field>
       </van-form>
@@ -69,6 +70,8 @@ export default {
   }),
   data() {
     return {
+      time: 60,
+      timeshow: false,
       line: '<br/>',
       errorEmailInfo: '',
       errorPasswordInfo: '',
@@ -134,7 +137,16 @@ export default {
       this.user.mode = 1;
       // console.error(this.user);
       this.userValidate(this.user).then(() => {
+        this.timeshow = true;
+        this.time = 60;
         this.$toast.success('已发送验证码，请将邮箱发送的验证码输入以完成注册验证');
+        const setTimeoutS = setInterval(() => {
+          this.time -= 1;
+          if (this.time <= 0) {
+            clearInterval(setTimeoutS);
+            this.timeshow = false;
+          }
+        }, 1000);
       }).catch((err) => {
         // console.error(err);
         this.$toast.fail(err.response.data.msg);
