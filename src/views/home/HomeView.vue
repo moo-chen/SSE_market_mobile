@@ -81,6 +81,7 @@
                 <span style='margin-top: 10px;' class='username'>{{ post.author }}</span>
               </div>
             </van-col>
+            <van-col style="margin-top: 3px;margin-left: 5px;"><van-tag :color="getTagColor(post.authorTitle)">{{post.authorTitle}}</van-tag></van-col>
           </div>
           <van-row class="post_title">{{ post.title }}
           </van-row>
@@ -287,6 +288,7 @@ export default {
         .then((post) => {
           this.posts[this.nowPostIndex].id = post.data.PostID;
           this.posts[this.nowPostIndex].author = post.data.UserName;
+          this.posts[this.nowPostIndex].authorTitle = this.getUserTitle(post.data.UserScore);
           this.posts[this.nowPostIndex].authorTelephone = post.data.UserTelephone;
           this.posts[this.nowPostIndex].authorAvatar = post.data.UserAvatar;
           this.posts[this.nowPostIndex].title = post.data.Title;
@@ -354,6 +356,57 @@ export default {
       this.currentPage = 1;
       this.partitionBrowse('');
       // this.searchinfo = '';
+    },
+    getUserTitle(userScore) {
+      if (userScore < 100) {
+        return '菜鸟';
+      }
+      if (userScore >= 100 && userScore < 300) {
+        return '大虾';
+      }
+      if (userScore >= 300 && userScore < 600) {
+        return '码农';
+      }
+      if (userScore >= 600 && userScore < 1000) {
+        return '程序猿';
+      }
+      if (userScore >= 1000 && userScore < 2000) {
+        return '工程师';
+      }
+      if (userScore >= 2000 && userScore < 3000) {
+        return '大牛';
+      }
+      if (userScore >= 3000 && userScore < 4000) {
+        return '专家';
+      }
+      if (userScore >= 4000 && userScore < 5000) {
+        return '大神';
+      }
+      return '祖师爷';
+    },
+    getTagColor(authorTitle) {
+      switch (authorTitle) {
+        case '菜鸟':
+          return '#007BFF';
+        case '大虾':
+          return '#28A745';
+        case '码农':
+          return '#DC3545';
+        case '程序猿':
+          return '#FF6600';
+        case '工程师':
+          return '#FFC107';
+        case '大牛':
+          return '#17A2B8';
+        case '专家':
+          return '#C428eb';
+        case '大神':
+          return '#6C757D';
+        case '祖师爷':
+          return '#343A40';
+        default:
+          return 'default-color';
+      }
     },
     showDetail(post, index) {
       this.nowPostIndex = index;
@@ -450,6 +503,7 @@ export default {
             .map((post) => ({
               id: post.PostID,
               author: post.UserName,
+              authorTitle: this.getUserTitle(post.UserScore),
               authorTelephone: post.UserTelephone,
               authorAvatar: post.UserAvatar,
               title: post.Title,
@@ -611,4 +665,15 @@ export default {
 
 <style scoped>
 @import '@/style/css/PostList.css';
+
+/* 添加一个自定义样式类 */
+.badge-custom {
+  background-color: #ff6600; /* 橙色背景 */
+  color: #fff; /* 白色文字颜色 */
+}
+
+.badge-custom2 {
+  background-color: #c428eb; /* 橙色背景 */
+  color: #fff; /* 白色文字颜色 */
+}
 </style>

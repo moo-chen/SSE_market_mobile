@@ -73,6 +73,8 @@
               <span style='margin-top: 10px;' class='username'>{{ post.author }}</span>
             </div>
           </van-col>
+          <van-col style="margin-top: 10px;margin-left: 5px;"><van-tag
+            :color="getTagColor(post.authorTitle)">{{post.authorTitle}}</van-tag></van-col>
         </div>
         <van-row class="post_title">{{ post.title }}
         </van-row>
@@ -228,8 +230,12 @@
               </div>
               <!--        评论作者和评论内容-->
               <div class="van-row" style="margin-top: 20px">
-                <div class="comment-author-name">{{ comment.author }}</div>
-                <div class="comment-content" style="margin-top:20px;">
+                <div class="van-row">
+                <div class="van-col comment-author-name">{{ comment.author }}</div>
+                <div class="van-col" style="margin-top: -4px;margin-left: 7px;"><van-tag
+                  :color="getTagColor(comment.authorTitle)">{{comment.authorTitle}}</van-tag></div>
+                </div>
+                  <div class="comment-content" style="margin-top:20px;">
                   {{ comment.content }}
                 </div>
                 <!--显示每个评论的点赞和回复数，点赞和回复图片对应点赞和回复功能-->
@@ -373,7 +379,11 @@
               <div class="van-row">
                 <!--作者名称和回复内容-->
                 <div class="van-row">
-                  <div class="comment-author-name">{{ subComment.author }}</div>
+                  <van-row>
+                  <div class="van-col comment-author-name">{{ subComment.author }}</div>
+                  <van-col style="margin-top: -3px;margin-left: 5px;"><van-tag
+                    :color="getTagColor(subComment.authorTitle)">{{subComment.authorTitle}}
+                  </van-tag></van-col></van-row>
                   <div
                     class="van-row--flex"
                     v-if="subComment.userTargetName !== ''">
@@ -640,6 +650,7 @@ export default {
       .then((post) => {
         this.post.postID = post.data.PostID;
         this.post.author = post.data.UserName;
+        this.post.authorTitle = this.getUserTitle(post.data.UserScore);
         this.post.authorTelephone = post.data.UserTelephone;
         this.post.authorAvatar = post.data.UserAvatar;
         this.post.title = post.data.Title;
@@ -699,6 +710,57 @@ export default {
       // Update the cursor position to be after the inserted emoji
       const newCursorPos = startPos + emoji.native.length;
       textarea.setSelectionRange(newCursorPos, newCursorPos);
+    },
+    getUserTitle(userScore) {
+      if (userScore < 100) {
+        return '菜鸟';
+      }
+      if (userScore >= 100 && userScore < 300) {
+        return '大虾';
+      }
+      if (userScore >= 300 && userScore < 600) {
+        return '码农';
+      }
+      if (userScore >= 600 && userScore < 1000) {
+        return '程序猿';
+      }
+      if (userScore >= 1000 && userScore < 2000) {
+        return '工程师';
+      }
+      if (userScore >= 2000 && userScore < 3000) {
+        return '大牛';
+      }
+      if (userScore >= 3000 && userScore < 4000) {
+        return '专家';
+      }
+      if (userScore >= 4000 && userScore < 5000) {
+        return '大神';
+      }
+      return '祖师爷';
+    },
+    getTagColor(authorTitle) {
+      switch (authorTitle) {
+        case '菜鸟':
+          return '#007BFF';
+        case '大虾':
+          return '#28A745';
+        case '码农':
+          return '#DC3545';
+        case '程序猿':
+          return '#FF6600';
+        case '工程师':
+          return '#FFC107';
+        case '大牛':
+          return '#17A2B8';
+        case '专家':
+          return '#C428eb';
+        case '大神':
+          return '#6C757D';
+        case '祖师爷':
+          return '#343A40';
+        default:
+          return 'default-color';
+      }
     },
     cclike(index, subIndex) {
       this.ccommentlike({
@@ -894,12 +956,16 @@ export default {
             const comments = data.map((pcomment) => ({
               pcommentID: pcomment.PcommentID,
               author: pcomment.Author,
+              authorTitle: this.getUserTitle(pcomment.AuthorScore),
               authorAvatar: pcomment.AuthorAvatar,
               authorTelephone: pcomment.AuthorTelephone,
               commentTime: pcomment.CommentTime,
               content: pcomment.Content,
               likeNum: pcomment.LikeNum,
-              subComments: pcomment.SubComments,
+              subComments: pcomment.SubComments.map((subComment) => ({
+                ...subComment,
+                authorTitle: this.getUserTitle(subComment.authorScore),
+              })),
               isLiked: pcomment.IsLiked,
               showMenu: false,
               showReplyForm: false,
