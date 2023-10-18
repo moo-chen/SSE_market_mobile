@@ -26,6 +26,12 @@
         />
         <van-field
           class='field-spacing'
+          label='用户等级积分'
+          :value="userInfo.title + ' ' + userInfo.score + '分'"
+          disabled
+        />
+        <van-field
+          class='field-spacing'
           v-model='userInfo.intro'
           rows='2'
           autosize
@@ -64,6 +70,8 @@ export default {
         name: '',
         num: '',
         intro: '',
+        score: '',
+        title: '',
         ban: '',
         punishnum: '',
         avatarURL: '',
@@ -79,6 +87,8 @@ export default {
         this.userInfo.phone = res.data.phone;
         this.userInfo.email = res.data.email;
         this.userInfo.intro = res.data.intro;
+        this.userInfo.score = res.data.score;
+        this.userInfo.title = this.getUserTitle(res.data.score);
         this.userInfo.ban = res.data.ban;
         this.userInfo.punishnum = res.data.punishnum;
         this.userInfo.avatarURL = res.data.avatarURL;
@@ -114,6 +124,33 @@ export default {
           });
           // 可以在此处处理上传失败的逻辑
         });
+    },
+    getUserTitle(userScore) {
+      if (userScore < 100) {
+        return '菜鸟';
+      }
+      if (userScore >= 100 && userScore < 300) {
+        return '大虾';
+      }
+      if (userScore >= 300 && userScore < 600) {
+        return '码农';
+      }
+      if (userScore >= 600 && userScore < 1000) {
+        return '程序猿';
+      }
+      if (userScore >= 1000 && userScore < 2000) {
+        return '工程师';
+      }
+      if (userScore >= 2000 && userScore < 3000) {
+        return '大牛';
+      }
+      if (userScore >= 3000 && userScore < 4000) {
+        return '专家';
+      }
+      if (userScore >= 4000 && userScore < 5000) {
+        return '大神';
+      }
+      return '祖师爷';
     },
     updateUserInfo() {
       if (this.userInfo.name.trim() === '') {
