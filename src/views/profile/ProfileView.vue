@@ -163,7 +163,7 @@ export default {
 .function_box{
   padding-left: 5%;
   padding-right: 5%;
-  border: 2px solid black;
+  border: none;
 }
 .profile_box {
   display: flex;

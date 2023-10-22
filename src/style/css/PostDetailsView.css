@@ -48,9 +48,29 @@
 
 .comment {
     margin-bottom: 100px;
+    margin-right: 35px;
+    margin-left: 20px;
 }
 .comment-content{
     text-align: left;
     font-size: 30px;
+    white-space: pre-wrap;
+    word-wrap: anywhere;
+}
+.post-like {
+    font-size: 25px;
+    vertical-align: 3px;
+    margin: 5px;
 }
 
+.browse-like {
+    font-size: 25px;
+    vertical-align: 4px;
+    margin: 5px;
+}
+
+.comment-like {
+    font-size: 25px;
+    vertical-align: 3px;
+    margin: 5px;
+}

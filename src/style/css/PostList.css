@@ -60,7 +60,7 @@
 .post_title {
     vertical-align: middle;
     text-align: left;
-    font-size: 35px;
+    font-size: 32px;
     font-weight: bold;
     margin-left: 50px;
     margin-top: 5px;
@@ -69,8 +69,11 @@
 .post_content {
     /*vertical-align: middle;*/
     margin-left: 50px;
+    margin-right: 45px;
     text-align: left;
-    font-size: 22px;
+    font-size: 27px;
+    white-space: pre-wrap;
+    word-wrap: anywhere;
 }
 
 .tips {
