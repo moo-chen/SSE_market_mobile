@@ -78,10 +78,10 @@
                        round class="mr-3"></van-image>
             <van-col>
               <div style='margin-top: 10px;margin-left: 5px;' class='username-container'>
-                <span style='margin-top: 10px;' class='username'>{{ post.author }}</span>
+                <span style='margin-top: 10px; vertical-align: 15px;' class='username'>{{ post.author }}</span>
               </div>
             </van-col>
-            <van-col style="margin-top: 3px;margin-left: 5px;"><van-tag :color="getTagColor(post.authorTitle)">{{post.authorTitle}}</van-tag></van-col>
+            <van-col style="margin-top: -5px;margin-left: 5px;"><van-tag :color="getTagColor(post.authorTitle)">{{post.authorTitle}}</van-tag></van-col>
           </div>
           <van-row class="post_title">{{ post.title }}
           </van-row>
@@ -136,7 +136,7 @@
               </template>
             </div>
           </div>
-          <div style="font-size:small;float: left;margin-left: 15px;">
+          <div style="font-size:14px;float: left;margin-left: 25px;">
             <small class='text-muted'>{{ formatDate(post.postTime) }}</small>
           </div>
           <div class="tag-group">
@@ -151,28 +151,28 @@
           <van-col span='6'>
             <van-icon name='good-job-o' size='20' @click='like(post)' v-if='!post.isLiked'/>
             <van-icon v-else color='red' name='good-job' size='20' @click='like(post)'/>
-            <font size='1'>
+            <font size='1' class="post-like">
               {{ post.like }}
             </font>
           </van-col>
 
           <van-col span='6' @click='showDetail(post)'>
-            <van-icon name='eye-o' size='20'/>
-            <font size='1'>
+            <van-icon name='eye-o' size='22' style='vertical-align: -2px'/>
+            <font size='1' class="browse-like">
               {{ post.browse }}
             </font>
           </van-col>
 
           <van-col span='6' @click='showDetail(post)'>
             <van-icon name='chat-o' size='20'/>
-            <font size='1'>
+            <font size='1' class="comment-like">
               {{ post.comment }}
             </font>
           </van-col>
 
           <van-col span='6'>
             <van-icon name='star-o' size='20' @click='save(post)' v-if='!post.isSaved'/>
-            <van-icon v-else color='rgb(255,220,0)' name='star' size='20' @click='save(post)'/>
+            <van-icon v-else color='rgb(255,220,0)' name='star' size='20' style="vertical-align: 3px" @click='save(post)'/>
           </van-col>
         </van-row>
       </van-list>
@@ -675,5 +675,23 @@ export default {
 .badge-custom2 {
   background-color: #c428eb; /* 橙色背景 */
   color: #fff; /* 白色文字颜色 */
+}
+
+.post-like {
+  font-size: 25px;
+  vertical-align: 1.2px;
+  margin: 0.8px;
+}
+
+.browse-like {
+  font-size: 25px;
+  vertical-align: 2px;
+  margin: 1px;
+}
+
+.comment-like {
+  font-size: 25px;
+  vertical-align: 3px;
+  margin: 1px;
 }
 </style>

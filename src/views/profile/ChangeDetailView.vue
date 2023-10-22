@@ -161,7 +161,7 @@ export default {
   flex-direction: row;
   padding-left: 10%;
   padding-right: 10%;
-  border: 1px solid grey;
+  border: none;
   margin-top: 15px;
   margin-bottom: 15px;
 }

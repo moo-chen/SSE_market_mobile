@@ -133,8 +133,8 @@
         </div>
         <div>
           <div class='d-flex justify-content-between'>
-            <span class='text-muted' style="color:gray;margin-left:5px">
-              {{ formatDate(post.postTime) }}</span>
+            <span class='text-muted' style="color:rgb(128,128,128);
+            margin-left:25px;font-size:12px;">{{ formatDate(post.postTime) }}</span>
           </div>
           <div class="tag-group" v-if="post.tag">
             <span class="tag-group__title"></span>
@@ -145,22 +145,23 @@
         </div>
         <div class='van-row--flex' style="margin-bottom: 5px;margin-top: 20px;">
           <div class="text-muted">
-            <van-icon size="20px" :name="post.isLiked ? 'like' : 'like-o'"
+            <van-icon size="20px" :name="post.isLiked ? 'good-job' : 'good-job-o'"
                       :color="post.isLiked ? '#ee0a24' : ''"
                       @click.stop="like()" :class="{ 'text-danger': post.isLiked }"></van-icon>
-            {{ post.like }}
+            <span class="post-like">{{ post.like }}</span>
           </div>
           <div class="text-muted" style="margin-left:50px">
-            <van-icon size="20px" name="eye-o"></van-icon>
-            {{ post.browse }}
+            <van-icon size="22px" name="eye-o" style="vertical-align: -1px;"></van-icon>
+            <span class="browse-like">{{ post.browse }}</span>
           </div>
-          <div class='text-muted' style="margin-left:50px">
-            <van-icon size="20px" name='comment-o'></van-icon>
-            {{ commentsNum }}
+          <div class='text-muted' style="margin-left:50px; ">
+            <van-icon size="20px" name='comment-o' style="vertical-align: -2px;"></van-icon>
+            <span class="comment-like">{{  commentsNum }}</span>
           </div>
           <van-button class="div" @click="post.showCommentForm
             = !post.showCommentForm" type="default" plain
-                      style="margin-left:20px">
+                      style="margin-left:20px;border:none;color:blue;margin-top:-1px;
+                      text-decoration: underline;text-underline-offset:0.2em;">
             {{ post.showCommentForm ? '隐藏评论' : '评论' }}
           </van-button>
         </div>
@@ -205,7 +206,7 @@
       <div class="van-row--flex" style="margin-left:20px">
         <van-button @click="sortkind='Date';comments=sortcomments(comments)"
                     plain hairline icon="descending"
-                    type="primary" size="small" style="margin-left: 2px">时间
+                    type="primary" size="small" style="margin-left: 190px">时间
         </van-button>
         <van-button @click="sortkind='heat';comments=sortcomments(comments)"
                     plain hairline icon="descending"
@@ -231,36 +232,41 @@
               <!--        评论作者和评论内容-->
               <div class="van-row" style="margin-top: 20px">
                 <div class="van-row">
-                <div class="van-col comment-author-name">{{ comment.author }}</div>
-                <div class="van-col" style="margin-top: -4px;margin-left: 7px;"><van-tag
-                  :color="getTagColor(comment.authorTitle)">{{comment.authorTitle}}</van-tag></div>
+                <div class="van-col comment-author-name" style="margin-top:5px;margin-left: -15px;
+                font-size:13px;">{{ comment.author }}</div>
+                <div class="van-col" style="margin-top: 11px;margin-left: 7px;font-size:11px;">
+                  <van-tag :color="getTagColor(comment.authorTitle)">
+                    {{comment.authorTitle}}</van-tag></div>
                 </div>
                   <div class="comment-content" style="margin-top:20px;">
                   {{ comment.content }}
                 </div>
+                <div>
+                  <div class="text-muted" style="margin-top:15px;margin-left:-195px;
+                  font-size:12px;">{{ formatDate(comment.commentTime) }}
+                  </div>
+                </div>
                 <!--显示每个评论的点赞和回复数，点赞和回复图片对应点赞和回复功能-->
                 <div class='van-row--flex justify-content-between align-items-center'>
                   <div class="text-muted">
-                    <van-icon size="20px" :name="comment.isLiked ? 'like' : 'like-o'"
+                    <van-icon size="20px" :name="comment.isLiked ? 'good-job' : 'good-job-o'"
                               :color="comment.isLiked ? '#ee0a24' : ''"
                               @click.stop="pclike(index)"
                               :class="{ 'text-danger': comment.isLiked }">
                     </van-icon>
-                    {{ comment.likeNum }}
+                    <span style="font-size: 14px;vertical-align: 1.2px;margin: 0.8px;">
+                      {{ comment.likeNum }}</span>
                   </div>
                   <van-icon size="20px" name="comment-o"
-                            style="vertical-align: middle; margin-top: 12px;
-                            margin-left: 20px;"
+                            style="vertical-align: middle; margin-top: 13px;
+                            margin-left: 30px;"
                             @click.stop="comment.showReplyForm
             = !comment.showReplyForm">
                   </van-icon>
                   <div class='text-muted' @click.stop>
                     <van-icon size="20px" name='ellipsis'
                               @click.stop="comment.showMenu =
-              !comment.showMenu" style="margin-left: 20px;"></van-icon>
-                  </div>
-                  <div class="text-muted" style="margin-top:15px;margin-left:130px">
-                    {{ formatDate(comment.commentTime) }}
+              !comment.showMenu" style="margin-left: 33px;margin-top: 1px;"></van-icon>
                   </div>
                 </div>
                 <!--对帖子评论的更多功能选择菜单：举报和删除-->
@@ -277,8 +283,10 @@
                        @click.stop='showReportModal = true'
                        @keydown="handleKeyboardEvent"
                   >
-                    <van-icon size="20px" name="failure" class='mr-2'></van-icon>
-                    <span style="font-size:20px;margin-left: 5px;">举报</span>
+                    <van-icon name="failure" class='mr-2' style="font-size:25px;
+                    margin-left: 10px;margin-top: 30px;">
+                    </van-icon><span style="font-size:20px;
+                    margin-left: 8px;margin-top: 29px;">举报</span>
                   </div>
                   <!--                  提交举报弹窗-->
                   <van-dialog v-model='showReportModal'
@@ -380,8 +388,9 @@
                 <!--作者名称和回复内容-->
                 <div class="van-row">
                   <van-row>
-                  <div class="van-col comment-author-name">{{ subComment.author }}</div>
-                  <van-col style="margin-top: -3px;margin-left: 5px;"><van-tag
+                  <div class="van-col comment-author-name" style="margin-top: 6px;
+                  margin-left: 4px; font-size: 13px;">{{ subComment.author }}</div>
+                  <van-col style="margin-top: -8px;margin-left: 5px;"><van-tag
                     :color="getTagColor(subComment.authorTitle)">{{subComment.authorTitle}}
                   </van-tag></van-col></van-row>
                   <div
@@ -389,31 +398,37 @@
                     v-if="subComment.userTargetName !== ''">
                             <span
                               class="comment-content"
-                              style="color: cadetblue">
+                              style="color: cadetblue;font-size: 13px;margin-left: 10px;">
                               回复@{{ subComment.userTargetName }}:</span>
                   </div>
                   <div
-                    class="comment-content">{{ subComment.content }}
+                    class="comment-content" style="font-size: 13px; margin-left: 10px;">
+                    {{ subComment.content }}
                   </div>
                 </div>
                 <!--回复时间&点赞、举报和回复图标-->
                 <div class="van-row--flex">
                   <!--回复时间-->
-                  <div class="text-muted">{{ formatDate(subComment.commentTime) }}</div>
+                  <div></div>
+                  <div class="text-muted" style="font-size: 10px; margin-left: 10px;">
+                    {{ formatDate(subComment.commentTime) }}
+                  </div>
                   <!--点赞图标-->
                   <div class="text-muted">
-                    <van-icon size="15px" :name="subComment.isLiked ? 'like' : 'like-o'"
+                    <van-icon style="font-size: 16px;margin-left: 60px;"
+                              :name="subComment.isLiked ? 'good-job' : 'good-job-o'"
                               :color="subComment.isLiked ? '#ee0a24' : ''"
                               @click.stop="cclike(showcommentsindex,subIndex)"
                               :class="{ 'text-danger': subComment.isLiked }">
                     </van-icon>
-                    {{ subComment.likeNum }}
+                    <span style="font-size: 10px;margin-left: -1px;">
+                      {{ subComment.likeNum }}</span>
                   </div>
                   <!--举报/删除图标-->
                   <div class='text-muted'>
                     <!--举报图标-->
                     <div v-if="subComment.authorTelephone !== userInfo.phone">
-                      <van-icon size="20px" name='failure'
+                      <van-icon style="font-size: 16px;margin-left: 10px;" name='failure'
                                 @click.stop='showReportModal = true'></van-icon>
                       <van-dialog v-model='showReportModal'
                                   title='举报'
@@ -428,8 +443,8 @@
                     </div>
                     <!--删除图标-->
                     <div v-else>
-                      <van-icon size="15px" name='delete-o'
-                                @click.stop='showDeleteModal = true'></van-icon>
+                      <van-icon style="font-size: 16px;margin-left: 10px;"
+                                name='delete-o' @click.stop='showDeleteModal = true'></van-icon>
                       <van-dialog
                         v-model='showDeleteModal'
                         confirm-button-text='确认'
@@ -442,12 +457,13 @@
                   </div>
                   <!--回复按钮，点击后跳出评论的评论的回复窗口-->
                   <div class="text-muted">
-                    <van-icon size="15px"
+                    <van-icon style="font-size: 16px;margin-left: 10px;margin-top: 2px;"
                               name="comment-o"
                               @click="replyshow = !replyshow; nowReplyComment=subComment">
-                      <span style="font-size: 8px;margin-left: 5px;">回复</span>
+                      <span style="font-size: 10px;margin-left:5px;vertical-align: 3px;">回复</span>
                     </van-icon>
                   </div>
+
                 </div>
               </div>
             </div>
@@ -1218,7 +1234,7 @@ export default {
   }
   50% {
     opacity: 0.5;
-    background-color: gray;
+    background-color: rgb(128, 128, 128);
   }
   100% {
     opacity: 1;
@@ -1257,6 +1273,9 @@ export default {
 
 .post_content {
   vertical-align: middle;
+  font-size: 30px;
+  white-space: pre-wrap;
+  word-wrap: anywhere;
 }
 
 .tag-group {

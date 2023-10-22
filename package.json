@@ -26,7 +26,8 @@
     "vue-scrollto": "^2.20.0",
     "vuelidate": "^0.7.7",
     "vuex": "^3.6.2",
-    "yargs-parser": "^6.0.0"
+    "yargs-parser": "^6.0.0",
+    "yarn": "^1.22.19"
   },
   "devDependencies": {
     "@babel/core": "^7.12.16",
