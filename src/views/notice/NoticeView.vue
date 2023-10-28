@@ -15,7 +15,7 @@
       >
         <template #icon>
           <van-image
-            v-if="notice.type==='pcomment'|| notice.type==='ccomment'"
+            v-if="notice.type==='pcomment'|| notice.type==='ccomment'|| notice.type==='post'"
             :src="notice.senderAvatar"
             width="48"
             height="48"
@@ -47,7 +47,9 @@
       <div class="d-flex align-items-center" style="margin: 10px">
         <!-- 头像 -->
         <img
-          v-if="currentNotice.type==='pcomment'|| currentNotice.type==='ccomment'"
+          v-if="currentNotice.type==='pcomment'
+          || currentNotice.type==='ccomment'
+          || currentNotice.type==='post'"
           :src="currentNotice.senderAvatar"
           width="48"
           height="48"
@@ -58,7 +60,7 @@
           <!-- 标题 -->
           <van-col>
             <van-row v-if="currentNotice.type==='pcomment'
-            || currentNotice.type==='ccomment'"
+            || currentNotice.type==='ccomment'|| currentNotice.type==='post'"
                      class="title" STYLE="color: #409EFF">{{ currentNotice.senderName }}
             </van-row>
             <van-row v-else class="title" STYLE="color:saddlebrown">系统通知：</van-row>
@@ -78,6 +80,9 @@
                   style="font-size: 20px">你的举报已得到处理： </span>
             <span v-if="currentNotice.type === 'feedback'"
                   style="font-size: 20px">你的反馈已得到处理回复： </span>
+            <span v-if="currentNotice.type === 'post'"
+                  style="font-size: 20px" class="postjump"
+                  @click="showDetails" @keydown.enter="showDetails">在你的专区发帖：</span>
             <span class="preview mb-2"
                   style="font-size: 18px;color:black">{{ currentNotice.content }}</span>
           </div>
@@ -185,6 +190,9 @@ export default {
         case 'feedback':
           content += '你的反馈已得到处理回复：';
           break;
+        case 'post':
+          content += '在你的专区发帖：';
+          break;
         default:
           content += '';
       }
@@ -198,7 +206,7 @@ export default {
     },
     formatNoticeTitle(notice) {
       let title = '';
-      if (notice.type === 'pcomment' || notice.type === 'ccomment') {
+      if (notice.type === 'pcomment' || notice.type === 'ccomment' || notice.type === 'post') {
         title += `${notice.senderName}：\n`;
       }
       return title;
@@ -333,6 +341,16 @@ export default {
           });
           window.open(link.href, '_blank');
           // window.location.href = link.href;
+        } else if (nowNotice.type === 'post') {
+          const link = this.$router.resolve({
+            name: 'postDetails',
+            query: {
+              id: nowNotice.postID,
+              partition: this.partition,
+              before: 'notice',
+            },
+          });
+          window.open(link.href, '_blank');
         }
       }, 100);
     },

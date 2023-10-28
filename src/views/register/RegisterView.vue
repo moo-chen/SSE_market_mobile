@@ -31,7 +31,7 @@
         />
 
         <van-field
-          v-model="user.password"
+          v-model="password"
           type="password"
           required
           label="密码"
@@ -40,7 +40,7 @@
         />
 
         <van-field
-          v-model="user.password2"
+          v-model="password2"
           type="password"
           required
           label="再次输入密码"
@@ -94,6 +94,8 @@ export default {
       errorNumMessage: '',
       errorPhoneMessage: '',
       emailCheck: false,
+      password: '',
+      password2: '',
       user: {
         phone: '',
         name: '',
@@ -176,8 +178,8 @@ export default {
     },
 
     register() {
-      this.user.password = this.setPassword(this.user.password, this.key);
-      this.user.password2 = this.setPassword(this.user.password2, this.key);
+      this.user.password = this.setPassword(this.password, this.key);
+      this.user.password2 = this.setPassword(this.password2, this.key);
       // 请求
       this.userRegister(this.user)
         .then(() => {
