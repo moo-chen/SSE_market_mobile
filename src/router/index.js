@@ -70,6 +70,7 @@ const routes = [
     name: 'save',
     meta: {
       auth: true,
+      keepAlive: true,
     },
     component: () => import('../views/save/SaveView.vue'),
   },
@@ -78,6 +79,7 @@ const routes = [
     name: 'history',
     meta: {
       auth: true,
+      keepAlive: true,
     },
     component: () => import('../views/history/HistoryView.vue'),
   },
@@ -106,6 +108,23 @@ const routes = [
     path: '/modifyPassword',
     name: 'modifyPassword',
     component: () => import('../views/modifyPassword/ModifyPasswordView.vue'),
+  },
+  {
+    path: '/filemanage',
+    name: 'filemanage',
+    meta: {
+      auth: true,
+    },
+    component: () => import('../views/file/FileManageView.vue'),
+  },
+  {
+    path: '/course',
+    name: 'course',
+    meta: {
+      auth: true,
+      keepAlive: true,
+    },
+    component: () => import('../views/course/CourseView.vue'),
   },
 ];
 

@@ -23,6 +23,12 @@
       </van-tabbar-item
       >
       <van-tabbar-item
+        replace to="/course?partition=课程专区"
+        :class="{ active: $route.path === '/course?partition=课程专区' }"
+        :icon="getIcon('points', 'points', '/course')">
+        课程
+      </van-tabbar-item>
+      <van-tabbar-item
         replace to="/notice"
         :class="{ active: $route.path === '/notice' }"
         :icon="getIcon('chat-o', 'chat', '/notice')"

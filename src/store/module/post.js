@@ -5,11 +5,11 @@ const postModule = {
   namespaced: true,
   actions: {
     post(context, {
-      userTelephone, title, content, partition, photos,
+      userTelephone, title, content, partition, photos, tagList,
     }) {
       return new Promise((resolve, reject) => {
         postService.post({
-          userTelephone, title, content, partition, photos,
+          userTelephone, title, content, partition, photos, tagList,
         }).then((res) => {
           resolve(res);
         }).catch((err) => {
@@ -19,11 +19,11 @@ const postModule = {
     },
 
     browse(context, {
-      userTelephone, partition, searchinfo, limit, offset, searchsort,
+      userTelephone, partition, searchinfo, tag, limit, offset, searchsort,
     }) {
       return new Promise((resolve, reject) => {
         postService.browse({
-          userTelephone, partition, searchinfo, limit, offset, searchsort,
+          userTelephone, partition, searchinfo, tag, limit, offset, searchsort,
         }).then((res) => {
           resolve(res);
         }).catch((err) => {

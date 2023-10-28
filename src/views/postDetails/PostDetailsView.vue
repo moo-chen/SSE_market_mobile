@@ -4,15 +4,15 @@
       <van-loading class="wrapper" size="24px" vertical>加载中...</van-loading>
     </van-overlay>
     <van-nav-bar
-      :title="post.title"
-      left-text="返回"
-      right-text="更多"
-      left-arrow
-      @click-left="goback"
-      @click-right="toggleMenu"
-      fixed
-      placeholder
-      safe-area-inset-top
+        :title="post.title"
+        left-text="返回"
+        right-text="更多"
+        left-arrow
+        @click-left="goback"
+        @click-right="toggleMenu"
+        fixed
+        placeholder
+        safe-area-inset-top
     />
     <!--帖子详情-->
     <div class='postDetails' style="margin-left:10px">
@@ -22,7 +22,7 @@
         <van-popup v-model="post.showMenu" position="bottom" round
                    :style="{ height: '40' }" @click.stop>
           <div
-            :style="{ 'background-color': isNightStyle ? 'rgb(50,50,50)' : 'white',
+              :style="{ 'background-color': isNightStyle ? 'rgb(50,50,50)' : 'white',
                     'color': isNightStyle ? 'gray' : null,
                     margin:'20px'}">
             <van-icon name='star-o' size='20' @click='save(post)' v-if='!post.isSaved'/>
@@ -31,11 +31,11 @@
           </div>
           <hr>
           <van-row
-            v-if="this.post.authorTelephone !== userInfo.phone"
-            :style="{ 'background-color': isNightStyle ? 'rgb(50,50,50)' : 'white',
+              v-if="this.post.authorTelephone !== userInfo.phone"
+              :style="{ 'background-color': isNightStyle ? 'rgb(50,50,50)' : 'white',
                     'color': isNightStyle ? 'gray' : null,
                     margin:'20px'}"
-            @click.stop="showReportModal = true">
+              @click.stop="showReportModal = true">
             <van-icon size="20px" name="failure" class="mr-2"></van-icon>
             举报
           </van-row>
@@ -46,15 +46,15 @@
                       @hidden='clearReportReason'
                       confirm-button-text="提交"
                       show-cancel-button>
-            <van-field v-model='reportReason' placeholder='请输入举报原因' rows='8'>
+            <van-field v-model='reportReason' type="textarea" placeholder='请输入举报原因' rows='8'>
             </van-field>
           </van-dialog>
           <van-row
-            v-if="this.post.authorTelephone === userInfo.phone"
-            :style="{ 'background-color': isNightStyle ? 'rgb(50,50,50)' : 'white',
+              v-if="this.post.authorTelephone === userInfo.phone"
+              :style="{ 'background-color': isNightStyle ? 'rgb(50,50,50)' : 'white',
                     'color': isNightStyle ? 'gray' : null,
                     margin:'20px'}"
-            @click.stop="showDeleteModal = true">
+              @click.stop="showDeleteModal = true">
             <van-icon size="20px" name="delete-o" class="mr-2"></van-icon>
             删除
           </van-row>
@@ -73,8 +73,14 @@
               <span style='margin-top: 10px;' class='username'>{{ post.author }}</span>
             </div>
           </van-col>
-          <van-col style="margin-top: 10px;margin-left: 5px;"><van-tag
-            :color="getTagColor(post.authorTitle)">{{post.authorTitle}}</van-tag></van-col>
+          <van-col style="margin-top: 10px;margin-left: 5px;">
+            <van-tag v-if="post.authorIdentity==='teacher'" color="#7232dd" plain>
+              教师
+            </van-tag>
+            <van-tag
+                :color="getTagColor(post.authorTitle)">{{ post.authorTitle }}
+            </van-tag>
+          </van-col>
         </div>
         <van-row class="post_title">{{ post.title }}
         </van-row>
@@ -91,7 +97,7 @@
                      @click="handlePictureCardPreview(fileListGet[0])"
                      @keyup.enter="handlePictureCardPreview(fileListGet[0])"
                      @loadeddata="handlePictureCardPreview(fileListGet[0])"
-                     alt="Post Photo" preview-text="Post Photo"
+                     alt="" preview-text="Post Photo"
                 />
                 <img :src="fileListGet[1]"
                      class="photo"
@@ -99,7 +105,7 @@
                      @click="handlePictureCardPreview(fileListGet[1])"
                      @keyup.enter="handlePictureCardPreview(fileListGet[1])"
                      @loadeddata="handlePictureCardPreview(fileListGet[1])"
-                     alt="Post Photo"
+                     alt=""
                 />
               </div>
               <div>
@@ -108,7 +114,7 @@
                      @click="handlePictureCardPreview(fileListGet[2])"
                      @keyup.enter="handlePictureCardPreview(fileListGet[2])"
                      @loadeddata="handlePictureCardPreview(fileListGet[2])"
-                     alt="Post Photo"
+                     alt=""
                 />
                 <img :src="fileListGet[3]"
                      class="photo"
@@ -116,7 +122,7 @@
                      @click="handlePictureCardPreview(fileListGet[3])"
                      @keyup.enter="handlePictureCardPreview(fileListGet[3])"
                      @loadeddata="handlePictureCardPreview(fileListGet[3])"
-                     alt="Post Photo"/>
+                     alt=""/>
               </div>
             </template>
             <template v-else>
@@ -126,15 +132,15 @@
                      @click="handlePictureCardPreview(file)"
                      @keyup.enter="handlePictureCardPreview(file)"
                      @loadeddata="handlePictureCardPreview(file)"
-                     alt="Post Photo"/>
+                     alt=""/>
               </div>
             </template>
           </div>
         </div>
         <div>
           <div class='d-flex justify-content-between'>
-            <span class='text-muted' style="color:rgb(128,128,128);
-            margin-left:25px;font-size:12px;">{{ formatDate(post.postTime) }}</span>
+            <span class='post_content' style="color:rgb(128,128,128);
+            margin-left:25px;">{{ formatDate(post.postTime) }}</span>
           </div>
           <div class="tag-group" v-if="post.tag">
             <span class="tag-group__title"></span>
@@ -156,7 +162,7 @@
           </div>
           <div class='text-muted' style="margin-left:50px; ">
             <van-icon size="20px" name='comment-o' style="vertical-align: -2px;"></van-icon>
-            <span class="comment-like">{{  commentsNum }}</span>
+            <span class="comment-like">{{ commentsNum }}</span>
           </div>
           <van-button class="div" @click="post.showCommentForm
             = !post.showCommentForm" type="default" plain
@@ -171,9 +177,14 @@
       <van-popup v-model="post.showCommentForm" position="bottom" :style="{ height: '50%' }">
         <div>
           <van-field v-model="pcomment.content"
+                     rows="3"
+                     autosize
+                     maxlength="1000"
+                     show-word-limit
+                     type="textarea"
                      ref="pcommentTextarea"
                      id="pcommentInput"
-                     placeholder="请写下你的精彩评论..." rows="3">
+                     placeholder="请写下你的精彩评论...">
           </van-field>
         </div>
         <div class="van-row" style="margin-right: 5px">
@@ -184,16 +195,16 @@
           </van-button> -->
           <div v-if="showEmoji">
             <picker
-              :include="['people']"
-              :showSearch="false"
-              :showPreview="false"
-              :showCategories="false"
-              @select="addEmojiToPcomment"
+                :include="['people']"
+                :showSearch="false"
+                :showPreview="false"
+                :showCategories="false"
+                @select="addEmojiToPcomment"
             />
           </div>
           <van-button
-            @click="pcommentPost"
-            round type="primary" :loading="buttonLoading">提交评论
+              @click="pcommentPost"
+              round type="primary" :loading="buttonLoading">提交评论
           </van-button>
         </div>
 
@@ -203,7 +214,7 @@
     <!--显示和发表帖子评论、评论的评论-->
     <div class='comment'>
       <!--帖子评论排序按钮-->
-      <div class="van-row--flex" style="margin-left:20px">
+      <div class="van-row--flex van-row--justify-center">
         <van-button @click="sortkind='Date';comments=sortcomments(comments)"
                     plain hairline icon="descending"
                     type="primary" size="small" style="margin-left: 190px">时间
@@ -232,18 +243,24 @@
               <!--        评论作者和评论内容-->
               <div class="van-row" style="margin-top: 20px">
                 <div class="van-row">
-                <div class="van-col comment-author-name" style="margin-top:5px;margin-left: -15px;
-                font-size:13px;">{{ comment.author }}</div>
-                <div class="van-col" style="margin-top: 11px;margin-left: 7px;font-size:11px;">
-                  <van-tag :color="getTagColor(comment.authorTitle)">
-                    {{comment.authorTitle}}</van-tag></div>
+                  <div class="van-col comment-author-name" style="margin-top:5px;margin-left: -15px;
+                font-size:13px;">{{ comment.author }}
+                  </div>
+                  <div class="van-col" style="margin-top: 11px;margin-left: 7px;font-size:11px;">
+                    <van-tag v-if="comment.authorIdentity==='teacher'" color="#7232dd" plain>
+                      教师
+                    </van-tag>
+                    <van-tag :color="getTagColor(comment.authorTitle)">
+                      {{ comment.authorTitle }}
+                    </van-tag>
+                  </div>
                 </div>
-                  <div class="comment-content" style="margin-top:20px;">
+                <div class="comment-content" style="margin-top:20px;">
                   {{ comment.content }}
                 </div>
                 <div>
-                  <div class="text-muted" style="margin-top:15px;margin-left:-195px;
-                  font-size:12px;">{{ formatDate(comment.commentTime) }}
+                  <div class="post_content" style="color:rgb(128,128,128);">
+                    {{ formatDate(comment.commentTime) }}
                   </div>
                 </div>
                 <!--显示每个评论的点赞和回复数，点赞和回复图片对应点赞和回复功能-->
@@ -271,11 +288,11 @@
                 </div>
                 <!--对帖子评论的更多功能选择菜单：举报和删除-->
                 <van-popup
-                  v-model='comment.showMenu'
-                  position="bottom"
-                  round
-                  :style="{height:'10%'}"
-                  @click.stop
+                    v-model='comment.showMenu'
+                    position="bottom"
+                    round
+                    :style="{height:'10%'}"
+                    @click.stop
                 >
                   <!--                  举报评论按钮-->
                   <div class="van-row--flex"
@@ -285,7 +302,8 @@
                   >
                     <van-icon name="failure" class='mr-2' style="font-size:25px;
                     margin-left: 10px;margin-top: 30px;">
-                    </van-icon><span style="font-size:20px;
+                    </van-icon>
+                    <span style="font-size:20px;
                     margin-left: 8px;margin-top: 29px;">举报</span>
                   </div>
                   <!--                  提交举报弹窗-->
@@ -296,36 +314,41 @@
                               @hidden='clearReportReason'
                               confirm-button-text="提交"
                               show-cancel-button>
-                    <van-field v-model='reportReason' placeholder='请输入举报原因' rows='8'>
+                    <van-field v-model='reportReason'
+                               type="textarea" placeholder='请输入举报原因' rows='8'>
                     </van-field>
                   </van-dialog>
                   <!--                  删除评论按钮-->
                   <div
-                    v-if='comment.authorTelephone === userInfo.phone'
-                    @click.stop='showDeleteModal = true'
-                    @keydown.stop="handleKeyboardEvent"
+                      v-if='comment.authorTelephone === userInfo.phone'
+                      @click.stop='showDeleteModal = true'
+                      @keydown.stop="handleKeyboardEvent"
                   >
                     <van-icon size="20px" name="delete-o" class='mr-2'></van-icon>
                     <span style="font-size:20px;margin-left: 5px;">删除</span>
                   </div>
                   <!--              确认删除弹窗    -->
                   <van-dialog
-                    v-model='showDeleteModal'
-                    show-cancel-button
-                    @confirm='pcommentdelete(comment)'
+                      v-model='showDeleteModal'
+                      show-cancel-button
+                      @confirm='pcommentdelete(comment)'
                   >
                     <p>你确定要删除这条评论吗？</p>
                   </van-dialog>
                 </van-popup>
                 <!--如果点击了评论，将显示评论窗口-->
                 <van-popup
-                  round
-                  position="bottom" :style="{ height: '50%' }"
-                  v-model="comment.showReplyForm">
+                    round
+                    position="bottom" :style="{ height: '50%' }"
+                    v-model="comment.showReplyForm">
                   <van-form @submit="ccommentPost(index)">
                     <van-field v-model="ccomment.content"
-                               ref="ccommentTextarea"
-                               placeholder="请写下你的精彩评论..." autosize>
+                               rows="3"
+                               maxlength="100"
+                               show-word-limit
+                               autosize
+                               type="textarea"
+                               placeholder="请写下你的精彩评论...">
                     </van-field>
                     <!--                    表情选择器和提交评论按钮-->
                     <div>
@@ -336,12 +359,12 @@
                       </van-button> -->
                       <div v-if="showEmoji">
                         <picker
-                          :include="['people']"
-                          :showSearch="false"
-                          :showPreview="false"
-                          :showCategories="false"
-                          @select="addEmojiToCcomment"
-                          style="height: 100px"
+                            :include="['people']"
+                            :showSearch="false"
+                            :showPreview="false"
+                            :showCategories="false"
+                            @select="addEmojiToCcomment"
+                            style="height: 100px"
                         />
                       </div>
                       <van-button type="primary"
@@ -366,10 +389,10 @@
       </van-list>
       <!-- 评论的评论（下弹窗） -->
       <van-popup
-        position="bottom"
-        round
-        :style="{ height: '80%' }"
-        v-model="showRepliesModal">
+          position="bottom"
+          round
+          :style="{ height: '80%' }"
+          v-model="showRepliesModal">
         <!--显示评论的评论/回复列表-->
         <van-list name="comment-list">
           <div v-for="(subComment, subIndex) in visibleSubComments(showcommentsindex)"
@@ -388,21 +411,28 @@
                 <!--作者名称和回复内容-->
                 <div class="van-row">
                   <van-row>
-                  <div class="van-col comment-author-name" style="margin-top: 6px;
-                  margin-left: 4px; font-size: 13px;">{{ subComment.author }}</div>
-                  <van-col style="margin-top: -8px;margin-left: 5px;"><van-tag
-                    :color="getTagColor(subComment.authorTitle)">{{subComment.authorTitle}}
-                  </van-tag></van-col></van-row>
+                    <div class="van-col comment-author-name" style="margin-top: 6px;
+                  margin-left: 4px; font-size: 13px;">{{ subComment.author }}
+                    </div>
+                    <van-col style="margin-top: -8px;margin-left: 5px;">
+                      <van-tag v-if="subComment.authorIdentity==='teacher'" color="#7232dd" plain>
+                        教师
+                      </van-tag>
+                      <van-tag
+                          :color="getTagColor(subComment.authorTitle)">{{ subComment.authorTitle }}
+                      </van-tag>
+                    </van-col>
+                  </van-row>
                   <div
-                    class="van-row--flex"
-                    v-if="subComment.userTargetName !== ''">
+                      class="van-row--flex"
+                      v-if="subComment.userTargetName !== ''">
                             <span
-                              class="comment-content"
-                              style="color: cadetblue;font-size: 13px;margin-left: 10px;">
+                                class="comment-content"
+                                style="color: cadetblue;font-size: 13px;margin-left: 10px;">
                               回复@{{ subComment.userTargetName }}:</span>
                   </div>
                   <div
-                    class="comment-content" style="font-size: 13px; margin-left: 10px;">
+                      class="comment-content" style="font-size: 13px; margin-left: 10px;">
                     {{ subComment.content }}
                   </div>
                 </div>
@@ -437,7 +467,8 @@
                                   @hidden='clearReportReason'
                                   confirm-button-text="提交"
                                   show-cancel-button>
-                        <van-field v-model='reportReason' placeholder='请输入举报原因' rows='8'>
+                        <van-field autosize type="textarea"
+                            v-model='reportReason' placeholder='请输入举报原因' rows='8'>
                         </van-field>
                       </van-dialog>
                     </div>
@@ -446,10 +477,10 @@
                       <van-icon style="font-size: 16px;margin-left: 10px;"
                                 name='delete-o' @click.stop='showDeleteModal = true'></van-icon>
                       <van-dialog
-                        v-model='showDeleteModal'
-                        confirm-button-text='确认'
-                        show-cancel-button
-                        @confirm='ccommentdelete(subComment)'
+                          v-model='showDeleteModal'
+                          confirm-button-text='确认'
+                          show-cancel-button
+                          @confirm='ccommentdelete(subComment)'
                       >
                         <p>你确定要删除这条评论吗？</p>
                       </van-dialog>
@@ -474,10 +505,15 @@
                    :style="{height:'50%'}"
                    v-model="replyshow">
           <van-form @submit=
-                      "ccommentPost(showcommentsindex,
+                        "ccommentPost(showcommentsindex,
                           nowReplyComment.author,
                           nowReplyComment.ccommentID)">
             <van-field v-model="ccomment.content"
+                       rows="2"
+                       autosize
+                       maxlength="100"
+                       show-word-limit
+                       type="textarea"
                        id="ccommentInput"
                        :placeholder="'回复@'+nowReplyComment.author">
             </van-field>
@@ -490,11 +526,11 @@
               </van-button> -->
               <div v-if="showEmoji">
                 <picker
-                  :include="['people']"
-                  :showSearch="false"
-                  :showPreview="false"
-                  :showCategories="false"
-                  @select="addEmojiToCcomment"
+                    :include="['people']"
+                    :showSearch="false"
+                    :showPreview="false"
+                    :showCategories="false"
+                    @select="addEmojiToCcomment"
                 />
               </div>
               <van-button type="primary" plain native-type="submit" :loading="buttonLoading">
@@ -669,6 +705,7 @@ export default {
         this.post.authorTitle = this.getUserTitle(post.data.UserScore);
         this.post.authorTelephone = post.data.UserTelephone;
         this.post.authorAvatar = post.data.UserAvatar;
+        this.post.authorIdentity = post.data.UserIdentity;
         this.post.title = post.data.Title;
         this.post.content = post.data.Content;
         this.post.like = post.data.Like;
@@ -706,7 +743,7 @@ export default {
       const endPos = textarea.selectionEnd; // Get the cursor's end position
       // Insert the emoji at the cursor position
       this.ccomment.content = this.ccomment.content.slice(0, startPos)
-        + emoji.native + this.ccomment.content.slice(endPos);
+          + emoji.native + this.ccomment.content.slice(endPos);
 
       // Update the cursor position to be after the inserted emoji
       const newCursorPos = startPos + emoji.native.length;
@@ -721,7 +758,7 @@ export default {
 
       // Insert the emoji at the cursor position
       this.pcomment.content = this.pcomment.content.slice(0, startPos)
-        + emoji.native + this.pcomment.content.slice(endPos);
+          + emoji.native + this.pcomment.content.slice(endPos);
 
       // Update the cursor position to be after the inserted emoji
       const newCursorPos = startPos + emoji.native.length;
@@ -974,6 +1011,7 @@ export default {
               author: pcomment.Author,
               authorTitle: this.getUserTitle(pcomment.AuthorScore),
               authorAvatar: pcomment.AuthorAvatar,
+              authorIdentity: pcomment.AuthorIdentity,
               authorTelephone: pcomment.AuthorTelephone,
               commentTime: pcomment.CommentTime,
               content: pcomment.Content,

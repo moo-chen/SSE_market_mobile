@@ -1,10 +1,10 @@
 <template>
   <div>
       <van-notice-bar left-icon="volume-o" :scrollable="true"
-                      text="欢迎大家来到软工集市，此版本为内测版本" style="margin-bottom: 10px;"/>
+                      text="欢迎大家来到软工集市version2.0" style="margin-bottom: 10px;"/>
     <div class="profile_box">
       <div class="avatar-container">
-        <img v-if="imageUrl" :src="imageUrl" class="profile_avatar" alt="Uploaded Avatar" />
+        <img v-if="imageUrl" :src="imageUrl" class="profile_avatar" alt="" />
         <i v-else class="van-icon profile_avatar"></i>
       </div>
       <div class="user_name field-spacing">{{ userInfo.name }}</div>
@@ -30,7 +30,6 @@
 
 <script>
 import { mapActions, mapState } from 'vuex';
-import axios from 'axios';
 import { Dialog } from 'vant';
 // eslint-disable-next-line import/no-cycle
 import request from '@/utils/request';
@@ -80,8 +79,8 @@ export default {
       const formData = new FormData();
       formData.append('file', file.file); // 'file' 必须与后端接收的字段名相匹配
       formData.append('phone', this.userInfo.phone);
-      axios
-        .post(`${process.env.VUE_APP_BASE_URL}auth/updateAvatar`, formData, {
+      request
+        .post('auth/updateAvatar', formData, {
           headers: {
             'Content-Type': 'multipart/form-data',
           },
@@ -92,11 +91,7 @@ export default {
         })
         .catch((error) => {
           console.error('上传失败', error);
-          this.$bvToast.toast('上传失败', {
-            title: '系统提醒',
-            variant: 'danger',
-            solid: true,
-          });
+          this.$toast.fail('上传失败');
           // 可以在此处处理上传失败的逻辑
         });
     },
@@ -132,7 +127,7 @@ export default {
         intro: this.userInfo.intro,
         avatarURL: this.userInfo.avatarURL,
       };
-      request.post(`${process.env.VUE_APP_BASE_URL}auth/updateUserInfo`, updatedUserInfo)
+      request.post('auth/updateUserInfo', updatedUserInfo)
         .then((response) => {
           // 处理更新成功的逻辑
           console.log(response);
