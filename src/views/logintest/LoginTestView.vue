@@ -15,7 +15,7 @@
                   :error-message="errorMessage"
                 ></van-field>
                 <van-field
-                  v-model="user.password"
+                  v-model="password"
                   label="密码"
                   type="password"
                   placeholder="输入密码"
@@ -55,6 +55,7 @@ import validator from '@/helper/validator';
 export default {
   data() {
     return {
+      password: '',
       user: {
         email: '',
         password: '',
@@ -76,7 +77,7 @@ export default {
       return CryptoJS.AES.encrypt(data, cypherKey, cfg).toString();
     },
     login() {
-      this.user.password = this.setPassword(this.user.password, this.key);
+      this.user.password = this.setPassword(this.password, this.key);
       // console.error(this.user);
       this.userlogin(this.user)
         .then(() => {
@@ -95,7 +96,7 @@ export default {
   },
   watch: {
     // eslint-disable-next-line func-names
-    'user.password': function (password) {
+    password(password) {
       if (len(password) < 6) {
         this.errorInfo = '密码长度>=6';
       } else {

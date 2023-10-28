@@ -34,7 +34,7 @@
           </div>
           <van-row class="post_title">{{ post.title }}
           </van-row>
-          <van-row class="post_content"
+          <van-row class="post_content van-multi-ellipsis--l3"
                    style="margin-bottom: 10px">
             {{ post.content }}
           </van-row>

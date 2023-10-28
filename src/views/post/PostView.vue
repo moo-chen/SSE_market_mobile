@@ -167,16 +167,6 @@ export default {
       });
       this.showTagPicker = false;
     },
-    getTag() {
-      request.get('/auth/getTags?type=course')
-        .then((res) => {
-          const options = res.data.data.tags.map((tag) => ({
-            label: tag.Name,
-            value: tag.Value,
-          }));
-          this.column = options.map((option) => option.label);
-        });
-    },
     afterRead(files) {
       const filesArray = Array.isArray(files) ? files : [files];
 
@@ -194,6 +184,15 @@ export default {
             console.error('Error uploading file:', error);
             // 在这里可以添加错误处理逻辑，比如提示用户上传失败等
           });
+      });
+    },
+    getTag() {
+      request.get('/auth/getTags?type=course').then((res) => {
+        const options = res.data.data.tags.map((tag) => ({
+          label: tag.Name,
+          value: tag.Value,
+        }));
+        this.column = options.map((option) => option.label);
       });
     },
     onDelete(item) {
