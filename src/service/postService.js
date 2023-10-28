@@ -8,6 +8,7 @@ const post = ({
   content,
   partition,
   photos,
+  tagList,
 }) => {
   return request.post('auth/post', {
     userTelephone,
@@ -15,15 +16,16 @@ const post = ({
     content,
     partition,
     photos,
+    tagList,
   });
 };
 
 // 看帖
 const browse = ({
-  userTelephone, partition, searchinfo, limit, offset, searchsort,
+  userTelephone, partition, searchinfo, tag, limit, offset, searchsort,
 }) => {
   return request.post('auth/browse', {
-    userTelephone, partition, searchinfo, limit, offset, searchsort,
+    userTelephone, partition, searchinfo, tag, limit, offset, searchsort,
   });
 };
 

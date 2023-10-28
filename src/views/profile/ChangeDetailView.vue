@@ -2,7 +2,7 @@
   <div>
     <van-uploader :after-read='afterRead' :max-count='1' accept='image/gif, image/jpeg, image/png'>
       <div class='avatar-container'>
-        <img v-if='imageUrl' :src='imageUrl' class='profile_avatar' alt='Uploaded Avatar' />
+        <img v-if='imageUrl' :src='imageUrl' class='profile_avatar' alt='' />
         <i v-else class='van-icon avatar'></i>
       </div>
     </van-uploader>
@@ -50,7 +50,6 @@
 
 <script>
 import { mapActions, mapState } from 'vuex';
-import axios from 'axios';
 import { Dialog } from 'vant';
 // eslint-disable-next-line import/no-cycle
 import request from '@/utils/request';
@@ -105,8 +104,8 @@ export default {
       const formData = new FormData();
       formData.append('file', file.file); // 'file' 必须与后端接收的字段名相匹配
       formData.append('phone', this.userInfo.phone);
-      axios
-        .post(`${process.env.VUE_APP_BASE_URL}auth/updateAvatar`, formData, {
+      request
+        .post('auth/updateAvatar', formData, {
           headers: {
             'Content-Type': 'multipart/form-data',
           },

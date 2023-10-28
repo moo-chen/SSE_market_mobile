@@ -17,11 +17,11 @@
       </van-field>
       <div v-if="showTitleEmoji">
         <picker
-          :include="['people']"
-          :showSearch="false"
-          :showPreview="false"
-          :showCategories="false"
-          @select="addEmojiToTitle"
+            :include="['people']"
+            :showSearch="false"
+            :showPreview="false"
+            :showCategories="false"
+            @select="addEmojiToTitle"
         />
       </div>
     </van-cell-group>
@@ -40,23 +40,23 @@
       </van-field>
       <div v-if="showContentEmoji">
         <picker
-          :include="['people']"
-          :showSearch="false"
-          :showPreview="false"
-          :showCategories="false"
-          @select="addEmojiToContent"
+            :include="['people']"
+            :showSearch="false"
+            :showPreview="false"
+            :showCategories="false"
+            @select="addEmojiToContent"
         />
       </div>
     </van-cell-group>
     <van-cell-group title="图片上传">
       <van-cell>
         <van-uploader
-          :file-list="fileList"
-          :after-read="afterRead"
-          :deletable="true"
-          @delete="onDelete"
-          :max-count="9"
-          multiple
+            :file-list="fileList"
+            :after-read="afterRead"
+            :deletable="true"
+            @delete="onDelete"
+            :max-count="9"
+            multiple
         />
       </van-cell>
     </van-cell-group>
@@ -66,21 +66,40 @@
 
     <van-cell-group>
       <van-field
-        v-model="posts.partition"
-        label-width="50px"
-        clickable
-        readonly
-        label="分区"
-        placeholder="选择分区"
-        @click="showPicker = true"
+          v-model="posts.partition"
+          label-width="50px"
+          clickable
+          readonly
+          label="分区"
+          placeholder="选择分区"
+          @click="showPicker = true"
       />
       <van-popup v-model="showPicker" round position="bottom" class="custom-popup">
         <van-picker
-          show-toolbar
-          :columns="partitions"
-          v-model="posts.partition"
-          @cancel="showPicker = false"
-          @confirm="onPartitionConfirm"
+            show-toolbar
+            :columns="partitions"
+            v-model="posts.partition"
+            @cancel="showPicker = false"
+            @confirm="onPartitionConfirm"
+        />
+      </van-popup>
+    </van-cell-group>
+    <van-cell-group v-if="posts.partition==='课程专区'">
+      <van-field
+          label-width="50px"
+          readonly
+          clickable
+          label="教师"
+          :value="label"
+          placeholder="请选择教师"
+          @click="showTagPicker = true"
+      />
+      <van-popup v-model="showTagPicker" round position="bottom">
+        <van-picker
+            show-toolbar
+            :columns="column"
+            @cancel="showPicker = false"
+            @confirm="handlechange"
         />
       </van-popup>
     </van-cell-group>
@@ -95,10 +114,13 @@
 <script>
 import { mapState, mapActions } from 'vuex';
 import { Notify } from 'vant';
-import axios from 'axios';
 import { Picker } from 'emoji-mart-vue';
+import request from '@/utils/request';
 
 export default {
+  created() {
+    this.getTag();
+  },
   components: {
     Picker,
   },
@@ -113,7 +135,8 @@ export default {
   //   },
   data() {
     return {
-      uploadPhotosActionURL: `${process.env.VUE_APP_BASE_URL}auth/uploadPhotos`,
+      column: [],
+      label: '',
       fileList: [],
       dialogImageUrl: '',
       dialogVisible: false,
@@ -130,11 +153,30 @@ export default {
       showTagPicker: false,
       rounded: true,
       showPicker: false,
-      partitions: ['日常吐槽', '学习交流', '恋爱交友', '二手闲置', '打听求助', '其他'],
+      partitions: ['日常吐槽', '学习交流', '课程专区', '恋爱交友', '二手闲置', '打听求助', '其他'],
     };
   },
   methods: {
     ...mapActions('postModule', { Post: 'post' }),
+    handlechange(value) {
+      this.label = value;
+      this.posts.tagList = value;
+      this.$notify({
+        type: 'success',
+        message: `切换成功to${this.label}`,
+      });
+      this.showTagPicker = false;
+    },
+    getTag() {
+      request.get('/auth/getTags?type=course')
+        .then((res) => {
+          const options = res.data.data.tags.map((tag) => ({
+            label: tag.Name,
+            value: tag.Value,
+          }));
+          this.column = options.map((option) => option.label);
+        });
+    },
     afterRead(files) {
       const filesArray = Array.isArray(files) ? files : [files];
 
@@ -142,8 +184,8 @@ export default {
         const formData = new FormData();
         formData.append('file', file.file);
 
-        axios
-          .post(this.uploadPhotosActionURL, formData)
+        request
+          .post('auth/uploadPhotos', formData)
           .then((response) => {
             const url = response.data.fileURL;
             this.fileList.push({ url });
@@ -205,7 +247,7 @@ export default {
       const endPos = textarea.selectionEnd; // Get the cursor's end position
       // Insert the emoji at the cursor position
       this.posts.content = this.posts.content.slice(0, startPos)
-        + emoji.native + this.posts.content.slice(endPos);
+          + emoji.native + this.posts.content.slice(endPos);
 
       // Update the cursor position to be after the inserted emoji
       const newCursorPos = startPos + emoji.native.length;
@@ -217,7 +259,7 @@ export default {
       const endPos = textarea.selectionEnd; // Get the cursor's end position
       // Insert the emoji at the cursor position
       this.posts.title = this.posts.title.slice(0, startPos)
-        + emoji.native + this.posts.title.slice(endPos);
+          + emoji.native + this.posts.title.slice(endPos);
 
       // Update the cursor position to be after the inserted emoji
       const newCursorPos = startPos + emoji.native.length;
