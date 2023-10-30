@@ -494,6 +494,7 @@ export default {
           .map((post) => ({
             id: post.PostID,
             author: post.UserName,
+            authorTitle: this.getUserTitle(post.UserScore),
             authorTelephone: post.UserTelephone,
             authorAvatar: post.UserAvatar,
             authorIdentity: post.UserIdentity,
